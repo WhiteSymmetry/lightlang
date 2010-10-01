@@ -21,15 +21,11 @@
 
 
 import Qt
-import Config
 import Const
+import Utils
 
 
 ##### Private constants #####
-Sl = Config.BinsDir+"/sl"
-AllSoundsDir = Config.DataRootDir+"/sl/sounds/"
-AudioPostfix = ".ogg"
-
 SoundSearchOption = "-s"
 
 
@@ -40,14 +36,14 @@ class SlSoundSearch(Qt.QObject) :
 
 		#####
 
-		self._proc = Qt.QProcess()
+		self._proc = Qt.QProcess(self)
 
 		self._proc_block_flag = False
 		self._proc_kill_flag = False
 
 		self._proc_args = Qt.QStringList()
 
-		self._all_sounds_dir = Qt.QDir(AllSoundsDir)
+		self._all_sounds_dir = Qt.QDir(Const.AllSoundsDir)
 
 		#####
 
@@ -73,39 +69,38 @@ class SlSoundSearch(Qt.QObject) :
 		while self._proc_block_flag :
 			self._proc.waitForFinished()
 		self._proc_kill_flag = False
-		self._proc.start(Sl, self._proc_args)
+		self._proc.start(Const.Sl, self._proc_args)
 
 	def checkWord(self, lang, word) :
 		word = word.simplified().toLower()
 		if word.isEmpty() :
-			return
-
-		return Qt.QFile.exists(AllSoundsDir+lang+"/"+word[0]+"/"+word+AudioPostfix)
+			return False
+		return Qt.QFile.exists(Utils.joinPath(Const.AllSoundsDir, lang, word[0], word+Const.AudioPostfix))
 
 
 	### Private ###
 
 	def processError(self, error_code) :
 		if error_code == Qt.QProcess.FailedToStart and not self._proc_kill_flag :
-			Qt.QMessageBox.warning(None, Const.MyName,
+			Qt.QMessageBox.warning(self, Const.MyName,
 				tr("An error occured when creating the search process"),
 				Qt.QMessageBox.Yes)
 		elif error_code == Qt.QProcess.Crashed and not self._proc_kill_flag :
-			Qt.QMessageBox.warning(None, Const.MyName,
+			Qt.QMessageBox.warning(self, Const.MyName,
 				tr("Error of the search process"),
 				Qt.QMessageBox.Yes)
 		elif error_code == Qt.QProcess.Timedout and not self._proc_kill_flag :
-			Qt.QMessageBox.warning(None, Const.MyName,
+			Qt.QMessageBox.warning(self, Const.MyName,
 				tr("Connection lost with search process"),
 				Qt.QMessageBox.Yes)
 		elif not self._proc_kill_flag :
-			Qt.QMessageBox.warning(None, Const.MyName,
+			Qt.QMessageBox.warning(self, Const.MyName,
 				tr("Unknown error occured while executing the search process"),
 				Qt.QMessageBox.Yes)
 
 	def processFinished(self, exit_code) :
 		if exit_code and not self._proc_kill_flag :
-			Qt.QMessageBox.warning(None, Const.MyName,
+			Qt.QMessageBox.warning(self, Const.MyName,
 				tr("Error of the search process"),
 				Qt.QMessageBox.Yes)
 

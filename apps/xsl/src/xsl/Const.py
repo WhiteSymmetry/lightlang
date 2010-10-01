@@ -41,4 +41,5 @@ Sl = Config.BinsDir+"/sl"
 
 AllDictsDir = Config.DataRootDir+"/sl/dicts"
 AllSoundsDir = Config.DataRootDir+"/sl/sounds"
+AudioPostfix = ".ogg"
 

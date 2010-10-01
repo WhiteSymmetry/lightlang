@@ -21,14 +21,10 @@
 
 
 import Qt
-import Config
 import Const
 
 
 ##### Private constants #####
-Sl = Config.BinsDir+"/sl"
-AllDictsDir = Config.DataRootDir+"/sl/dicts/"
-
 UsuallySearchOption = "-u"
 WordCombinationsSearchOption = "-c"
 ListSearchOption = "-l"
@@ -42,7 +38,7 @@ class SlWordSearch(Qt.QObject) :
 
 		#####
 
-		self._proc = Qt.QProcess()
+		self._proc = Qt.QProcess(self)
 		self._proc.setReadChannelMode(Qt.QProcess.MergedChannels)
 		self._proc.setReadChannel(Qt.QProcess.StandardOutput)
 
@@ -123,39 +119,39 @@ class SlWordSearch(Qt.QObject) :
 		while self._proc_block_flag :
 			self._proc.waitForFinished()
 		self._proc_kill_flag = False
-		self._proc.start(Sl, self._proc_args)
+		self._proc.start(Const.Sl, self._proc_args)
 
 	###
 
 	def processError(self, error_code) :
 		if error_code == Qt.QProcess.FailedToStart and not self._proc_kill_flag :
-			Qt.QMessageBox.warning(None, Const.MyName,
+			Qt.QMessageBox.warning(self, Const.MyName,
 				tr("An error occured when creating the search process"),
 				Qt.QMessageBox.Yes)
 		elif error_code == Qt.QProcess.Crashed and not self._proc_kill_flag :
-			Qt.QMessageBox.warning(None, Const.MyName,
+			Qt.QMessageBox.warning(self, Const.MyName,
 				tr("Error of the search process"),
 				Qt.QMessageBox.Yes)
 		elif error_code == Qt.QProcess.Timedout and not self._proc_kill_flag :
-			Qt.QMessageBox.warning(None, Const.MyName,
+			Qt.QMessageBox.warning(self, Const.MyName,
 				tr("Connection lost with search process"),
 				Qt.QMessageBox.Yes)
 		elif error_code == Qt.QProcess.WriteError and not self._proc_kill_flag :
-			Qt.QMessageBox.warning(None, Const.MyName,
+			Qt.QMessageBox.warning(self, Const.MyName,
 				tr("Error while writing data into the search process"),
 				Qt.QMessageBox.Yes)
 		elif error_code == Qt.QProcess.ReadError and not self._proc_kill_flag :
-			Qt.QMessageBox.warning(None, Const.MyName,
+			Qt.QMessageBox.warning(self, Const.MyName,
 				tr("Error while reading data from the search process"),
 				Qt.QMessageBox.Yes)
 		elif not self._proc_kill_flag :
-			Qt.QMessageBox.warning(None, Const.MyName,
+			Qt.QMessageBox.warning(self, Const.MyName,
 				tr("Unknown error occured while executing the search process"),
 				Qt.QMessageBox.Yes)
 
 	def processFinished(self, exit_code) :
 		if exit_code and not self._proc_kill_flag :
-			Qt.QMessageBox.warning(None, Const.MyName,
+			Qt.QMessageBox.warning(self, Const.MyName,
 				tr("Error of the search process"),
 				Qt.QMessageBox.Yes)
 		self.processFinishedSignal()
@@ -174,8 +170,7 @@ class SlWordSearch(Qt.QObject) :
 		if self._proc_args[3] in (UsuallySearchOption, WordCombinationsSearchOption) :
 			self.textChangedSignal(text)
 		else :
-			list = Qt.QStringList()
-
+			text_list = Qt.QStringList()
 			parts_list = text.split("<table border=\"0\" width=\"100%\">")
 
 			#####
@@ -183,12 +178,12 @@ class SlWordSearch(Qt.QObject) :
 			if parts_list.count() == 1 :
 				info_item_pos = self._info_item_regexp.indexIn(text, 0)
 				while info_item_pos != -1 :
-					list << "{{"+self._info_item_regexp.cap(1)+"}}"
+					text_list << "{{"+self._info_item_regexp.cap(1)+"}}"
 					info_item_pos = self._info_item_regexp.indexIn(text, info_item_pos +
 						self._info_item_regexp.matchedLength())
 
-				if list.count() == 0 :
-					list << "{{"+text+"}}"
+				if text_list.count() == 0 :
+					text_list << "{{"+text+"}}"
 
 			###
 
@@ -196,17 +191,17 @@ class SlWordSearch(Qt.QObject) :
 				if self._caption_item_regexp.indexIn(parts_list[parts_list_count]) < 0 :
 					continue
 
-				list << "[["+self._caption_item_regexp.cap(1)+"]]"
+				text_list << "[["+self._caption_item_regexp.cap(1)+"]]"
 
 				word_item_pos = self._word_item_regexp.indexIn(parts_list[parts_list_count], 0)
 				while word_item_pos != -1 :
-					list << self._word_item_regexp.cap(1)
+					text_list << self._word_item_regexp.cap(1)
 					word_item_pos = self._word_item_regexp.indexIn(parts_list[parts_list_count], word_item_pos +
 						self._word_item_regexp.matchedLength())
 
 			#####
 
-			self.listChangedSignal(list)
+			self.listChangedSignal(text_list)
 
 
 	### Signals ###
@@ -223,6 +218,6 @@ class SlWordSearch(Qt.QObject) :
 	def textChangedSignal(self, text) :
 		self.emit(Qt.SIGNAL("textChanged(const QString &)"), text)
 
-	def listChangedSignal(self, list) :
-		self.emit(Qt.SIGNAL("listChanged(const QStringList &)"), list)
+	def listChangedSignal(self, text_list) :
+		self.emit(Qt.SIGNAL("listChanged(const QStringList &)"), text_list)
 

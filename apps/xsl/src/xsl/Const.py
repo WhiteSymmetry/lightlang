@@ -20,6 +20,9 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 
+import Config
+
+
 ##### Public constants #####
 
 Organization = "LightLang"
@@ -32,4 +35,10 @@ OffersMail = "developers@lightlang.org.ru"
 BugtrackMail = "bugtrack@lightlang.org.ru"
 UserCountMail = "usercount@lightlang.org.ru"
 HomePageAddress = "http://lightlang.org.ru"
+
+
+Sl = Config.BinsDir+"/sl"
+
+AllDictsDir = Config.DataRootDir+"/sl/dicts"
+AllSoundsDir = Config.DataRootDir+"/sl/sounds"
 

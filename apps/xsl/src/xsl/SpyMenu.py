@@ -21,8 +21,6 @@
 
 
 import Qt
-import Config
-import Const
 import Settings
 import IconsLoader
 import MouseSelector
@@ -41,7 +39,7 @@ class SpyMenu(Qt.QMenu) :
 
 		#####
 
-		self._mouse_selector = MouseSelector.MouseSelector()
+		self._mouse_selector = MouseSelector.MouseSelector(self)
 
 		#####
 
@@ -58,7 +56,7 @@ class SpyMenu(Qt.QMenu) :
 		self._auto_detect_window_menu_action.setCheckable(True)
 
 		try :
-			self._keyboard_modifiers_menu = RadioButtonsMenu.RadioButtonsMenu(tr("Keyboard modifiers"))
+			self._keyboard_modifiers_menu = RadioButtonsMenu.RadioButtonsMenu(tr("Keyboard modifiers"), self)
 			self._keyboard_modifiers_menu.setIcon(IconsLoader.icon("configure-shortcuts"))
 			self._keyboard_modifiers_menu.addRadioButton(tr("No modifier"), Qt.QVariant(KeyboardModifiersTest.NoModifier))
 
@@ -79,14 +77,14 @@ class SpyMenu(Qt.QMenu) :
 			self._keyboard_modifiers_menu.setIndex(0)
 			self.addMenu(self._keyboard_modifiers_menu)
 		except :
-			self._fictive_keyboard_modifiers_menu = Qt.QMenu(tr("Keyboard modifiers"))
+			self._fictive_keyboard_modifiers_menu = Qt.QMenu(tr("Keyboard modifiers"), self)
 			self._fictive_keyboard_modifiers_menu.setIcon(IconsLoader.icon("configure-shortcuts"))
 			self._fictive_keyboard_modifiers_menu.setEnabled(False)
 			self.addMenu(self._fictive_keyboard_modifiers_menu)
 
 		self.addSeparator()
 
-		self._translate_methods_menu = RadioButtonsMenu.RadioButtonsMenu(tr("Translate methods"))
+		self._translate_methods_menu = RadioButtonsMenu.RadioButtonsMenu(tr("Translate methods"), self)
 		self._translate_methods_menu.setIcon(IconsLoader.icon("configure"))
 		self.addMenu(self._translate_methods_menu)
 

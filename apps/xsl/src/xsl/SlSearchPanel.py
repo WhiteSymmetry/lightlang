@@ -21,8 +21,6 @@
 
 
 import Qt
-import Config
-import Const
 import IconsLoader
 import LineEdit
 import SlWordSearch
@@ -43,7 +41,7 @@ class SlSearchPanel(Qt.QDockWidget) :
 
 		#####
 
-		self._main_widget = Qt.QWidget()
+		self._main_widget = Qt.QWidget(self)
 		self.setWidget(self._main_widget)
 
 		self._main_layout = Qt.QVBoxLayout()
@@ -60,30 +58,30 @@ class SlSearchPanel(Qt.QDockWidget) :
 
 		#####
 
-		self._delay_timer = Qt.QTimer()
+		self._delay_timer = Qt.QTimer(self)
 		self._delay_timer.setInterval(300)
 
-		self._internal_word_search = SlWordSearch.SlWordSearch()
-		self._external_word_search = SlWordSearch.SlWordSearch()
+		self._internal_word_search = SlWordSearch.SlWordSearch(self)
+		self._external_word_search = SlWordSearch.SlWordSearch(self)
 
 		#####
 
-		self._line_edit = LineEdit.LineEdit()
+		self._line_edit = LineEdit.LineEdit(self)
 		self._line_edit_layout.addWidget(self._line_edit)
 
-		self._u_find_button = Qt.QPushButton(tr("&Search"))
+		self._u_find_button = Qt.QPushButton(tr("&Search"), self)
 		self._u_find_button.setEnabled(False)
 		self._line_edit_layout.addWidget(self._u_find_button)
 
-		self._list_browser = SlListBrowser.SlListBrowser()
+		self._list_browser = SlListBrowser.SlListBrowser(self)
 		self._list_browser.setText(tr("Enter the word, please"))
 		self._list_browser_layout.addWidget(self._list_browser)
 
-		self._c_find_button = Qt.QPushButton(tr("&Expanded search"))
+		self._c_find_button = Qt.QPushButton(tr("&Expanded search"), self)
 		self._c_find_button.setEnabled(False)
 		self._bottom_search_buttons_layout.addWidget(self._c_find_button)
 
-		self._i_find_button = Qt.QPushButton(tr("S&imilar words"))
+		self._i_find_button = Qt.QPushButton(tr("S&imilar words"), self)
 		self._i_find_button.setEnabled(False)
 		self._bottom_search_buttons_layout.addWidget(self._i_find_button)
 

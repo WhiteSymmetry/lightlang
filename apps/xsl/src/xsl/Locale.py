@@ -21,7 +21,6 @@
 
 
 import Qt
-import Config
 import Const
 
 
@@ -43,7 +42,7 @@ def mainLang() :
 	lang.remove(lang.indexOf("_"), lang.length())
 
 	if lang.simplified().isEmpty() :
-		lang = "en"
+		lang = Const.DefaultLang
 
 	return Qt.QString(lang)
 
@@ -51,5 +50,6 @@ def mainLang() :
 ##### Private methdos #####
 def initLocale() :
 	global LocaleObject
+
 	LocaleObject = Qt.QLocale()
 

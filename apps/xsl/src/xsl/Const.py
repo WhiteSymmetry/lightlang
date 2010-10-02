@@ -44,3 +44,5 @@ AllDictsDir = Utils.joinPath(Config.DataRootDir, "sl/dicts")
 AllSoundsDir = Utils.joinPath(Config.DataRootDir, "sl/sounds")
 AudioPostfix = ".ogg"
 
+DefaultLang = "en"
+

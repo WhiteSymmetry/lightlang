@@ -24,8 +24,6 @@ import Xlib.display
 import Xlib.XK
 
 import Qt
-import Config
-import Const
 
 
 ##### Public constants #####
@@ -60,5 +58,6 @@ def checkModifier(modifier) :
 ##### Private methdos #####
 def initDisplay() :
 	global DisplayObject
+
 	DisplayObject = Xlib.display.Display()
 

@@ -21,7 +21,6 @@
 
 
 import Qt
-import Config
 import Const
 import IconsLoader
 
@@ -33,24 +32,23 @@ class InternetLinksMenu(Qt.QMenu) :
 
 		#####
 
-		self.addLink(IconsLoader.icon("mail-send"), tr("Developer e-mail"), "mailto:"+Const.DeveloperMail+"?subject="+Const.Organization)
-		self.addLink(IconsLoader.icon("mail-send"), tr("Offers e-mail"), "mailto:"+Const.OffersMail+"?subject="+Const.Organization)
-		self.addLink(IconsLoader.icon("mail-send"), tr("Bugtrack e-mail"), "mailto:"+Const.BugtrackMail+"?subject="+Const.Organization)
-
+		self.addMailLink(IconsLoader.icon("mail-send"), tr("Developer e-mail"), Const.DeveloperMail, Const.Organization)
+		self.addMailLink(IconsLoader.icon("mail-send"), tr("Offers e-mail"), Const.OffersMail, Const.Organization)
+		self.addMailLink(IconsLoader.icon("mail-send"), tr("Bugtrack e-mail"), Const.BugtrackMail, Const.Organization)
 		self.addSeparator()
-
 		self.addLink(IconsLoader.icon("applications-internet"), tr("Home page"), Const.HomePageAddress)
-
 		self.addSeparator()
 
-		self.addLink(IconsLoader.icon("mail-send"), tr("Register %1").arg(Const.Organization),
-			Qt.QString("mailto:"+Const.UserCountMail+"?subject="+Const.Organization+"&body=")+
-			tr("Count me, please :-)\nRegistration date/time: %1\nPackage version: %2")
-			.arg(Qt.QDateTime().currentDateTime().toString()).arg(Const.PackageVersion))
+		self.addMailLink(IconsLoader.icon("mail-send"), tr("Register %1").arg(Const.Organization), Const.UserCountMail,
+			"&body="+tr("Count me, please :-)\nRegistration date/time: %1\nPackage version: %2")
+				.arg(Qt.QDateTime().currentDateTime().toString()).arg(Const.PackageVersion))
 
 
 	### Private ###
 
 	def addLink(self, icon, title, link) :
 		self.addAction(icon, title, lambda : Qt.QDesktopServices.openUrl(Qt.QUrl(link)))
+
+	def addMailLink(self, icon, title, mailto, subject) :
+		self.addLink(icon, title, Qt.QString("mailto:%1?subject=%2").arg(mailto).arg(subject))
 

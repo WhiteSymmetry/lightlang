@@ -21,8 +21,6 @@
 
 
 import Qt
-import Config
-import Const
 
 
 ##### Private constants #####
@@ -54,12 +52,12 @@ class PopupWindow(Qt.QFrame) :
 
 		####
 
-		self._resize_timer = Qt.QTimer()
+		self._resize_timer = Qt.QTimer(self)
 		self._resize_timer.setInterval(10)
 
 		self._resize_direction = ResizeDirectionNone
 
-		self._move_timer = Qt.QTimer()
+		self._move_timer = Qt.QTimer(self)
 		self._move_timer.setInterval(10)
 
 		#####

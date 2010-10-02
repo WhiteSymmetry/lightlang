@@ -21,7 +21,6 @@
 
 
 import Qt
-import Config
 import Const
 import Settings
 import IconsLoader
@@ -54,7 +53,7 @@ class MainWindow(Qt.QMainWindow) :
 
 		#####
 
-		self._main_widget = Qt.QWidget()
+		self._main_widget = Qt.QWidget(self)
 		self.setCentralWidget(self._main_widget)
 
 		self._main_layout = Qt.QVBoxLayout()
@@ -71,24 +70,24 @@ class MainWindow(Qt.QMainWindow) :
 
 		#####
 
-		self._tabbed_translate_browser = TabbedTranslateBrowser.TabbedTranslateBrowser()
+		self._tabbed_translate_browser = TabbedTranslateBrowser.TabbedTranslateBrowser(self)
 		self._main_layout.addWidget(self._tabbed_translate_browser)
 
-		self._status_bar = StatusBar.StatusBar()
+		self._status_bar = StatusBar.StatusBar(self)
 		self.setStatusBar(self._status_bar)
 
-		self._translate_window = TranslateWindow.TranslateWindow()
+		self._translate_window = TranslateWindow.TranslateWindow(self)
 
-		self._dicts_manager_window = DictsManagerWindow.DictsManagerWindow()
+		self._dicts_manager_window = DictsManagerWindow.DictsManagerWindow(self)
 
-		self._help_browser_window = HelpBrowserWindow.HelpBrowserWindow()
+		self._help_browser_window = HelpBrowserWindow.HelpBrowserWindow(self)
 
-		self._about_window = AboutWindow.AboutWindow()
+		self._about_window = AboutWindow.AboutWindow(self)
 
 
 		##### Creating menues #####
 
-		self._main_menu_bar = Qt.QMenuBar()
+		self._main_menu_bar = Qt.QMenuBar(self)
 		self.setMenuBar(self._main_menu_bar)
 
 		### Pages menu
@@ -131,7 +130,7 @@ class MainWindow(Qt.QMainWindow) :
 
 		### Spy menu
 
-		self._spy_menu = SpyMenu.SpyMenu(tr("Sp&y"))
+		self._spy_menu = SpyMenu.SpyMenu(tr("Sp&y"), self)
 		self._main_menu_bar.addMenu(self._spy_menu)
 
 		### Tools menu
@@ -140,10 +139,10 @@ class MainWindow(Qt.QMainWindow) :
 		self._tools_menu.addAction(IconsLoader.icon("configure"), tr("Dicts management"),
 			self._dicts_manager_window.show, Qt.QKeySequence("Ctrl+D"))
 		self._tools_menu.addSeparator()
-		self._translate_sites_menu = TranslateSitesMenu.TranslateSitesMenu(tr("Web translate"))
+		self._translate_sites_menu = TranslateSitesMenu.TranslateSitesMenu(tr("Web translate"), self)
 		self._translate_sites_menu.setIcon(IconsLoader.icon("applications-internet"))
 		self._tools_menu.addMenu(self._translate_sites_menu)
-		self._ifa_menu = IfaMenu.IfaMenu(tr("Applications"))
+		self._ifa_menu = IfaMenu.IfaMenu(tr("Applications"), self)
 		self._ifa_menu.setIcon(IconsLoader.icon("fork"))
 		self._tools_menu.addMenu(self._ifa_menu)
 
@@ -153,7 +152,7 @@ class MainWindow(Qt.QMainWindow) :
 		self._help_menu.addAction(IconsLoader.icon("help-contents"), tr("%1 manual").arg(Const.Organization),
 			self._help_browser_window.show, Qt.QKeySequence("F1"))
 		self._help_menu.addSeparator()
-		self._internet_links_menu = InternetLinksMenu.InternetLinksMenu(tr("Internet links"))
+		self._internet_links_menu = InternetLinksMenu.InternetLinksMenu(tr("Internet links"), self)
 		self._internet_links_menu.setIcon(IconsLoader.icon("applications-internet"))
 		self._help_menu.addMenu(self._internet_links_menu)
 		self._help_menu.addSeparator()
@@ -163,13 +162,13 @@ class MainWindow(Qt.QMainWindow) :
 
 		##### Creating panels #####
 
-		self._sl_search_panel = SlSearchPanel.SlSearchPanel()
+		self._sl_search_panel = SlSearchPanel.SlSearchPanel(self)
 		self.addPanel(self._sl_search_panel)
 
-		self._history_panel = HistoryPanel.HistoryPanel()
+		self._history_panel = HistoryPanel.HistoryPanel(self)
 		self.addPanel(self._history_panel)
 
-		self._google_translate_panel = GoogleTranslatePanel.GoogleTranslatePanel()
+		self._google_translate_panel = GoogleTranslatePanel.GoogleTranslatePanel(self)
 		self.addPanel(self._google_translate_panel)
 
 
@@ -219,7 +218,7 @@ class MainWindow(Qt.QMainWindow) :
 	def startSpy(self) :
 		self._spy_menu.startSpy()
 
-        def stopSpy(self) :
+	def stopSpy(self) :
 		self._spy_menu.stopSpy()
 
 	###
@@ -319,7 +318,7 @@ class MainWindow(Qt.QMainWindow) :
 		add_tabbed_translate_browser_tab = ( lambda : self.addTabbedTranslateBrowserTab() )
 		status_bar_start_wait_movie = ( lambda : self._status_bar.startWaitMovie() )
 		status_bar_stop_wait_movie = ( lambda : self._status_bar.stopWaitMovie() )
-		status_bar_show_status_message = ( lambda str : self._status_bar.showStatusMessage(str) )
+		status_bar_show_status_message = ( lambda message : self._status_bar.showStatusMessage(message) )
 		set_translate_window_caption = ( lambda word : self.setTranslateWindowCaption(word) )
 		set_translate_window_text = ( lambda text : self.setTranslateWindowText(text) )
 		clear_translate_window = ( lambda : self.clearTranslateWindow() )
@@ -348,11 +347,13 @@ class MainWindow(Qt.QMainWindow) :
 	def registrateStream(self, source_object_index) :
 		self._tabbed_translate_browser.setShredLock(True)
 		tabbed_translate_browser_index = self._tabbed_translate_browser.currentIndex()
+
 		for source_objects_list_item in self._source_objects_list :
 			if source_objects_list_item["index"] == tabbed_translate_browser_index :
 				self._tabbed_translate_browser.addTab()
 				tabbed_translate_browser_index = self._tabbed_translate_browser.currentIndex()
 				break
+
 		self._source_objects_list[source_object_index]["index"] = tabbed_translate_browser_index
 
 	def releaseStream(self, source_object_index) :
@@ -364,6 +365,8 @@ class MainWindow(Qt.QMainWindow) :
 			if source_objects_list_item["index"] != -1 :
 				return True
 		return False
+
+	###
 
 	def clearTabbedTranslateBrowser(self, source_object_index) :
 		self._tabbed_translate_browser.clear(self._source_objects_list[source_object_index]["index"])
@@ -400,23 +403,23 @@ class MainWindow(Qt.QMainWindow) :
 			return
 
 		index = self._tabbed_translate_browser.currentIndex()
-		file_path = Qt.QFileDialog.getSaveFileName(None,
+		file_path = Qt.QFileDialog.getSaveFileName(self,
 			tr("Save page \"%1\"").arg(self._tabbed_translate_browser.caption(index)),
 			Qt.QDir.homePath(), "*.html *.htm")
 		if file_path.simplified().isEmpty() :
 			return
 
-		file = Qt.QFile(file_path)
-		if not file.open(Qt.QIODevice.WriteOnly|Qt.QIODevice.Text) :
-			Qt.QMessageBox.warning(None, Const.MyName,
+		page_file = Qt.QFile(file_path)
+		if not page_file.open(Qt.QIODevice.WriteOnly|Qt.QIODevice.Text) :
+			Qt.QMessageBox.warning(self, Const.MyName,
 				tr("This file cannot by open for saving"),
 				Qt.QMessageBox.Yes)
 			return
 
-		file_stream = Qt.QTextStream(file)
+		file_stream = Qt.QTextStream(page_file)
 		file_stream << self._tabbed_translate_browser.document(index).toHtml("utf-8")
 
-		file.close()
+		page_file.close()
 
 		self._status_bar.showStatusMessage(tr("Saved"))
 

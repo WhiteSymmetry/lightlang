@@ -21,6 +21,7 @@
 
 
 import Config
+import Utils
 
 
 ##### Public constants #####
@@ -39,7 +40,7 @@ HomePageAddress = "http://lightlang.org.ru"
 
 Sl = Config.BinsDir+"/sl"
 
-AllDictsDir = Config.DataRootDir+"/sl/dicts"
-AllSoundsDir = Config.DataRootDir+"/sl/sounds"
+AllDictsDir = Utils.joinPath(Config.DataRootDir, "sl/dicts")
+AllSoundsDir = Utils.joinPath(Config.DataRootDir, "sl/sounds")
 AudioPostfix = ".ogg"
 

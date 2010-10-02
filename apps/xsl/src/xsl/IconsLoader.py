@@ -22,37 +22,33 @@
 
 import Qt
 import Config
-import Const
+import Utils
 
 
 ##### Private constants #####
 ImagePostfix = ".png"
 GifPostfix = ".gif"
 
-IconsDir = Config.DataRootDir+"/xsl/icons/"
-PicturesDir = Config.DataRootDir+"/xsl/pictures/"
-GifsDir = Config.DataRootDir+"/xsl/pictures/"
+IconsDir = Utils.joinPath(Config.DataRootDir, "xsl/icons")
+PicturesDir = Utils.joinPath(Config.DataRootDir, "xsl/pictures")
+GifsDir = Utils.joinPath(Config.DataRootDir, "xsl/pictures")
 
 
 ##### Public methods #####
 def icon(name, fallback_name = None) :
-	try : # FIXME: Qt-4.6 specifics
-		fallback_icon = Qt.QIcon(IconsDir+name+ImagePostfix)
-		if fallback_name != None :
-			fallback_icon = Qt.QIcon.fromTheme(fallback_name, fallback_icon)
-
-		return Qt.QIcon.fromTheme(name, fallback_icon)
-	except :
-		return Qt.QIcon(IconsDir+name+ImagePostfix)
+	fallback_icon = Qt.QIcon(Utils.joinPath(IconsDir, name+ImagePostfix))
+	if fallback_name != None :
+		fallback_icon = Qt.QIcon.fromTheme(fallback_name, fallback_icon)
+	return Qt.QIcon.fromTheme(name, fallback_icon)
 
 def iconPath(name) :
-	return Qt.QString(IconsDir+name+ImagePostfix)
+	return Qt.QString(Utils.joinPath(IconsDir, name+ImagePostfix))
 
 ###
 
 def pixmap(name) :
-	return Qt.QPixmap(PicturesDir+name+ImagePostfix)
+	return Qt.QPixmap(Utils.joinPath(PicturesDir, name+ImagePostfix))
 
 def gifMovie(name) :
-	return Qt.QMovie(GifsDir+name+GifPostfix)
+	return Qt.QMovie(Utils.joinPath(GifsDir, name+GifPostfix))
 

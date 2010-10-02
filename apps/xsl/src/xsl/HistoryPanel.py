@@ -21,8 +21,6 @@
 
 
 import Qt
-import Config
-import Const
 import Settings
 import IconsLoader
 import LineEdit
@@ -45,7 +43,7 @@ class HistoryPanel(Qt.QDockWidget) :
 
 		#####
 
-		self._main_widget = Qt.QWidget()
+		self._main_widget = Qt.QWidget(self)
 		self.setWidget(self._main_widget)
 
 		self._main_layout = Qt.QVBoxLayout()
@@ -53,13 +51,13 @@ class HistoryPanel(Qt.QDockWidget) :
 
 		#####
 
-		self._line_edit = LineEdit.LineEdit()
+		self._line_edit = LineEdit.LineEdit(self)
 		self._main_layout.addWidget(self._line_edit)
 
-		self._history_browser = Qt.QListWidget()
+		self._history_browser = Qt.QListWidget(self)
 		self._main_layout.addWidget(self._history_browser)
 
-		self._clear_history_button = Qt.QPushButton(tr("Clear history"))
+		self._clear_history_button = Qt.QPushButton(tr("Clear history"), self)
 		self._clear_history_button.setEnabled(False)
 		self._main_layout.addWidget(self._clear_history_button)
 
@@ -133,15 +131,15 @@ class HistoryPanel(Qt.QDockWidget) :
 	### Private ###
 
 	def historyList(self) :
-		list = Qt.QStringList()
+		history_list = Qt.QStringList()
 		for count in xrange(self._history_browser.count()) :
-			list << self._history_browser.item(count).text()
-		return list
+			history_list << self._history_browser.item(count).text()
+		return history_list
 
-	def setHistoryList(self, list) :
-		self._history_browser.addItems(list)
+	def setHistoryList(self, history_list) :
+		self._history_browser.addItems(history_list)
 
-		if list.count() > 0 :
+		if history_list.count() > 0 :
 			self._clear_history_button.setEnabled(True)
 
 	def setFilter(self, word) :

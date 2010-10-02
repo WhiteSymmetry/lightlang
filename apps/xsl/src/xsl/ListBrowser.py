@@ -21,7 +21,8 @@
 
 
 import Qt
-import UserStyleCssCollection
+import ListBrowserInfoItem
+import ListBrowserCaptionItem
 
 
 ##### Public classes #####
@@ -37,27 +38,6 @@ class ListBrowser(Qt.QListWidget) :
 		self._caption_item_regexp = Qt.QRegExp("\\[\\[(.*)\\]\\]")
 		self._caption_item_regexp.setMinimal(True)
 
-		###
-
-		self._caption_item_font = Qt.QListWidgetItem().font()
-		self._caption_item_foreground_brush = Qt.QListWidgetItem().foreground()
-		self._caption_item_foreground_brush.setStyle(Qt.Qt.SolidPattern)
-		self._caption_item_background_brush = Qt.QListWidgetItem().background()
-		self._caption_item_background_brush.setStyle(Qt.Qt.SolidPattern)
-
-		self._caption_item_font.setBold(UserStyleCssCollection.option("dict_header_font", "bold_flag"))
-		self._caption_item_font.setItalic(UserStyleCssCollection.option("dict_header_font", "italic_flag"))
-		if UserStyleCssCollection.option("dict_header_font", "large_flag") :
-			if self._caption_item_font.pixelSize() > 0 :
-				self._caption_item_font.setPixelSize(self._caption_item_font.pixelSize() + 1)
-			elif self._caption_item_font.pointSize() > 0 :
-				self._caption_item_font.setPointSize(self._caption_item_font.pointSize() + 1)
-		if UserStyleCssCollection.option("dict_header_font", "color").isValid() :
-			self._caption_item_foreground_brush.setColor(UserStyleCssCollection.option("dict_header_font", "color"))
-
-		if UserStyleCssCollection.option("dict_header_background", "color").isValid() :
-			self._caption_item_background_brush.setColor(UserStyleCssCollection.option("dict_header_background", "color"))
-
 
 	### Public ###
 
@@ -66,24 +46,13 @@ class ListBrowser(Qt.QListWidget) :
 
 		for count in xrange(items_list.count()) :
 			if self._info_item_regexp.exactMatch(items_list[count]) :
-				info_item = Qt.QListWidgetItem(self._info_item_regexp.cap(1))
-				info_item.setFlags(Qt.Qt.NoItemFlags)
-				self.addItem(info_item)
+				self.addItem(ListBrowserInfoItem.ListBrowserInfoItem(self._info_item_regexp.cap(1), self))
 			elif self._caption_item_regexp.exactMatch(items_list[count]) :
-				caption_item = Qt.QListWidgetItem(self._caption_item_regexp.cap(1))
-				caption_item.setFlags(Qt.Qt.NoItemFlags)
-				caption_item.setFont(self._caption_item_font)
-				caption_item.setForeground(self._caption_item_foreground_brush)
-				caption_item.setBackground(self._caption_item_background_brush)
-				caption_item.setTextAlignment(Qt.Qt.AlignHCenter|Qt.Qt.AlignVCenter)
-				self.addItem(caption_item)
+				self.addItem(ListBrowserCaptionItem.ListBrowserCaptionItem(self._caption_item_regexp.cap(1), self))
 			else :
 				self.addItem(items_list[count])
 
 	def setText(self, text) :
 		self.clear()
-
-		item = Qt.QListWidgetItem(text)
-		item.setFlags(Qt.Qt.NoItemFlags)
-		self.addItem(item)
+		self.addItem(ListBrowserInfoItem.ListBrowserInfoItem(text, self))
 

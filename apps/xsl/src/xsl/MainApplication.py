@@ -23,7 +23,6 @@
 import sys
 
 import Qt
-import Config
 import Const
 
 

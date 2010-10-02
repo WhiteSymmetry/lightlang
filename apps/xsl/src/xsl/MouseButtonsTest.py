@@ -24,8 +24,6 @@ import Xlib.display
 import Xlib.X
 
 import Qt
-import Config
-import Const
 
 
 ##### Private constants #####
@@ -41,12 +39,12 @@ def checkMainButtons() :
 	if RootObject == None :
 		initRoot()
 
-	mask = RootObject.query_pointer()._data["mask"]
-	return bool(mask & MainButtons)
+	return bool(RootObject.query_pointer()._data["mask"] & MainButtons)
 
 
 ##### Private methods #####
 def initRoot() :
 	global RootObject
+
 	RootObject = Xlib.display.Display().screen().root
 

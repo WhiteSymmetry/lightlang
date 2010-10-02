@@ -25,8 +25,6 @@ import Xlib.XK
 import Xlib.X
 
 import Qt
-import Config
-import Const
 
 
 ##### Public constants #####

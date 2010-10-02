@@ -21,8 +21,6 @@
 
 
 import Qt
-import Config
-import Const
 import IconsLoader
 
 
@@ -41,7 +39,7 @@ class LineEdit(Qt.QLineEdit) :
 
 		#####
 
-		self._clear_button = Qt.QToolButton()
+		self._clear_button = Qt.QToolButton(self)
 		self._clear_button.setIcon(IconsLoader.icon("edit-clear-locationbar-rtl"))
 		self._clear_button.setIconSize(Qt.QSize(16, 16))
 		self._clear_button.setCursor(Qt.Qt.ArrowCursor)

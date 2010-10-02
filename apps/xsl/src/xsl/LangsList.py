@@ -21,13 +21,11 @@
 
 
 import Qt
-import Config
-import Const
 
 
 ##### Private objects #####
 LangsListObject = None
-LangsCodesDictObject = None
+LangCodesDictObject = None
 
 
 ##### Public methods #####
@@ -37,11 +35,13 @@ def langsList() :
 	return LangsListObject
 
 def langName(short_name) :
-	if LangsCodesDictObject == None :
+	short_name = str(short_name)
+
+	if LangCodesDictObject == None :
 		initLangsList()
 
-	if LangsCodesDictObject.has_key(str(short_name)) :
-		return Qt.QString(LangsCodesDictObject[str(short_name)])
+	if LangCodesDictObject.has_key(short_name) :
+		return Qt.QString(LangCodesDictObject[short_name])
 	else :
 		return Qt.QString(short_name)
 
@@ -49,9 +49,9 @@ def langName(short_name) :
 ##### Private methods #####
 def initLangsList() :
 	global LangsListObject
-	global LangsCodesDictObject
+	global LangCodesDictObject
 
-	LangsCodesDictObject = {
+	LangCodesDictObject = {
 		"af" : tr("Afrikaans"),
 		"sq" : tr("Albanian"),
 		"ar" : tr("Arabic"),
@@ -104,15 +104,14 @@ def initLangsList() :
 		"cy" : tr("Welsh"),
 		"yi" : tr("Yiddish")
 	}
-
 	LangsListObject = []
-	for langs_codes_dict_object_key in LangsCodesDictObject.keys() :
+
+	for lang_codes_dict_object_key in LangCodesDictObject.keys() :
 		LangsListObject.append({
-				"name" : Qt.QString(LangsCodesDictObject[langs_codes_dict_object_key]),
-				"code" : Qt.QString(langs_codes_dict_object_key)
+				"name" : Qt.QString(LangCodesDictObject[lang_codes_dict_object_key]),
+				"code" : Qt.QString(lang_codes_dict_object_key)
 			})
 	sortLangsList(LangsListObject)
-
 
 def sortLangsList(langs_list_object, left = None, right = None) :
 	if left == right == None :

@@ -21,8 +21,6 @@
 
 
 import Qt
-import Config
-import Const
 try : # Optional python-xlib requires
 	import MouseButtonsTest
 	import KeyboardModifiersTest
@@ -39,7 +37,7 @@ class MouseSelector(Qt.QObject) :
 		self._clipboard = Qt.QApplication.clipboard()
 		self._old_selection = Qt.QString()
 
-		self._timer = Qt.QTimer()
+		self._timer = Qt.QTimer(self)
 		self._timer.setInterval(300)
 
 		try :

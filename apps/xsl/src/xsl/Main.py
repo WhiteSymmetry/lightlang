@@ -25,6 +25,7 @@ import __builtin__
 import Qt
 import Config
 import Const
+import Utils
 import IconsLoader
 import Locale
 import StartupLock
@@ -36,7 +37,6 @@ import MainWindow
 
 ##### Private constants #####
 TrPostfix = ".qm"
-
 TrDir = Config.DataRootDir+"/xsl/tr/"
 
 
@@ -57,7 +57,7 @@ class Main(object) :
 
 		#####
 
-		__builtin__.__dict__["tr"] = ( lambda str : Qt.QApplication.translate("@default", str) )
+		__builtin__.__dict__["tr"] = ( lambda text : Qt.QApplication.translate("@default", text) )
 
 
 	### Public ###
@@ -66,13 +66,13 @@ class Main(object) :
 		self._app = MainApplication.MainApplication(self._argv)
 		self._app.setQuitOnLastWindowClosed(self._no_tray_icon)
 
-		tr_file_path = Qt.QString("%1/%2%3").arg(TrDir).arg(Locale.mainLang()).arg(TrPostfix)
+		tr_file_path = Utils.joinPath(TrDir, Locale.mainLang()+TrPostfix)
 		if Qt.QFile.exists(tr_file_path) :
 			self._translator = Qt.QTranslator()
 			self._translator.load(tr_file_path)
 			self._app.installTranslator(self._translator)
 
-		qt_tr_file_path = Qt.QString("%1/qt_%2%3").arg(Config.QtTrDir).arg(Locale.mainLang()).arg(TrPostfix)
+		qt_tr_file_path = Utils.joinPath(Config.QtTrDir, "qt_"+Locale.mainLang()+TrPostfix)
 		if Qt.QFile.exists(qt_tr_file_path) :
 			self._qt_translator = Qt.QTranslator()
 			self._qt_translator.load(qt_tr_file_path)

@@ -21,7 +21,6 @@
 
 
 import Qt
-import Config
 import Const
 import IconsLoader
 
@@ -50,12 +49,12 @@ class AboutWindow(Qt.QDialog) :
 
 		#####
 
-		self._icon_label = Qt.QLabel()
+		self._icon_label = Qt.QLabel(self)
 		self._icon_label.setAlignment(Qt.Qt.AlignTop)
 		self._icon_label.setPixmap(IconsLoader.icon("xsl_64").pixmap(Qt.QSize(64, 64)))
 		self._info_label_layout.addWidget(self._icon_label)
 
-		self._text_label = Qt.QLabel()
+		self._text_label = Qt.QLabel(self)
 		self._text_label.setTextFormat(Qt.Qt.RichText)
 		self._text_label.setOpenExternalLinks(True)
 		self._text_label.setText(tr("<h3>%1 - the graphical interface for SL</h3>"
@@ -82,7 +81,7 @@ class AboutWindow(Qt.QDialog) :
 				.arg(Const.MyName).arg(Const.Organization).arg(Const.DeveloperMail))
 		self._info_label_layout.addWidget(self._text_label)
 
-		self._ok_button = Qt.QPushButton(tr("&OK"))
+		self._ok_button = Qt.QPushButton(tr("&OK"), self)
 		self._ok_button.setDefault(True)
 		self._ok_button_layout.addWidget(self._ok_button)
 

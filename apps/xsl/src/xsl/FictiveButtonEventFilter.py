@@ -21,8 +21,6 @@
 
 
 import Qt
-import Config
-import Const
 
 
 ##### Public classes #####
@@ -31,10 +29,11 @@ class FictiveButtonEventFilter(Qt.QObject) :
 		Qt.QObject.__init__(self, parent)
 
 
-	### Public ###
+	### Private ###
+	### Handlers ###
 
 	def eventFilter(self, object, event) :
-		if event.type() in [Qt.QEvent.Paint, Qt.QEvent.KeyPress, Qt.QEvent.KeyRelease] :
+		if event.type() in (Qt.QEvent.Paint, Qt.QEvent.KeyPress, Qt.QEvent.KeyRelease) :
 			return False
 		else :
 			event.accept()

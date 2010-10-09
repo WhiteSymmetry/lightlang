@@ -21,8 +21,6 @@
 
 
 import Qt
-import Config
-import Const
 import FictiveButtonEventFilter
 
 
@@ -46,7 +44,7 @@ class EntitledMenu(Qt.QMenu) :
 		button_action.setText(text)
 
 		fictive_action = Qt.QWidgetAction(self)
-		fictive_button = Qt.QToolButton()
+		fictive_button = Qt.QToolButton(self)
 		fictive_button.installEventFilter(FictiveButtonEventFilter.FictiveButtonEventFilter(self))
 		fictive_button.setDefaultAction(button_action)
 		fictive_button.setDown(True)

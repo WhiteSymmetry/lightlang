@@ -174,8 +174,8 @@ class SpyMenu(Qt.QMenu) :
 	def spyStoppedSignal(self) :
 		self.emit(Qt.SIGNAL("spyStopped()"))
 
-	def statusChangedSignal(self, text) :
-		self.emit(Qt.SIGNAL("statusChanged(const QString &)"), text)
+	def statusChangedSignal(self, status) :
+		self.emit(Qt.SIGNAL("statusChanged(const QString &)"), status)
 
 	def translateRequestSignal(self, text) :
 		self.emit(Qt.SIGNAL(self._translate_methods_menu.data().toString()), text)

@@ -23,6 +23,7 @@
 import json
 
 import Qt
+import Const
 import Locale
 import LangsList
 
@@ -209,6 +210,6 @@ class GoogleTranslate(Qt.QObject) :
 	def textChangedSignal(self, text) :
 		self.emit(Qt.SIGNAL("textChanged(const QString &)"), text)
 
-	def statusChangedSignal(self, text) :
-		self.emit(Qt.SIGNAL("statusChanged(const QString &)"), text)
+	def statusChangedSignal(self, status) :
+		self.emit(Qt.SIGNAL("statusChanged(const QString &)"), status)
 

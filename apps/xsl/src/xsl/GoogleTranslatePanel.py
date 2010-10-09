@@ -21,8 +21,6 @@
 
 
 import Qt
-import Config
-import Const
 import Locale
 import Settings
 import IconsLoader
@@ -44,7 +42,7 @@ class GoogleTranslatePanel(Qt.QDockWidget) :
 
 		#####
 
-		self._main_widget = Qt.QWidget()
+		self._main_widget = Qt.QWidget(self)
 		self.setWidget(self._main_widget)
 
 		self._main_layout = Qt.QVBoxLayout()
@@ -61,11 +59,11 @@ class GoogleTranslatePanel(Qt.QDockWidget) :
 
 		#####
 
-		self._google_translate = GoogleTranslate.GoogleTranslate()
+		self._google_translate = GoogleTranslate.GoogleTranslate(self)
 
 		#####
 
-		self._sl_combobox = Qt.QComboBox()
+		self._sl_combobox = Qt.QComboBox(self)
 		self._sl_combobox.setSizeAdjustPolicy(Qt.QComboBox.AdjustToMinimumContentsLength)
 		self._sl_combobox.setMaxVisibleItems(15)
 		self._sl_combobox.addItem(IconsLoader.icon("help-hint"), tr("Guess"), Qt.QVariant(""))
@@ -75,14 +73,14 @@ class GoogleTranslatePanel(Qt.QDockWidget) :
 				langs_list_item["name"], Qt.QVariant(langs_list_item["code"]))
 		self._langs_layout.addWidget(self._sl_combobox)
 
-		self._invert_langs_button = Qt.QToolButton()
+		self._invert_langs_button = Qt.QToolButton(self)
 		self._invert_langs_button.setIcon(IconsLoader.icon("go-jump"))
 		self._invert_langs_button.setIconSize(Qt.QSize(16, 16))
 		self._invert_langs_button.setCursor(Qt.Qt.ArrowCursor)
 		self._invert_langs_button.setAutoRaise(True)
 		self._langs_layout.addWidget(self._invert_langs_button)
 
-		self._tl_combobox = Qt.QComboBox()
+		self._tl_combobox = Qt.QComboBox(self)
 		self._tl_combobox.setSizeAdjustPolicy(Qt.QComboBox.AdjustToMinimumContentsLength)
 		self._tl_combobox.setMaxVisibleItems(15)
 		self._tl_combobox.addItem(IconsLoader.icon("flags/"+Locale.mainLang()),
@@ -93,15 +91,15 @@ class GoogleTranslatePanel(Qt.QDockWidget) :
 				langs_list_item["name"], Qt.QVariant(langs_list_item["code"]))
 		self._langs_layout.addWidget(self._tl_combobox)
 
-		self._text_edit = TextEdit.TextEdit()
+		self._text_edit = TextEdit.TextEdit(self)
 		self._text_edit_layout.addWidget(self._text_edit)
 
-		self._translate_button = Qt.QPushButton(tr("T&ranslate"))
+		self._translate_button = Qt.QPushButton(tr("T&ranslate"), self)
 		self._translate_button.setEnabled(False)
 		self._translate_button.setToolTip(tr("Ctrl+Enter"))
 		self._control_buttons_layout.addWidget(self._translate_button)
 
-		self._abort_button = Qt.QToolButton()
+		self._abort_button = Qt.QToolButton(self)
 		self._abort_button.setIcon(IconsLoader.icon("dialog-cancel"))
 		self._abort_button.setIconSize(Qt.QSize(16, 16))
 		self._abort_button.setEnabled(False)
@@ -203,12 +201,8 @@ class GoogleTranslatePanel(Qt.QDockWidget) :
 		if text.simplified().isEmpty() :
 			return
 
-		sl_index = self._sl_combobox.currentIndex()
-		sl = self._sl_combobox.itemData(sl_index).toString()
-
-		tl_index = self._tl_combobox.currentIndex()
-		tl = self._tl_combobox.itemData(tl_index).toString()
-
+		sl = self._sl_combobox.itemData(self._sl_combobox.currentIndex()).toString()
+		tl = self._tl_combobox.itemData(self._tl_combobox.currentIndex()).toString()
 		self._google_translate.translate(sl, tl, text)
 
 	def abort(self) :
@@ -258,6 +252,6 @@ class GoogleTranslatePanel(Qt.QDockWidget) :
 	def clearRequestSignal(self) :
 		self.emit(Qt.SIGNAL("clearRequest()"))
 
-	def statusChangedSignal(self, str) :
-		self.emit(Qt.SIGNAL("statusChanged(const QString &)"), str)
+	def statusChangedSignal(self, status) :
+		self.emit(Qt.SIGNAL("statusChanged(const QString &)"), status)
 

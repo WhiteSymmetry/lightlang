@@ -23,8 +23,6 @@
 import json
 
 import Qt
-import Const
-import Config
 import Locale
 import LangsList
 
@@ -36,13 +34,13 @@ class GoogleTranslate(Qt.QObject) :
 
 		#####
 
-		self._http = Qt.QHttp()
+		self._http = Qt.QHttp(self)
 		self._http_request_id = -1
 		self._http_abort_flag = False
 
 		self._http_output = Qt.QByteArray()
 
-		self._timer = Qt.QTimer()
+		self._timer = Qt.QTimer(self)
 		self._timer.setInterval(30000)
 
 		self._sl = Qt.QString()
@@ -85,8 +83,8 @@ class GoogleTranslate(Qt.QObject) :
 			site = ( Qt.QString("http://translate.google.com/translate?js=y&prev=_t&hl=%1&ie=UTF-8&sl=%2&tl=%3&u=%4")
 				.arg(Locale.mainLang()).arg(sl).arg(tl).arg(text) )
 			Qt.QDesktopServices.openUrl(Qt.QUrl(site))
-			self.textChangedSignal(tr("<font class=\"word_header_font\">Link of site \"%1\" translation"
-				" was opened in your browser</font><hr><br><a href=\"%2\">%2</a>").arg(text).arg(site))
+			self.textChangedSignal(tr("<font class=\"word_header_font\">Link of site \"%1\" translation "
+				"was opened in your browser</font><hr><br><a href=\"%2\">%2</a>").arg(text).arg(site))
 			self.processFinishedSignal()
 			return
 
@@ -148,7 +146,7 @@ class GoogleTranslate(Qt.QObject) :
 			return
 
 		if error_flag and not self._http_abort_flag :
-			Qt.QMessageBox.warning(None, Const.MyName,
+			Qt.QMessageBox.warning(self, Const.MyName,
 				tr("HTTP error: %1\nPress \"Yes\" to ignore").arg(self._http.errorString()),
 				Qt.QMessageBox.Yes)
 

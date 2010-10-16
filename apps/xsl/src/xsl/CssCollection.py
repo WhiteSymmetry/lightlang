@@ -27,44 +27,33 @@ import Css
 ##### Private objects #####
 CollectionDictObject = {
 	"dict_header_font" : {
-		"bold_flag" : None,
-		"italic_flag" : None,
-		"large_flag" : None,
-		"color" : None
+		"bold_flag" : (None, False, bool),
+		"italic_flag" : (None, False, bool),
+		"large_flag" : (None, False, bool),
+		"color" : (None, Qt.QColor(), Qt.QColor)
 	},
 	"dict_header_background" : {
-		"color" : None
+		"color" : (None, Qt.QColor(), Qt.QColor)
 	},
 	"red_alert_background" : {
-		"color" : None
+		"color" : (None, Qt.QColor(), Qt.QColor)
 	},
 	"highlight_background" : {
-		"color" : None,
-		"opacity" : None
+		"color" : (None, Qt.QColor(), Qt.QColor),
+		"opacity" : (None, 255, int)
 	},
 	"transparent_frame_background" : {
-		"color" : None,
-		"opacity" : None
+		"color" : (None, Qt.QColor(), Qt.QColor),
+		"opacity" : (None, 255, int)
 	}
 }
 
 
 ##### Private methods #####
 def initCollection() :
-	setOption("dict_header_font", "bold_flag", False)
-	setOption("dict_header_font", "italic_flag", False)
-	setOption("dict_header_font", "large_flag", False)
-	setOption("dict_header_font", "color", Qt.QColor())
-
-	setOption("dict_header_background", "color", Qt.QColor())
-
-	setOption("red_alert_background", "color", Qt.QColor())
-
-	setOption("highlight_background", "color", Qt.QColor())
-	setOption("highlight_background", "opacity", 255)
-
-	setOption("transparent_frame_background", "color", Qt.QColor())
-	setOption("transparent_frame_background", "opacity", 255)
+	for section_name in CollectionDictObject.keys() :
+		for option_name in CollectionDictObject[section_name].keys() :
+			setValue(section_name, option_name)
 
 	###
 
@@ -88,54 +77,51 @@ def initCollection() :
 
 			if css_class_name == "dict_header_font" :
 				if css_option_name == "font-weight" :
-					setOption(str(css_class_name), "bold_flag", ( css_option_value == "bold" ))
+					setValue(str(css_class_name), "bold_flag", ( css_option_value == "bold" ))
 				elif css_option_name == "font-style" :
-					setOption(str(css_class_name), "italic_flag", ( css_option_value == "italic" ))
+					setValue(str(css_class_name), "italic_flag", ( css_option_value == "italic" ))
 				elif css_option_name == "font-size" :
-					setOption(str(css_class_name), "large_flag", ( css_option_value == "large" ))
+					setValue(str(css_class_name), "large_flag", ( css_option_value == "large" ))
 				elif css_option_name == "color" :
-					setOption(str(css_class_name), "color", Qt.QColor(css_option_value))
+					setValue(str(css_class_name), "color", css_option_value)
 
 			elif css_class_name == "dict_header_background" :
 				if css_option_name == "background-color" :
-					setOption(str(css_class_name), "color", Qt.QColor(css_option_value))
+					setValue(str(css_class_name), "color", css_option_value)
 
 			elif css_class_name == "red_alert_background" :
 				if css_option_name == "background-color" :
-					setOption(str(css_class_name), "color", Qt.QColor(css_option_value))
+					setValue(str(css_class_name), "color", css_option_value)
 
 			elif css_class_name == "highlight_background" :
 				if css_option_name == "background-color" :
 					if css_option_value == "from-palette" :
-						setOption(str(css_class_name), "color", Qt.QApplication.palette().color(Qt.QPalette.Highlight))
+						setValue(str(css_class_name), "color", Qt.QApplication.palette().color(Qt.QPalette.Highlight))
 					else :
-						setOption(str(css_class_name), "color", Qt.QColor(css_option_value))
+						setValue(str(css_class_name), "color", css_option_value)
 				if css_option_name == "opacity" :
-					setOption(str(css_class_name), "opacity", ( css_option_value.toInt()[0] if css_option_value.toInt()[1] else 255 ))
+					setValue(str(css_class_name), "opacity", ( css_option_value.toInt()[0] if css_option_value.toInt()[1] else 255 ))
 
 			elif css_class_name == "transparent_frame_background" :
 				if css_option_name == "background-color" :
 					if css_option_value == "from-palette" :
-						setOption(str(css_class_name), "color", Qt.QApplication.palette().color(Qt.QPalette.Window))
+						setValue(str(css_class_name), "color", Qt.QApplication.palette().color(Qt.QPalette.Window))
 					else :
-						setOption(str(css_class_name), "color", Qt.QColor(css_option_value))
+						setValue(str(css_class_name), "color", css_option_value)
 				if css_option_name == "opacity" :
-					setOption(str(css_class_name), "opacity", ( css_option_value.toInt()[0] if css_option_value.toInt()[1] else 255 ))
+					setValue(str(css_class_name), "opacity", ( css_option_value.toInt()[0] if css_option_value.toInt()[1] else 255 ))
 
 			css_option_pos = css_option_regexp.indexIn(css_class_body, css_option_pos + css_option_regexp.matchedLength())
 		css_class_pos = css_class_regexp.indexIn(css, css_class_pos + css_class_regexp.matchedLength())
 
-def setOption(section_name, option_name, value) :
-	if not CollectionDictObject.has_key(section_name) :
-		CollectionDictObject[section_name] = {}
-	CollectionDictObject[section_name][option_name] = value
+def setValue(section_name, option_name, value = None) :
+	(old_value, default_value, validator) = CollectionDictObject[section_name][option_name]
+	CollectionDictObject[section_name][option_name] = (validator( value if value != None else default_value ), default_value, validator)
 
 
 ##### Public methods #####
-def option(section_name, option_name) :
-	if not CollectionDictObject.has_key(section_name) or not CollectionDictObject[section_name].has_key(option_name) :
-		return None
-	elif CollectionDictObject[section_name][option_name] == None :
+def value(section_name, option_name) :
+	if CollectionDictObject[section_name][option_name][0] == None :
 		initCollection()
-	return CollectionDictObject[section_name][option_name]
+	return CollectionDictObject[section_name][option_name][0]
 

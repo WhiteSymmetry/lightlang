@@ -34,8 +34,8 @@ class TransparentFrame(Qt.QFrame) :
 
 		#####
 
-		self._color = CssCollection.option("transparent_frame_background", "color")
-		self._alpha = CssCollection.option("transparent_frame_background", "opacity")
+		self._color = CssCollection.value("transparent_frame_background", "color")
+		self._alpha = CssCollection.value("transparent_frame_background", "opacity")
 
 		#####
 

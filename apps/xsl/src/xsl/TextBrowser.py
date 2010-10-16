@@ -39,8 +39,8 @@ class TextBrowser(Qt.QTextBrowser) :
 
 		self._zoom_count = 0
 
-		self._highlight_color = CssCollection.option("highlight_background", "color")
-		self._highlight_color.setAlpha(CssCollection.option("highlight_background", "opacity"))
+		self._highlight_color = CssCollection.value("highlight_background", "color")
+		self._highlight_color.setAlpha(CssCollection.value("highlight_background", "opacity"))
 
 		# setSource() does not accept user-style.css
 

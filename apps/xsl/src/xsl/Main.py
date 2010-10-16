@@ -29,7 +29,7 @@ import Utils
 import IconsLoader
 import Locale
 import StartupLock
-import UserStyleCss
+import Css
 import MainApplication
 import TrayIcon
 import MainWindow
@@ -78,7 +78,7 @@ class Main(object) :
 			self._qt_translator.load(qt_tr_file_path)
 			self._app.installTranslator(self._qt_translator)
 
-		self._app.setStyleSheet(UserStyleCss.userStyleCss())
+		self._app.setStyleSheet(Css.css())
 
 		StartupLock.test()
 

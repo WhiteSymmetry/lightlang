@@ -21,7 +21,7 @@
 
 
 import Qt
-import UserStyleCssCollection
+import CssCollection
 
 
 ##### Private constants #####
@@ -40,8 +40,8 @@ class ChromeScrollBar(Qt.QScrollBar) :
 
 		self._highlight_positions_list = []
 
-		self._highlight_color = UserStyleCssCollection.option("highlight_background", "color")
-		self._highlight_color.setAlpha(UserStyleCssCollection.option("highlight_background", "opacity"))
+		self._highlight_color = CssCollection.option("highlight_background", "color")
+		self._highlight_color.setAlpha(CssCollection.option("highlight_background", "opacity"))
 
 		self._highlight_pen = Qt.QPen()
 		self._highlight_pen.setColor(self._highlight_color)

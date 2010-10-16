@@ -21,7 +21,7 @@
 
 
 import Qt
-import UserStyleCssCollection
+import CssCollection
 import IconsLoader
 import LineEdit
 
@@ -78,7 +78,7 @@ class TextSearchFrame(Qt.QFrame) :
 		self._line_edit_default_palette = Qt.QPalette(self._line_edit.palette())
 
 		self._line_edit_red_alert_palette = Qt.QPalette()
-		alert_color = UserStyleCssCollection.option("red_alert_background", "color")
+		alert_color = CssCollection.option("red_alert_background", "color")
 		if alert_color.isValid() :
 			self._line_edit_red_alert_palette.setColor(Qt.QPalette.Base, alert_color)
 

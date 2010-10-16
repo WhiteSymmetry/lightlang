@@ -23,7 +23,7 @@
 import Qt
 import Utils
 import Settings
-import UserStyleCss
+import Css
 import IconsLoader
 import PopupWindow
 import TextSearchFrame
@@ -104,7 +104,7 @@ class TranslateWindow(PopupWindow.PopupWindow) :
 	### Public ###
 
 	def setCaption(self, caption) :
-		self._caption_label.setText(Utils.styledHtml(UserStyleCss.userStyleCss(), caption))
+		self._caption_label.setText(Utils.styledHtml(Css.css(), caption))
 
 	def setText(self, text) :
 		self._translate_browser.setText(text)

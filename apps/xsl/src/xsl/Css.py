@@ -28,7 +28,7 @@ import Settings
 ##### Private constants #####
 UserStyleCssName = "user-style.css"
 
-DefaultUserStyleCss = Qt.QString("\n.dict_header_background {background-color: #DFEDFF;}\n"
+DefaultCss = Qt.QString("\n.dict_header_background {background-color: #DFEDFF;}\n"
 	".red_alert_background {background-color: #FF6E6E;}\n"
 	".highlight_background {background-color: from-palette; opacity: 70;}\n"
 	".transparent_frame_background {background-color: from-palette; opacity: 180;}\n"
@@ -47,28 +47,28 @@ DefaultUserStyleCss = Qt.QString("\n.dict_header_background {background-color: #
 
 
 ##### Private objects #####
-UserStyleCssObject = None
+CssObject = None
 
 
 ##### Public methods #####
-def userStyleCss() :
-	if UserStyleCssObject == None :
-		initUserStyleCss()
+def css() :
+	if CssObject == None :
+		initCss()
 
-	return Qt.QString(UserStyleCssObject)
+	return Qt.QString(CssObject)
 
 
 ##### Private methods #####
-def initUserStyleCss() :
-	global UserStyleCssObject
+def initCss() :
+	global CssObject
 
-	UserStyleCssObject = Qt.QString(DefaultUserStyleCss)
+	CssObject = Qt.QString(DefaultCss)
 
 	user_style_css_file = Qt.QFile(Utils.joinPath(Settings.settingsPath(), UserStyleCssName))
 	user_style_css_file_stream = Qt.QTextStream(user_style_css_file)
 
 	if user_style_css_file.open(Qt.QIODevice.ReadOnly) :
-		UserStyleCssObject.append("\n"+user_style_css_file_stream.readAll()+"\n")
-		UserStyleCssObject.remove(Qt.QRegExp("/\\*([^*]|\\*[^/]|\\n)*\\*/"))
+		CssObject.append("\n"+user_style_css_file_stream.readAll()+"\n")
+		CssObject.remove(Qt.QRegExp("/\\*([^*]|\\*[^/]|\\n)*\\*/"))
 		user_style_css_file.close()
 

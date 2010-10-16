@@ -21,7 +21,7 @@
 
 
 import Qt
-import UserStyleCssCollection
+import CssCollection
 
 
 ##### Public classes #####
@@ -34,8 +34,8 @@ class TransparentFrame(Qt.QFrame) :
 
 		#####
 
-		self._color = UserStyleCssCollection.option("transparent_frame_background", "color")
-		self._alpha = UserStyleCssCollection.option("transparent_frame_background", "opacity")
+		self._color = CssCollection.option("transparent_frame_background", "color")
+		self._alpha = CssCollection.option("transparent_frame_background", "opacity")
 
 		#####
 

@@ -21,7 +21,7 @@
 
 
 import Qt
-import UserStyleCssCollection
+import CssCollection
 
 
 ##### Public classes #####
@@ -35,9 +35,9 @@ class ListBrowserCaptionItem(Qt.QListWidgetItem) :
 		#####
 
 		font = self.font()
-		font.setBold(UserStyleCssCollection.option("dict_header_font", "bold_flag"))
-		font.setItalic(UserStyleCssCollection.option("dict_header_font", "italic_flag"))
-		if UserStyleCssCollection.option("dict_header_font", "large_flag") :
+		font.setBold(CssCollection.option("dict_header_font", "bold_flag"))
+		font.setItalic(CssCollection.option("dict_header_font", "italic_flag"))
+		if CssCollection.option("dict_header_font", "large_flag") :
 			if font.pixelSize() > 0 :
 				font.setPixelSize(font.pixelSize() + 1)
 			elif font.pointSize() > 0 :
@@ -46,13 +46,13 @@ class ListBrowserCaptionItem(Qt.QListWidgetItem) :
 
 		foreground_brush = self.foreground()
 		foreground_brush.setStyle(Qt.Qt.SolidPattern)
-		if UserStyleCssCollection.option("dict_header_font", "color").isValid() :
-			foreground_brush.setColor(UserStyleCssCollection.option("dict_header_font", "color"))
+		if CssCollection.option("dict_header_font", "color").isValid() :
+			foreground_brush.setColor(CssCollection.option("dict_header_font", "color"))
 		self.setForeground(foreground_brush)
 
 		background_brush = self.background()
 		background_brush.setStyle(Qt.Qt.SolidPattern)
-		if UserStyleCssCollection.option("dict_header_background", "color").isValid() :
-			background_brush.setColor(UserStyleCssCollection.option("dict_header_background", "color"))
+		if CssCollection.option("dict_header_background", "color").isValid() :
+			background_brush.setColor(CssCollection.option("dict_header_background", "color"))
 		self.setBackground(background_brush)
 

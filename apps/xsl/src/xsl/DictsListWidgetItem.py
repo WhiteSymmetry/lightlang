@@ -21,7 +21,7 @@
 
 
 import Qt
-import UserStyleCss
+import Css
 import IconsLoader
 import LangsList
 import HorizontalGrabWidget
@@ -107,10 +107,10 @@ class DictsListWidgetItem(Qt.QWidget) :
 			dict_caption.replace("_", " ")
 			dict_caption.replace(".", " ")
 			self._dict_caption_label.setText(Qt.QString("<html><head><style>%1</style></head><body><font class=\"text_label_font\">"
-				"%2</font></body></html>").arg(UserStyleCss.userStyleCss()).arg(dict_caption))
+				"%2</font></body></html>").arg(Css.css()).arg(dict_caption))
 
 			self._dict_direction_label.setText(Qt.QString("<html><head><style>%1</style></head><body><font class=\"text_label_font\">"
-				"%2</font></body></html>").arg(UserStyleCss.userStyleCss()).arg(dict_name_regexp.cap(2)))
+				"%2</font></body></html>").arg(Css.css()).arg(dict_name_regexp.cap(2)))
 
 			self._dict_details_layout.insertSpacing(0, 10)
 
@@ -118,7 +118,7 @@ class DictsListWidgetItem(Qt.QWidget) :
 				.arg(LangsList.langName(dict_name_regexp.cap(3))).arg(LangsList.langName(dict_name_regexp.cap(4))))
 		else :
 			self._dict_caption_label.setText(Qt.QString("<html><head><style>%1</style></head><body><font class=\"red_alert_background\">"
-				"%2</font></body></html>").arg(UserStyleCss.userStyleCss()).arg(dict_name))
+				"%2</font></body></html>").arg(Css.css()).arg(dict_name))
 
 		###
 

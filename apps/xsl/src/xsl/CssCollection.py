@@ -21,7 +21,7 @@
 
 
 import Qt
-import UserStyleCss
+import Css
 
 
 ##### Private objects #####
@@ -122,7 +122,7 @@ def initCollection() :
 
 	###
 
-	user_style_css = UserStyleCss.userStyleCss().remove(Qt.QRegExp("\\s"))
+	css = Css.css().remove(Qt.QRegExp("\\s"))
 
 	css_class_regexp = Qt.QRegExp("\\.([^(\\{|\\})]*)\\{([^(\\{|\\})]*)\\}")
 	css_class_regexp.setMinimal(True)
@@ -130,7 +130,7 @@ def initCollection() :
 	css_option_regexp = Qt.QRegExp("([^(\\{|\\})]*):([^(\\{|\\})]*);")
 	css_option_regexp.setMinimal(True)
 
-	css_class_pos = css_class_regexp.indexIn(user_style_css)
+	css_class_pos = css_class_regexp.indexIn(css)
 	while css_class_pos != -1 :
 		css_class_name = css_class_regexp.cap(1)
 		css_class_body = css_class_regexp.cap(2)
@@ -178,5 +178,5 @@ def initCollection() :
 
 			css_option_pos = css_option_regexp.indexIn(css_class_body, css_option_pos + css_option_regexp.matchedLength())
 
-		css_class_pos = css_class_regexp.indexIn(user_style_css, css_class_pos + css_class_regexp.matchedLength())
+		css_class_pos = css_class_regexp.indexIn(css, css_class_pos + css_class_regexp.matchedLength())
 

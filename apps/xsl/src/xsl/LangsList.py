@@ -28,24 +28,6 @@ LangsListObject = None
 LangCodesDictObject = None
 
 
-##### Public methods #####
-def langsList() :
-	if LangsListObject == None :
-		initLangsList()
-	return LangsListObject
-
-def langName(short_name) :
-	short_name = str(short_name)
-
-	if LangCodesDictObject == None :
-		initLangsList()
-
-	if LangCodesDictObject.has_key(short_name) :
-		return Qt.QString(LangCodesDictObject[short_name])
-	else :
-		return Qt.QString(short_name)
-
-
 ##### Private methods #####
 def initLangsList() :
 	global LangsListObject
@@ -130,4 +112,22 @@ def sortLangsList(langs_list_object, left = None, right = None) :
 
 	sortLangsList(langs_list_object, left, i - 2)
 	sortLangsList(langs_list_object, i, right)
+
+
+##### Public methods #####
+def langsList() :
+	if LangsListObject == None :
+		initLangsList()
+	return LangsListObject
+
+def langName(short_name) :
+	short_name = str(short_name)
+
+	if LangCodesDictObject == None :
+		initLangsList()
+
+	if LangCodesDictObject.has_key(short_name) :
+		return Qt.QString(LangCodesDictObject[short_name])
+	else :
+		return Qt.QString(short_name)
 

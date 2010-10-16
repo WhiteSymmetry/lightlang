@@ -28,6 +28,13 @@ import Const
 LocaleObject = None
 
 
+##### Private methdos #####
+def initLocale() :
+	global LocaleObject
+
+	LocaleObject = Qt.QLocale()
+
+
 ##### Public methods #####
 def locale() :
 	if LocaleObject == None :
@@ -45,11 +52,4 @@ def mainLang() :
 		lang = Const.DefaultLang
 
 	return Qt.QString(lang)
-
-
-##### Private methdos #####
-def initLocale() :
-	global LocaleObject
-
-	LocaleObject = Qt.QLocale()
 

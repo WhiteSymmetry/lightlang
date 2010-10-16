@@ -50,14 +50,6 @@ DefaultCss = Qt.QString("\n.dict_header_background {background-color: #DFEDFF;}\
 CssObject = None
 
 
-##### Public methods #####
-def css() :
-	if CssObject == None :
-		initCss()
-
-	return Qt.QString(CssObject)
-
-
 ##### Private methods #####
 def initCss() :
 	global CssObject
@@ -71,4 +63,12 @@ def initCss() :
 		CssObject.append("\n"+user_style_css_file_stream.readAll()+"\n")
 		CssObject.remove(Qt.QRegExp("/\\*([^*]|\\*[^/]|\\n)*\\*/"))
 		user_style_css_file.close()
+
+
+##### Public methods #####
+def css() :
+	if CssObject == None :
+		initCss()
+
+	return Qt.QString(CssObject)
 

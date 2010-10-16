@@ -42,6 +42,13 @@ NoModifier = -1
 DisplayObject = None
 
 
+##### Private methdos #####
+def initDisplay() :
+	global DisplayObject
+
+	DisplayObject = Xlib.display.Display()
+
+
 ##### Public methods #####
 def checkModifier(modifier) :
 	if DisplayObject == None :
@@ -53,11 +60,4 @@ def checkModifier(modifier) :
 	keymap = DisplayObject.query_keymap()
 	keycode = DisplayObject.keysym_to_keycode(modifier)
 	return bool(1 & (keymap[keycode / 8] >> (keycode & 7)))
-
-
-##### Private methdos #####
-def initDisplay() :
-	global DisplayObject
-
-	DisplayObject = Xlib.display.Display()
 

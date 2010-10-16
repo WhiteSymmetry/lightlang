@@ -49,61 +49,7 @@ CollectionDictObject = {
 }
 
 
-##### Public methods #####
-def dictHeaderFontBoldFlag() :
-	return option("dict_header_font", "bold_flag")
-
-def dictHeaderFontItalicFlag() :
-	return option("dict_header_font", "italic_flag")
-
-def dictHeaderFontLargeFlag() :
-	return option("dict_header_font", "large_flag")
-
-def dictHeaderFontColor() :
-	return Qt.QColor(option("dict_header_font", "color"))
-
-###
-
-def dictHeaderBackgroundColor() :
-	return Qt.QColor(option("dict_header_background", "color"))
-
-###
-
-def redAlertBackgroundColor() :
-	return Qt.QColor(option("red_alert_background", "color"))
-
-###
-
-def highlightBackgroundColor() :
-	return Qt.QColor(option("highlight_background", "color"))
-
-def highlightBackgroundOpacity() :
-	return option("highlight_background", "opacity")
-
-###
-
-def transparentFrameBackgroundColor() :
-	return Qt.QColor(option("transparent_frame_background", "color"))
-
-def transparentFrameBackgroundOpacity() :
-	return option("transparent_frame_background", "opacity")
-
-
 ##### Private methods #####
-def setOption(section_name, option_name, value) :
-	if not CollectionDictObject.has_key(section_name) :
-		CollectionDictObject[section_name] = {}
-	CollectionDictObject[section_name][option_name] = value
-
-def option(section_name, option_name) :
-	if not CollectionDictObject.has_key(section_name) or not CollectionDictObject[section_name].has_key(option_name) :
-		return None
-	elif CollectionDictObject[section_name][option_name] == None :
-		initCollection()
-	return CollectionDictObject[section_name][option_name]
-
-###
-
 def initCollection() :
 	setOption("dict_header_font", "bold_flag", False)
 	setOption("dict_header_font", "italic_flag", False)
@@ -177,6 +123,19 @@ def initCollection() :
 					setOption(str(css_class_name), "opacity", ( css_option_value.toInt()[0] if css_option_value.toInt()[1] else 255 ))
 
 			css_option_pos = css_option_regexp.indexIn(css_class_body, css_option_pos + css_option_regexp.matchedLength())
-
 		css_class_pos = css_class_regexp.indexIn(css, css_class_pos + css_class_regexp.matchedLength())
+
+def setOption(section_name, option_name, value) :
+	if not CollectionDictObject.has_key(section_name) :
+		CollectionDictObject[section_name] = {}
+	CollectionDictObject[section_name][option_name] = value
+
+
+##### Public methods #####
+def option(section_name, option_name) :
+	if not CollectionDictObject.has_key(section_name) or not CollectionDictObject[section_name].has_key(option_name) :
+		return None
+	elif CollectionDictObject[section_name][option_name] == None :
+		initCollection()
+	return CollectionDictObject[section_name][option_name]
 

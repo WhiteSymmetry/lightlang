@@ -34,17 +34,17 @@ MainButtons = Xlib.X.Button1Mask|Xlib.X.Button2Mask
 RootObject = None
 
 
+##### Private methods #####
+def initRoot() :
+	global RootObject
+
+	RootObject = Xlib.display.Display().screen().root
+
+
 ##### Public methods #####
 def checkMainButtons() :
 	if RootObject == None :
 		initRoot()
 
 	return bool(RootObject.query_pointer()._data["mask"] & MainButtons)
-
-
-##### Private methods #####
-def initRoot() :
-	global RootObject
-
-	RootObject = Xlib.display.Display().screen().root
 

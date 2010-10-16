@@ -33,6 +33,18 @@ SettingsPostfix = ".conf"
 SettingsObject = None
 
 
+##### Private methods #####
+def initSettings() :
+	global SettingsObject
+
+	my_name = Qt.QString(Const.MyName).toLower()
+
+	if not Qt.QDir(Utils.joinPath(Qt.QDir.homePath(), "."+my_name)).exists() :
+		Qt.QDir.home().mkdir("."+my_name)
+
+	SettingsObject = Qt.QSettings(Utils.joinPath(Qt.QDir.homePath(), "."+my_name, my_name+SettingsPostfix), Qt.QSettings.IniFormat)
+
+
 ##### Public methods #####
 def settings() :
 	if SettingsObject == None :
@@ -44,16 +56,4 @@ def settingsPath() :
 		initSettings()
 
 	return Utils.pathName(SettingsObject.fileName())
-
-
-##### Private methods #####
-def initSettings() :
-	global SettingsObject
-
-	my_name = Qt.QString(Const.MyName).toLower()
-
-	if not Qt.QDir(Utils.joinPath(Qt.QDir.homePath(), "."+my_name)).exists() :
-		Qt.QDir.home().mkdir("."+my_name)
-
-	SettingsObject = Qt.QSettings(Utils.joinPath(Qt.QDir.homePath(), "."+my_name, my_name+SettingsPostfix), Qt.QSettings.IniFormat)
 

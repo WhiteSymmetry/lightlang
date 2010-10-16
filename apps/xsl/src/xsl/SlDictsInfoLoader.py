@@ -51,28 +51,6 @@ AllTagsList = [
 InfoDictObject = {}
 
 
-##### Public methods #####
-def info(tag, dict_name) :
-	tag = str(tag)
-	dict_name = str(dict_name)
-
-	if not InfoDictObject.has_key(dict_name) :
-		loadInfo(dict_name)
-
-	if InfoDictObject.has_key(dict_name) and InfoDictObject[dict_name].has_key(tag) :
-		return Qt.QString(InfoDictObject[dict_name][tag])
-	return tr("Unavailable")
-
-def clearInfo(dict_name = None) :
-	global InfoDictObject
-
-	if dict_name == None :
-		InfoDictObject = {}
-	else :
-		if InfoDictObject.has_key(str(dict_name)) :
-			InfoDictObject.pop(str(dict_name))
-
-
 ##### Private methods #####
 def loadInfo(dict_name) :
 	dict_name = str(dict_name)
@@ -133,4 +111,26 @@ def loadInfo(dict_name) :
 	for key_item in InfoDictObject[dict_name].keys() :
 		if InfoDictObject[dict_name][key_item].isEmpty() :
 			InfoDictObject[dict_name][key_item] = tr("Unavailable")
+
+
+##### Public methods #####
+def info(tag, dict_name) :
+	tag = str(tag)
+	dict_name = str(dict_name)
+
+	if not InfoDictObject.has_key(dict_name) :
+		loadInfo(dict_name)
+
+	if InfoDictObject.has_key(dict_name) and InfoDictObject[dict_name].has_key(tag) :
+		return Qt.QString(InfoDictObject[dict_name][tag])
+	return tr("Unavailable")
+
+def clearInfo(dict_name = None) :
+	global InfoDictObject
+
+	if dict_name == None :
+		InfoDictObject = {}
+	else :
+		if InfoDictObject.has_key(str(dict_name)) :
+			InfoDictObject.pop(str(dict_name))
 

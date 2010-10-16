@@ -21,6 +21,7 @@
 
 
 import Qt
+import Utils
 import Css
 import IconsLoader
 import LangsList
@@ -103,22 +104,18 @@ class DictsListWidgetItem(Qt.QWidget) :
 
 		dict_name_regexp = Qt.QRegExp("([^\\.]+)\\.((..)-(..))")
 		if dict_name_regexp.exactMatch(dict_name) :
-			dict_caption = dict_name_regexp.cap(1)
-			dict_caption.replace("_", " ")
-			dict_caption.replace(".", " ")
-			self._dict_caption_label.setText(Qt.QString("<html><head><style>%1</style></head><body><font class=\"text_label_font\">"
-				"%2</font></body></html>").arg(Css.css()).arg(dict_caption))
-
-			self._dict_direction_label.setText(Qt.QString("<html><head><style>%1</style></head><body><font class=\"text_label_font\">"
-				"%2</font></body></html>").arg(Css.css()).arg(dict_name_regexp.cap(2)))
+			self._dict_caption_label.setText(Utils.styledHtml(Css.css(), Qt.QString("<font class=\"text_label_font\">%1</font>")
+				.arg(dict_name_regexp.cap(1).replace(Qt.QRegExp("[\\._]"), " "))))
+			self._dict_direction_label.setText(Utils.styledHtml(Css.css(),
+				Qt.QString("<font class=\"text_label_font\">%1</font>").arg(dict_name_regexp.cap(2))))
 
 			self._dict_details_layout.insertSpacing(0, 10)
 
 			self._dict_full_direction_label.setText(Qt.QString("%1 &#187; %2")
 				.arg(LangsList.langName(dict_name_regexp.cap(3))).arg(LangsList.langName(dict_name_regexp.cap(4))))
 		else :
-			self._dict_caption_label.setText(Qt.QString("<html><head><style>%1</style></head><body><font class=\"red_alert_background\">"
-				"%2</font></body></html>").arg(Css.css()).arg(dict_name))
+			self._dict_caption_label.setText(Utils.styledHtml(Css.css(),
+				Qt.QString("<font class=\"text_label_font\">%1</font>").arg(dict_name)))
 
 		###
 

@@ -52,41 +52,6 @@ InfoDictObject = {}
 
 
 ##### Public methods #####
-def caption(dict_name) :
-	return info(CaptionTag, dict_name)
-
-def direction(dict_name) :
-	return info(DirectionTag, dict_name)
-
-def group(dict_name) :
-	return info(GroupTag, dict_name)
-
-def version(dict_name) :
-	return info(VersionTag, dict_name)
-
-def wordCount(dict_name) :
-	return info(WordCountTag, dict_name)
-
-def fileSize(dict_name) :
-	return info(FileSizeTag, dict_name)
-
-def author(dict_name) :
-	return info(AuthorTag, dict_name)
-
-def url(dict_name) :
-	return info(UrlTag, dict_name)
-
-def license(dict_name) :
-	return info(LicenseTag, dict_name)
-
-def copyright(dict_name) :
-	return info(CopyrightTag, dict_name)
-
-def miscInfo(dict_name) :
-	return info(MiscTag, dict_name)
-
-###
-
 def info(tag, dict_name) :
 	tag = str(tag)
 	dict_name = str(dict_name)

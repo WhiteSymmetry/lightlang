@@ -21,8 +21,6 @@
 
 
 import Qt
-import Config
-import Const
 import IconsLoader
 import TextBrowser
 import SlDictsInfoLoader
@@ -64,28 +62,28 @@ class DictInfoWindow(Qt.QDialog) :
 
 		#####
 
-		self._dict_info_browser = TextBrowser.TextBrowser()
+		self._dict_info_browser = TextBrowser.TextBrowser(self)
 		self._dict_info_browser_layout.addWidget(self._dict_info_browser)
 
 		self._wait_picture_movie = IconsLoader.gifMovie("circular")
 		icon_width = icon_height = self.style().pixelMetric(Qt.QStyle.PM_SmallIconSize)
 		self._wait_picture_movie.setScaledSize(Qt.QSize(icon_width, icon_height))
 		self._wait_picture_movie.jumpToFrame(0)
-		self._wait_picture_movie_label = Qt.QLabel()
+		self._wait_picture_movie_label = Qt.QLabel(self)
 		self._wait_picture_movie_label.setMovie(self._wait_picture_movie)
 		self._wait_picture_movie_label.hide()
 		self._control_buttons_layout.addWidget(self._wait_picture_movie_label)
 
-		self._wait_message_label = Qt.QLabel(tr("Please wait..."))
+		self._wait_message_label = Qt.QLabel(tr("Please wait..."), self)
 		self._wait_message_label.hide()
 		self._control_buttons_layout.addWidget(self._wait_message_label)
 
 		self._control_buttons_layout.addStretch()
 
-		self._update_info_button = Qt.QPushButton(IconsLoader.icon("view-refresh"), tr("&Update"))
+		self._update_info_button = Qt.QPushButton(IconsLoader.icon("view-refresh"), tr("&Update"), self)
 		self._control_buttons_layout.addWidget(self._update_info_button)
 
-		self._ok_button = Qt.QPushButton(IconsLoader.icon("dialog-ok-apply"), tr("&OK"))
+		self._ok_button = Qt.QPushButton(IconsLoader.icon("dialog-ok-apply"), tr("&OK"), self)
 		self._ok_button.setDefault(True)
 		self._control_buttons_layout.addWidget(self._ok_button)
 
@@ -136,17 +134,17 @@ class DictInfoWindow(Qt.QDialog) :
 		###
 
 		dict_info = Qt.QString()
-		dict_info.append(tr("<font class=\"text_label_font\">Caption</font>: %2<hr>").arg(SlDictsInfoLoader.caption(self._dict_name)))
-		dict_info.append(tr("<font class=\"text_label_font\">Translate direction</font>: %2<hr>").arg(SlDictsInfoLoader.direction(self._dict_name)))
-		dict_info.append(tr("<font class=\"text_label_font\">Dictionary group</font>: %2<hr>").arg(SlDictsInfoLoader.group(self._dict_name)))
-		dict_info.append(tr("<font class=\"text_label_font\">Dictionary version</font>: %2<hr>").arg(SlDictsInfoLoader.version(self._dict_name)))
-		dict_info.append(tr("<font class=\"text_label_font\">Count of words</font>: %2<hr>").arg(SlDictsInfoLoader.wordCount(self._dict_name)))
-		dict_info.append(tr("<font class=\"text_label_font\">File size (KB)</font>: %2<hr>").arg(SlDictsInfoLoader.fileSize(self._dict_name)))
-		dict_info.append(tr("<font class=\"text_label_font\">Author</font>: %2<hr>").arg(SlDictsInfoLoader.author(self._dict_name)))
-		dict_info.append(tr("<font class=\"text_label_font\">Homepage</font>: %2<hr>").arg(SlDictsInfoLoader.url(self._dict_name)))
-		dict_info.append(tr("<font class=\"text_label_font\">License</font>: %2<hr>").arg(SlDictsInfoLoader.license(self._dict_name)))
-		dict_info.append(tr("<font class=\"text_label_font\">Copyright</font>: %2<hr>").arg(SlDictsInfoLoader.copyright(self._dict_name)))
-		dict_info.append(tr("<font class=\"text_label_font\">Description</font>: %2").arg(SlDictsInfoLoader.miscInfo(self._dict_name)))
+		dict_info.append(self.tagInfo("Caption", SlDictsInfoLoader.CaptionTag)).append("<hr>")
+		dict_info.append(self.tagInfo("Translate direction", SlDictsInfoLoader.DirectionTag)).append("<hr>")
+		dict_info.append(self.tagInfo("Dictionary group", SlDictsInfoLoader.GroupTag)).append("<hr>")
+		dict_info.append(self.tagInfo("Dictionary version", SlDictsInfoLoader.VersionTag)).append("<hr>")
+		dict_info.append(self.tagInfo("Count of words", SlDictsInfoLoader.WordCountTag)).append("<hr>")
+		dict_info.append(self.tagInfo("File size (KB)", SlDictsInfoLoader.FileSizeTag)).append("<hr>")
+		dict_info.append(self.tagInfo("Author", SlDictsInfoLoader.AuthorTag)).append("<hr>")
+		dict_info.append(self.tagInfo("Homepage", SlDictsInfoLoader.UrlTag)).append("<hr>")
+		dict_info.append(self.tagInfo("License", SlDictsInfoLoader.LicenseTag)).append("<hr>")
+		dict_info.append(self.tagInfo("Copyright", SlDictsInfoLoader.CopyrightTag)).append("<hr>")
+		dict_info.append(self.tagInfo("Description", SlDictsInfoLoader.MiscTag))
 		self._dict_info_browser.setText(dict_info)
 
 		###
@@ -162,4 +160,9 @@ class DictInfoWindow(Qt.QDialog) :
 		###
 
 		self._is_loaded_flag = True
+
+	###
+
+	def tagInfo(self, caption, tag) :
+		return tr("<font class=\"text_label_font\">%1</font>: %2").arg(caption, SlDictsInfoLoader.info(tag, self._dict_name))
 

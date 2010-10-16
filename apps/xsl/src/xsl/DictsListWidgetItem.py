@@ -21,8 +21,6 @@
 
 
 import Qt
-import Config
-import Const
 import UserStyleCss
 import IconsLoader
 import LangsList
@@ -49,7 +47,7 @@ class DictsListWidgetItem(Qt.QWidget) :
 		self._main_layout.setSpacing(0)
 		self.setLayout(self._main_layout)
 
-		self._horizontal_grab_widget = HorizontalGrabWidget.HorizontalGrabWidget()
+		self._horizontal_grab_widget = HorizontalGrabWidget.HorizontalGrabWidget(self)
 		self._main_layout.addWidget(self._horizontal_grab_widget)
 
 		self._enable_dict_checkbox_layout = Qt.QVBoxLayout()
@@ -57,7 +55,7 @@ class DictsListWidgetItem(Qt.QWidget) :
 		self._enable_dict_checkbox_layout.setSpacing(3)
 		self._main_layout.addLayout(self._enable_dict_checkbox_layout)
 
-		self._vertical_frame1 = Qt.QFrame()
+		self._vertical_frame1 = Qt.QFrame(self)
 		self._vertical_frame1.setFrameStyle(Qt.QFrame.VLine|Qt.QFrame.Sunken)
 		self._main_layout.addWidget(self._vertical_frame1)
 
@@ -80,26 +78,26 @@ class DictsListWidgetItem(Qt.QWidget) :
 
 		#####
 
-		self._enable_dict_checkbox = Qt.QCheckBox()
+		self._enable_dict_checkbox = Qt.QCheckBox(self)
 		self._enable_dict_checkbox.setChecked(dict_state_flag)
 		self._enable_dict_checkbox.setToolTip(tr("Enter"))
 		self._enable_dict_checkbox_layout.addWidget(self._enable_dict_checkbox)
 
 		###
 
-		self._dict_caption_label = Qt.QLabel()
+		self._dict_caption_label = Qt.QLabel(self)
 		self._dict_caption_label.setTextFormat(Qt.Qt.RichText)
 		self._dict_name_layout.addWidget(self._dict_caption_label)
 
 		self._dict_name_layout.addStretch()
 
-		self._dict_direction_label = Qt.QLabel()
+		self._dict_direction_label = Qt.QLabel(self)
 		self._dict_direction_label.setTextFormat(Qt.Qt.RichText)
 		self._dict_name_layout.addWidget(self._dict_direction_label)
 
 		self._dict_details_layout.addItem(Qt.QSpacerItem(40, 0))
 
-		self._dict_full_direction_label = Qt.QLabel()
+		self._dict_full_direction_label = Qt.QLabel(self)
 		self._dict_full_direction_label.setTextFormat(Qt.Qt.RichText)
 		self._dict_details_layout.addWidget(self._dict_full_direction_label)
 
@@ -126,7 +124,7 @@ class DictsListWidgetItem(Qt.QWidget) :
 
 		self._dict_details_layout.addStretch()
 
-		self._show_info_button = Qt.QToolButton()
+		self._show_info_button = Qt.QToolButton(self)
 		self._show_info_button.setIcon(IconsLoader.icon("help-about"))
 		self._show_info_button.setIconSize(Qt.QSize(16, 16))
 		self._show_info_button.setCursor(Qt.Qt.ArrowCursor)

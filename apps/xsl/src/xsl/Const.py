@@ -38,7 +38,7 @@ UserCountMail = "usercount@lightlang.org.ru"
 HomePageAddress = "http://lightlang.org.ru"
 
 
-Sl = Config.BinsDir+"/sl"
+Sl = Utils.joinPath(Config.BinsDir, "sl")
 
 AllDictsDir = Utils.joinPath(Config.DataRootDir, "sl/dicts")
 AllSoundsDir = Utils.joinPath(Config.DataRootDir, "sl/sounds")

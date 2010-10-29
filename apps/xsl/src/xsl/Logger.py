@@ -25,6 +25,7 @@ import traceback
 import inspect
 
 import Qt
+import Settings
 
 
 ##### Public constants #####
@@ -59,16 +60,17 @@ def log(message_type, message) :
 
 	message = Qt.QString(message)
 
-	if message.contains(ModuleCallerNameTag) :
-		try :
-			message.replace(ModuleCallerNameTag, inspect.getmodule(inspect.currentframe().f_back.f_back).__name__)
-		except : pass
-	elif message.contains(CurrentTimeTag) :
-		message.replace(CurrentTimeTag, Qt.QDateTime().currentDateTime().toString())
+	if Settings.settings().value("application/logger/debug_mode_flag", Qt.QVariant(False)).toBool() :
+		if message.contains(ModuleCallerNameTag) :
+			try :
+				message.replace(ModuleCallerNameTag, inspect.getmodule(inspect.currentframe().f_back.f_back).__name__)
+			except : pass
+		elif message.contains(CurrentTimeTag) :
+			message.replace(CurrentTimeTag, Qt.QDateTime().currentDateTime().toString())
 
-	colored_index = int(sys.stderr.isatty())
-	for message_list_item in message.split("\n") :
-		message_type[1](Qt.QString("[ %1 ] %2").arg(AllMessagesTextsList[message_type[0]][colored_index]).arg(message_list_item))
+		colored_index = int(sys.stderr.isatty())
+		for message_list_item in message.split("\n") :
+			message_type[1](Qt.QString("[ %1 ] %2").arg(AllMessagesTextsList[message_type[0]][colored_index]).arg(message_list_item))
 
 
 ##### Public methods #####

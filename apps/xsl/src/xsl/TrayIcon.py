@@ -43,9 +43,9 @@ class TrayIcon(Qt.QSystemTrayIcon) :
 		self.connect(ActionsCollection.action("spy_menu", "start_spy"), Qt.SIGNAL("changed()"), self.startSpyChanged)
 
 		try :
-			keys_grabber_thread = KeysGrabberThread.KeysGrabberThread()
-			signal = keys_grabber_thread.addHotkey(self.objectName(), KeysGrabberThread.Key_L, KeysGrabberThread.WinModifier)
-			self.connect(keys_grabber_thread, Qt.SIGNAL(signal), self.visibleChangeRequestSignal)
+			self._keys_grabber_thread = KeysGrabberThread.KeysGrabberThread()
+			signal = self._keys_grabber_thread.addHotkey(self.objectName(), KeysGrabberThread.Key_L, KeysGrabberThread.WinModifier)
+			self.connect(self._keys_grabber_thread, Qt.SIGNAL(signal), self.visibleChangeRequestSignal)
 		except : pass
 
 		self.connect(self, Qt.SIGNAL("activated(QSystemTrayIcon::ActivationReason)"), self.act)

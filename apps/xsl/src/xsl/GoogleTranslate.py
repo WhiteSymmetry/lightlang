@@ -25,6 +25,7 @@ import json
 import Qt
 import Const
 import Locale
+import Settings
 import LangsList
 import Logger
 
@@ -108,6 +109,14 @@ class GoogleTranslate(Qt.QObject) :
 		http_request_header.setContentLength(text.length())
 		http_request_header.setValue("Connection", "close")
 
+		if Settings.settings().value("application/network/use_proxy_flag", Qt.QVariant(False)).toBool() :
+			self._http.setProxy(Settings.settings().value("application/network/proxy/host").toString(),
+				Settings.settings().value("application/network/proxy/port").toInt()[0],
+				Settings.settings().value("application/network/proxy/user").toString(),
+				Settings.settings().value("application/network/proxy/passwd").toString())
+		else :
+			self._http.setProxy(Qt.QString(), 0)
+
 		self._http.setHost("ajax.googleapis.com")
 		self._http_request_id = self._http.request(http_request_header, text)
 
@@ -148,9 +157,8 @@ class GoogleTranslate(Qt.QObject) :
 			return
 
 		if error_flag and not self._http_abort_flag :
-			Qt.QMessageBox.warning(self, Const.MyName,
-				tr("HTTP error: %1\nPress \"Yes\" to ignore").arg(self._http.errorString()),
-				Qt.QMessageBox.Yes)
+			Qt.QMessageBox.warning(None, Const.MyName,
+				tr("HTTP error: %1\nPress \"Yes\" to ignore").arg(self._http.errorString()))
 
 		self._timer.stop()
 

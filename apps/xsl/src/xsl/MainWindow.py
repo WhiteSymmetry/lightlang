@@ -387,9 +387,7 @@ class MainWindow(Qt.QMainWindow) :
 
 		page_file = Qt.QFile(file_path)
 		if not page_file.open(Qt.QIODevice.WriteOnly|Qt.QIODevice.Text) :
-			Qt.QMessageBox.warning(self, Const.MyName,
-				tr("This file cannot by open for saving"),
-				Qt.QMessageBox.Yes)
+			Qt.QMessageBox.warning(self, Const.MyName, tr("This file cannot by open for saving"))
 			return
 
 		file_stream = Qt.QTextStream(page_file)

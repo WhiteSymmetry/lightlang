@@ -52,9 +52,8 @@ def test() :
 
 	old_pid = Qt.QString(lock_file_stream.readLine())
 	if old_pid.length() and Qt.QDir(Utils.joinPath(ProcDir, old_pid)).exists() and not Qt.QApplication.instance().isSessionRestored() :
-		Qt.QMessageBox.warning(None, Const.MyName,
-			tr("Oops, %1 process is already running, kill old process and try again.\n"
-				"If not, remove lock file \"%2\"").arg(Const.MyName).arg(lock_file_path))
+		Qt.QMessageBox.warning(None, Const.MyName, tr("Oops, %1 process is already running, kill old process and try again.\n"
+			"If not, remove lock file \"%2\"").arg(Const.MyName).arg(lock_file_path))
 		lock_file.close()
 		sys.exit(1)
 		return

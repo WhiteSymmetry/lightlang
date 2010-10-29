@@ -157,8 +157,7 @@ class GoogleTranslate(Qt.QObject) :
 			return
 
 		if error_flag and not self._http_abort_flag :
-			Qt.QMessageBox.warning(None, Const.MyName,
-				tr("HTTP error: %1\nPress \"Yes\" to ignore").arg(self._http.errorString()))
+			Qt.QMessageBox.warning(None, Const.MyName, tr("HTTP error: %1\nPress \"Yes\" to ignore").arg(self._http.errorString()))
 
 		self._timer.stop()
 

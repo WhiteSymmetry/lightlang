@@ -22,6 +22,7 @@
 
 import Qt
 import Const
+import Settings
 
 
 ##### Private objects #####
@@ -32,7 +33,8 @@ LocaleObject = None
 def initLocale() :
 	global LocaleObject
 
-	LocaleObject = Qt.QLocale()
+	force_locale = Settings.settings().value("application/locale/force_locale", Qt.QVariant(Qt.QString())).toString()
+	LocaleObject = ( Qt.QLocale() if force_locale.isEmpty() else Qt.QLocale(force_locale) )
 
 
 ##### Public methods #####

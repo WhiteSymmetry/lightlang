@@ -24,56 +24,64 @@
 
 
 import sys
+import os
 import getopt
+import traceback
 
 
-#####
+##### Private methods #####
+def help() :
+	print ( "Usage: xsl [options]\n"
+		"Options:\n"
+		"\t-h, --help -- Print this text\n"
+		"\t--no-splash -- Disable splash screen on starting\n"
+		"\t--no-tray-icon -- Disable tray icon\n"
+		"\t--xsl-libs-path=<path/to/libs> -- Set path for loading XSL libs\n"
+		"\t--enable-psyco -- Enable experimental Psyco environment\n"
+		"\t-s=<string>, --session=<string> -- Restoring X11 session" )
+
+##### Main #####
 if __name__ == "__main__" :
-	enable_psyco_flag = False
 	no_splash_flag = False
 	no_tray_icon_flag = False
-	libs_dir = "@libdir@/xsl/xsl"
+	enable_psyco_flag = False
+	xsl_libs_path = os.path.join("@libdir@", "xsl/xsl")
 
-	#####
 
 	try :
-		(opts_list, args_list) = getopt.getopt(sys.argv[1:], "hs:", ["enable-psyco", "no-splash", "no-tray-icon",
-			"libs-dir=", "help", "session="])
+		(opts_list, args_list) = getopt.getopt(sys.argv[1:], "hs:", ( "help", "no-splash", "no-tray-icon",
+			"xsl-libs-path=", "enable-psyco", "session=" ))
+
+		for (opts_list_item, args_list_item) in opts_list :
+			if opts_list_item in ("-h", "--help") :
+				help()
+				sys.exit(0)
+
+			elif opts_list_item in ("--no-splash",) :
+				no_splash_flag = True
+
+			elif opts_list_item in ("--no-tray-icon",) :
+				no_tray_icon_flag = True
+
+			elif opts_list_item in ("--xsl-libs-path",) :
+				xsl_libs_path = args_list_item
+
+			elif opts_list_item in ("--enable-psyco",) :
+				try :
+					import psyco
+					psyco.full()
+					print >> sys.stderr, "Experemintal Psyco environment is enabled"
+				except :
+					print >> sys.stderr, "Ignored enabling Psyco:\n %s" % (traceback.format_exc())
+
+			elif opts_list_item in ("-s", "--session",) :
+				print >> sys.stderr, "Accepted X11 session: %s" % (args_list_item)
 	except Exception, err1 :
-		print >> sys.stderr, "xsl: "+str(err1)
-		print >> sys.stderr, "usage: xsl [ --enable-psyco | --no-splash | --no-tray-icon | --libs-dir=<dir> | -h | --help ]"
-		sys.exit(1)
-
-	for (opts_list_item, args_list_item) in opts_list :
-		if opts_list_item in ("--enable-psyco") :
-			enable_psyco_flag = True
-		elif opts_list_item in ("--no-splash") :
-			no_splash_flag = True
-		elif opts_list_item in ("--no-tray-icon") :
-			no_tray_icon_flag = True
-		elif opts_list_item in ("--libs-dir") :
-			libs_dir = args_list_item
-		elif opts_list_item in ("-h", "--help") :
-			print "usage: xsl [ --enable-psyco | --no-splash | --no-tray-icon | --libs-dir=<dir> | -h | --help ]"
-			sys.exit(0)
+		print "Bad command line options: %s" % (str(err1))
 
 	#####
 
-	sys.path.append(libs_dir)
+	sys.path.append(xsl_libs_path)
 	import Main
-
-	#####
-
-	if enable_psyco_flag :
-		try :
-			import psyco
-			psyco.full()
-			print "xsl: experemetal \"psyco\" module is enabled"
-		except :
-			print >> sys.stderr, "xsl: cannot enable experemental \"psyco\" module: ignored"
-
-	#####
-
-	main = Main.Main(sys.argv, no_splash_flag, no_tray_icon_flag)
-	main.run()
+	Main.Main(sys.argv, no_splash_flag, no_tray_icon_flag).run()
 

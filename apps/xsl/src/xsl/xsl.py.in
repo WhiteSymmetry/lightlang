@@ -34,16 +34,12 @@ def help() :
 	print ( "Usage: xsl [options]\n"
 		"Options:\n"
 		"\t-h, --help -- Print this text\n"
-		"\t--no-splash -- Disable splash screen on starting\n"
-		"\t--no-tray-icon -- Disable tray icon\n"
 		"\t--xsl-libs-path=<path/to/libs> -- Set path for loading XSL libs\n"
 		"\t--enable-psyco -- Enable experimental Psyco environment\n"
 		"\t-s=<string>, --session=<string> -- Restoring X11 session" )
 
 ##### Main #####
 if __name__ == "__main__" :
-	no_splash_flag = False
-	no_tray_icon_flag = False
 	enable_psyco_flag = False
 	xsl_libs_path = os.path.join("@libdir@", "xsl/xsl")
 
@@ -56,12 +52,6 @@ if __name__ == "__main__" :
 			if opts_list_item in ("-h", "--help") :
 				help()
 				sys.exit(0)
-
-			elif opts_list_item in ("--no-splash",) :
-				no_splash_flag = True
-
-			elif opts_list_item in ("--no-tray-icon",) :
-				no_tray_icon_flag = True
 
 			elif opts_list_item in ("--xsl-libs-path",) :
 				xsl_libs_path = args_list_item
@@ -83,5 +73,5 @@ if __name__ == "__main__" :
 
 	sys.path.append(xsl_libs_path)
 	import Main
-	Main.Main(sys.argv, no_splash_flag, no_tray_icon_flag).run()
+	Main.Main(sys.argv).run()
 

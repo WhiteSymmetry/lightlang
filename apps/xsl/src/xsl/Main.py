@@ -26,6 +26,7 @@ import Qt
 import Config
 import Const
 import Utils
+import Settings
 import IconsLoader
 import Locale
 import StartupLock
@@ -41,14 +42,12 @@ MainObject = None
 
 ##### Public classes #####
 class Main(Qt.QObject) :
-	def __init__(self, argv, no_splash_flag = False, no_tray_icon = False, parent = None) :
+	def __init__(self, argv, parent = None) :
 		Qt.QObject.__init__(self, parent)
 
 		#####
 
 		self._argv = argv
-		self._no_splash_flag = no_splash_flag
-		self._no_tray_icon_flag = no_tray_icon
 
 		#####
 
@@ -59,7 +58,9 @@ class Main(Qt.QObject) :
 
 	def run(self) :
 		self._app = MainApplication.MainApplication(self._argv)
-		self._app.setQuitOnLastWindowClosed(self._no_tray_icon_flag)
+		show_tray_icon_flag = Settings.settings().value("application/misc/show_tray_icon_flag", Qt.QVariant(True)).toBool()
+		show_splash_flag = Settings.settings().value("application/misc/show_splash_flag", Qt.QVariant(True)).toBool()
+		self._app.setQuitOnLastWindowClosed(not show_tray_icon_flag)
 
 		tr_file_path = Utils.joinPath(Const.TrDir, Locale.mainLang()+Const.TrPostfix)
 		if Qt.QFile.exists(tr_file_path) :
@@ -79,7 +80,7 @@ class Main(Qt.QObject) :
 
 		#####
 
-		if not self._no_splash_flag :
+		if show_splash_flag :
 			self._splash_pixmap = IconsLoader.pixmap("xsl_splash")
 			self._splash = Qt.QSplashScreen(self._splash_pixmap)
 			if not self._app.isSessionRestored() :
@@ -100,10 +101,10 @@ class Main(Qt.QObject) :
 		#####
 
 		self._main_window.load()
-		if not self._no_tray_icon_flag :
+		if show_tray_icon_flag :
 			self._tray_icon.show()
 
-		if not self._no_splash_flag :
+		if show_splash_flag :
 			self._splash.finish(self._main_window)
 
 		#####

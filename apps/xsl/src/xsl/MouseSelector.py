@@ -21,10 +21,14 @@
 
 
 import Qt
+import Logger
+
 try : # Optional python-xlib requires
 	import MouseButtonsTest
 	import KeyboardModifiersTest
-except : pass
+except :
+	Logger.warning("Ignored X11 hooks: MouseButtonsTest, KeyboardModifiersTest")
+	Logger.attachException(Logger.WarningMessage)
 
 
 ##### Public classes #####
@@ -42,7 +46,8 @@ class MouseSelector(Qt.QObject) :
 
 		try :
 			self._modifier = KeyboardModifiersTest.NoModifier
-		except : pass
+		except :
+			Logger.attachException(Logger.DebugMessage)
 
 		#####
 
@@ -74,7 +79,8 @@ class MouseSelector(Qt.QObject) :
 		try :
 			if MouseButtonsTest.checkMainButtons() :
 				return
-		except : pass
+		except :
+			Logger.attachException(Logger.DebugMessage)
 
 		word = self._clipboard.text(Qt.QClipboard.Selection)
 		word = word.simplified().toLower()
@@ -88,7 +94,8 @@ class MouseSelector(Qt.QObject) :
 		try :
 			if not KeyboardModifiersTest.checkModifier(self._modifier) :
 				return
-		except : pass
+		except :
+			Logger.attachException(Logger.DebugMessage)
 
 		self.selectionChangedSignal(word)
 

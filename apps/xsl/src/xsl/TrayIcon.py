@@ -25,9 +25,13 @@ import Const
 import IconsLoader
 import ActionsCollection
 import EntitledMenu
+import Logger
+
 try :
 	import KeysGrabberThread
-except : pass
+except :
+	Logger.warning("Ignored X11 hooks: KeysGrabberThread")
+	Logger.attachException(Logger.WarningMessage)
 
 
 ##### Public classes #####
@@ -46,7 +50,8 @@ class TrayIcon(Qt.QSystemTrayIcon) :
 			self._keys_grabber_thread = KeysGrabberThread.KeysGrabberThread()
 			signal = self._keys_grabber_thread.addHotkey(self.objectName(), KeysGrabberThread.Key_L, KeysGrabberThread.WinModifier)
 			self.connect(self._keys_grabber_thread, Qt.SIGNAL(signal), self.visibleChangeRequestSignal)
-		except : pass
+		except :
+			Logger.attachException(Logger.DebugMessage)
 
 		self.connect(self, Qt.SIGNAL("activated(QSystemTrayIcon::ActivationReason)"), self.act)
 

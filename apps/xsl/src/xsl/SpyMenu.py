@@ -26,9 +26,13 @@ import IconsLoader
 import ActionsCollection
 import MouseSelector
 import RadioButtonsMenu
+import Logger
+
 try :
 	import KeyboardModifiersTest
-except : pass
+except :
+	Logger.warning("Ignored X11 hooks: KeyboardModifiersTest")
+	Logger.attachException(Logger.WarningMessage)
 
 
 ##### Public classes #####
@@ -78,6 +82,7 @@ class SpyMenu(Qt.QMenu) :
 			self._keyboard_modifiers_menu.setIndex(0)
 			self.addMenu(self._keyboard_modifiers_menu)
 		except :
+			Logger.attachException(Logger.DebugMessage)
 			self._fictive_keyboard_modifiers_menu = Qt.QMenu(tr("Keyboard modifiers"), self)
 			self._fictive_keyboard_modifiers_menu.setIcon(IconsLoader.icon("configure-shortcuts"))
 			self._fictive_keyboard_modifiers_menu.setEnabled(False)
@@ -97,7 +102,8 @@ class SpyMenu(Qt.QMenu) :
 		try :
 			self.connect(self._keyboard_modifiers_menu, Qt.SIGNAL("dataChanged(const QVariant &)"),
 				lambda data : self._mouse_selector.setModifier(data.toInt()[0]))
-		except : pass
+		except :
+			Logger.attachException(Logger.DebugMessage)
 
 		#####
 
@@ -146,7 +152,8 @@ class SpyMenu(Qt.QMenu) :
 		settings.setValue("spy_menu/spy_is_running_flag", Qt.QVariant(self._mouse_selector.isRunning()))
 		try :
 			settings.setValue("spy_menu/keyboard_modifier_index", Qt.QVariant(self._keyboard_modifiers_menu.index()))
-		except : pass
+		except :
+			Logger.attachException(Logger.DebugMessage)
 		settings.setValue("spy_menu/translate_method_index", Qt.QVariant(self._translate_methods_menu.index()))
 
 	def loadSettings(self) :
@@ -157,7 +164,8 @@ class SpyMenu(Qt.QMenu) :
 			self.startSpy()
 		try :
 			self._keyboard_modifiers_menu.setIndex(settings.value("spy_menu/keyboard_modifier_index", Qt.QVariant(0)).toInt()[0])
-		except : pass
+		except :
+			Logger.attachException(Logger.DebugMessage)
 		self._translate_methods_menu.setIndex(settings.value("spy_menu/translate_method_index", Qt.QVariant(0)).toInt()[0])
 
 

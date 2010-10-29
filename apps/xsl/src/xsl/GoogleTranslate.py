@@ -26,6 +26,7 @@ import Qt
 import Const
 import Locale
 import LangsList
+import Logger
 
 
 ##### Public classes #####
@@ -162,6 +163,8 @@ class GoogleTranslate(Qt.QObject) :
 		try :
 			json_dict = json.loads(unicode(text).encode("utf-8"))
 		except :
+			Logger.warning("JSON parser return None instead correct data")
+			Logger.attachException(Logger.WarningMessage)
 			json_dict = None
 
 		if json_dict != None :

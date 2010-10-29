@@ -23,6 +23,7 @@
 import Qt
 import Settings
 import IconsLoader
+import ActionsCollection
 import MouseSelector
 import RadioButtonsMenu
 try :
@@ -97,6 +98,11 @@ class SpyMenu(Qt.QMenu) :
 			self.connect(self._keyboard_modifiers_menu, Qt.SIGNAL("dataChanged(const QVariant &)"),
 				lambda data : self._mouse_selector.setModifier(data.toInt()[0]))
 		except : pass
+
+		#####
+
+		ActionsCollection.setAction("spy_menu", "start_spy", self._start_spy_menu_action)
+		ActionsCollection.setAction("spy_menu", "stop_spy", self._stop_spy_menu_action)
 
 
 	### Public ###

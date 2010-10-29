@@ -38,11 +38,15 @@ UserCountMail = "usercount@lightlang.org.ru"
 HomePageAddress = "http://lightlang.org.ru"
 
 
+DefaultLang = "en"
+
 Sl = Utils.joinPath(Config.BinsDir, "sl")
 
 AllDictsDir = Utils.joinPath(Config.DataRootDir, "sl/dicts")
 AllSoundsDir = Utils.joinPath(Config.DataRootDir, "sl/sounds")
-AudioPostfix = ".ogg"
 
-DefaultLang = "en"
+TrDir = Utils.joinPath(Config.DataRootDir, "xsl/tr")
+
+AudioPostfix = ".ogg"
+TrPostfix = ".qm"
 

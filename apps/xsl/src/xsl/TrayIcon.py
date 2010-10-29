@@ -23,6 +23,7 @@
 import Qt
 import Const
 import IconsLoader
+import ActionsCollection
 import EntitledMenu
 try :
 	import KeysGrabberThread
@@ -39,83 +40,46 @@ class TrayIcon(Qt.QSystemTrayIcon) :
 
 		#####
 
+		self.connect(ActionsCollection.action("spy_menu", "start_spy"), Qt.SIGNAL("changed()"), self.startSpyChanged)
+
 		try :
-			self._keys_grabber_thread = KeysGrabberThread.KeysGrabberThread()
+			keys_grabber_thread = KeysGrabberThread.KeysGrabberThread()
+			signal = keys_grabber_thread.addHotkey(self.objectName(), KeysGrabberThread.Key_L, KeysGrabberThread.WinModifier)
+			self.connect(keys_grabber_thread, Qt.SIGNAL(signal), self.visibleChangeRequestSignal)
 		except : pass
-
-		self._tray_menu = EntitledMenu.EntitledMenu(IconsLoader.icon("xsl"), Const.Organization+" "+Const.MyName)
-
-		self._start_spy_menu_action = self._tray_menu.addAction(IconsLoader.icon("media-playback-start"), tr("Start Spy"), self.startSpy)
-		self._stop_spy_menu_action = self._tray_menu.addAction(IconsLoader.icon("media-playback-stop"), tr("Stop Spy"), self.stopSpy)
-		self._stop_spy_menu_action.setEnabled(False)
-
-		self._tray_menu.addSeparator()
-
-		try :
-			signal = self._keys_grabber_thread.addHotkey(self.objectName(), KeysGrabberThread.Key_L, KeysGrabberThread.WinModifier)
-			self.connect(self._keys_grabber_thread, Qt.SIGNAL(signal), self.visibleChangeRequestSignal)
-			self._tray_menu.addAction(tr("Dictionary window")+"\tWin+L", self.visibleChangeRequestSignal)
-		except :
-			self._tray_menu.addAction(tr("Dictionary window"), self.visibleChangeRequestSignal)
-
-		self._tray_menu.addSeparator()
-
-		self._tray_menu.addAction(IconsLoader.icon("application-exit"), tr("Quit"), self.exit)
-		self.setContextMenu(self._tray_menu)
-
-		#####
 
 		self.connect(self, Qt.SIGNAL("activated(QSystemTrayIcon::ActivationReason)"), self.act)
 
 
-	### Public ###
-
-	def spyStarted(self) :
-		self._start_spy_menu_action.setEnabled(False)
-		self._stop_spy_menu_action.setEnabled(True)
-
-		self.setIcon(IconsLoader.icon("xsl+spy_22"))
-
-		self.setToolTip(tr("%1 - graphical interface for SL\nSpy is running").arg(Const.MyName))
-
-	def spyStopped(self) :
-		self._start_spy_menu_action.setEnabled(True)
-		self._stop_spy_menu_action.setEnabled(False)
-
-		self.setIcon(IconsLoader.icon("xsl_22"))
-
-		self.setToolTip(tr("%1 - graphical interface for SL\nSpy is stopped").arg(Const.MyName))
-
-
 	### Private ###
-
-	def startSpy(self) :
-		self.spyStarted()
-		self.startSpyRequestSignal()
-
-	def stopSpy(self) :
-		self.spyStopped()
-		self.stopSpyRequestSignal()
 
 	def act(self, reason) :
 		if reason == Qt.QSystemTrayIcon.Trigger :
 			self.visibleChangeRequestSignal()
+		elif reason == Qt.QSystemTrayIcon.Context :
+			menu = EntitledMenu.EntitledMenu(IconsLoader.icon("xsl"), Const.Organization+" "+Const.MyName)
+			menu.addAction(ActionsCollection.action("spy_menu", "start_spy"))
+			menu.addAction(ActionsCollection.action("spy_menu", "stop_spy"))
+			menu.addSeparator()
+			menu.addAction(tr("Dictionary window")+( "\tWin+L" if self.__dict__.has_key("_keys_grabber_thread") else "" ),
+				self.visibleChangeRequestSignal)
+			menu.addSeparator()
+			menu.addAction(ActionsCollection.action("application", "exit"))
+			menu.exec_(Qt.QCursor.pos())
 
-	def exit(self) :
-		self.exitRequestSignal()
+	###
+
+	def startSpyChanged(self) :
+		if ActionsCollection.action("spy_menu", "start_spy").isEnabled() :
+			self.setIcon(IconsLoader.icon("xsl_22"))
+			self.setToolTip(tr("%1 - graphical interface for SL\nSpy is stopped").arg(Const.MyName))
+		else :
+			self.setIcon(IconsLoader.icon("xsl+spy_22"))
+			self.setToolTip(tr("%1 - graphical interface for SL\nSpy is running").arg(Const.MyName))
 
 
 	### Signals ###
 
-	def startSpyRequestSignal(self) :
-		self.emit(Qt.SIGNAL("startSpyRequest()"))
-
-	def stopSpyRequestSignal(self) :
-		self.emit(Qt.SIGNAL("stopSpyRequest()"))
-
 	def visibleChangeRequestSignal(self) :
 		self.emit(Qt.SIGNAL("visibleChangeRequest()"))
-
-	def exitRequestSignal(self) :
-		self.emit(Qt.SIGNAL("exitRequest()"))
 

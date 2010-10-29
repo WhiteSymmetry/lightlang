@@ -87,7 +87,7 @@ class MainWindow(Qt.QMainWindow) :
 		### Pages menu
 
 		self._pages_menu = self.menuBar().addMenu(tr("&Pages"))
-		ActionsCollection.setAction("pages_menu", "self", self._pages_menu.menuAction())
+		ActionsCollection.setAction("pages_menu", "pages_menu", self._pages_menu.menuAction())
 		ActionsCollection.setAction("pages_menu", "save_page", self._pages_menu.addAction(IconsLoader.icon("document-save-as"),
 			tr("Save current page"), self.saveCurrentPage))
 		ActionsCollection.setAction("pages_menu", "print_page", self._pages_menu.addAction(IconsLoader.icon("document-print"),
@@ -115,6 +115,7 @@ class MainWindow(Qt.QMainWindow) :
 		### View menu
 
 		self._view_menu = self.menuBar().addMenu(tr("&View"))
+		ActionsCollection.setAction("view_menu", "view_menu", self._view_menu.menuAction())
 		ActionsCollection.setAction("view_menu", "zoom_in", self._view_menu.addAction(IconsLoader.icon("zoom-in"),
 			tr("Zoom in"), self._tabbed_translate_browser.zoomIn, Qt.QKeySequence("Ctrl++")))
 		ActionsCollection.setAction("view_menu", "zoom_out", self._view_menu.addAction(IconsLoader.icon("zoom-out"),
@@ -125,12 +126,12 @@ class MainWindow(Qt.QMainWindow) :
 		### Spy menu
 
 		self._spy_menu = SpyMenu.SpyMenu(tr("Sp&y"), self)
-		ActionsCollection.setAction("spy_menu", "self", self.menuBar().addMenu(self._spy_menu))
+		ActionsCollection.setAction("spy_menu", "spy_menu", self.menuBar().addMenu(self._spy_menu))
 
 		### Tools menu
 
 		self._tools_menu = self.menuBar().addMenu(tr("&Tools"))
-		ActionsCollection.setAction("tools_menu", "self", self._tools_menu.menuAction())
+		ActionsCollection.setAction("tools_menu", "tools_menu", self._tools_menu.menuAction())
 		ActionsCollection.setAction("tools_menu", "dicts_manager", self._tools_menu.addAction(IconsLoader.icon("configure"),
 			tr("Dicts management"), self._dicts_manager_window.show, Qt.QKeySequence("Ctrl+D")))
 		self._tools_menu.addSeparator()
@@ -144,7 +145,7 @@ class MainWindow(Qt.QMainWindow) :
 		### Help menu
 
 		self._help_menu = self.menuBar().addMenu(tr("&Help"))
-		ActionsCollection.setAction("help_menu", "self", self._help_menu.menuAction())
+		ActionsCollection.setAction("help_menu", "help_menu", self._help_menu.menuAction())
 		ActionsCollection.setAction("help_menu", "manual", self._help_menu.addAction(IconsLoader.icon("help-contents"),
 			tr("%1 manual").arg(Const.Organization), self._help_browser_window.show, Qt.QKeySequence("F1")))
 		self._help_menu.addSeparator()
@@ -178,8 +179,6 @@ class MainWindow(Qt.QMainWindow) :
 
 		##### Exclusive connections #####
 
-		self.connect(self._spy_menu, Qt.SIGNAL("spyStarted()"), self.spyStartedSignal)
-		self.connect(self._spy_menu, Qt.SIGNAL("spyStopped()"), self.spyStoppedSignal)
 		self.connect(self._spy_menu, Qt.SIGNAL("statusChanged(const QString &)"), self._status_bar.showStatusMessage)
 		self.connect(self._spy_menu, Qt.SIGNAL("showTranslateWindowRequest()"), self._translate_window.show)
 		self.connect(self._spy_menu, Qt.SIGNAL("showTranslateWindowRequest()"), self._translate_window.setFocus)
@@ -212,14 +211,6 @@ class MainWindow(Qt.QMainWindow) :
 
 
 	### Public ###
-
-	def startSpy(self) :
-		self._spy_menu.startSpy()
-
-	def stopSpy(self) :
-		self._spy_menu.stopSpy()
-
-	###
 
 	def save(self) :
 		for panels_list_item in self._panels_list :
@@ -458,13 +449,4 @@ class MainWindow(Qt.QMainWindow) :
 		self.move(settings.value("main_window/position", Qt.QVariant(Qt.QPoint(0, 0))).toPoint())
 		self.setVisible(settings.value("main_window/is_visible_flag", Qt.QVariant(True)).toBool())
 		self.restoreState(settings.value("main_window/state", Qt.QVariant(Qt.QByteArray())).toByteArray())
-
-
-	### Signals ###
-
-	def spyStartedSignal(self) :
-		self.emit(Qt.SIGNAL("spyStarted()"))
-
-	def spyStoppedSignal(self) :
-		self.emit(Qt.SIGNAL("spyStopped()"))
 

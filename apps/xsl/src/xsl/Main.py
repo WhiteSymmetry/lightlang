@@ -35,25 +35,20 @@ import TrayIcon
 import MainWindow
 
 
-##### Private constants #####
-TrPostfix = ".qm"
-TrDir = Config.DataRootDir+"/xsl/tr/"
-
-
 ##### Public objects #####
 MainObject = None
 
 
 ##### Public classes #####
-class Main(object) :
-	def __init__(self, argv, no_splash_flag = False, no_tray_icon = False) :
-		object.__init__(self)
+class Main(Qt.QObject) :
+	def __init__(self, argv, no_splash_flag = False, no_tray_icon = False, parent = None) :
+		Qt.QObject.__init__(self, parent)
 
 		#####
 
 		self._argv = argv
 		self._no_splash_flag = no_splash_flag
-		self._no_tray_icon = no_tray_icon
+		self._no_tray_icon_flag = no_tray_icon
 
 		#####
 
@@ -64,15 +59,15 @@ class Main(object) :
 
 	def run(self) :
 		self._app = MainApplication.MainApplication(self._argv)
-		self._app.setQuitOnLastWindowClosed(self._no_tray_icon)
+		self._app.setQuitOnLastWindowClosed(self._no_tray_icon_flag)
 
-		tr_file_path = Utils.joinPath(TrDir, Locale.mainLang()+TrPostfix)
+		tr_file_path = Utils.joinPath(Const.TrDir, Locale.mainLang()+Const.TrPostfix)
 		if Qt.QFile.exists(tr_file_path) :
 			self._translator = Qt.QTranslator()
 			self._translator.load(tr_file_path)
 			self._app.installTranslator(self._translator)
 
-		qt_tr_file_path = Utils.joinPath(Config.QtTrDir, "qt_"+Locale.mainLang()+TrPostfix)
+		qt_tr_file_path = Utils.joinPath(Config.QtTrDir, "qt_"+Locale.mainLang()+Const.TrPostfix)
 		if Qt.QFile.exists(qt_tr_file_path) :
 			self._qt_translator = Qt.QTranslator()
 			self._qt_translator.load(qt_tr_file_path)
@@ -100,18 +95,12 @@ class Main(object) :
 		Qt.QObject.connect(self._app, Qt.SIGNAL("focusChanged(QWidget *, QWidget*)"), self._main_window.focusChanged)
 		Qt.QObject.connect(self._app, Qt.SIGNAL("saveSettingsRequest()"), self._main_window.exit)
 
-		Qt.QObject.connect(self._main_window, Qt.SIGNAL("spyStarted()"), self._tray_icon.spyStarted)
-		Qt.QObject.connect(self._main_window, Qt.SIGNAL("spyStopped()"), self._tray_icon.spyStopped)
-
-		Qt.QObject.connect(self._tray_icon, Qt.SIGNAL("startSpyRequest()"), self._main_window.startSpy)
-		Qt.QObject.connect(self._tray_icon, Qt.SIGNAL("stopSpyRequest()"), self._main_window.stopSpy)
 		Qt.QObject.connect(self._tray_icon, Qt.SIGNAL("visibleChangeRequest()"), self._main_window.visibleChange)
-		Qt.QObject.connect(self._tray_icon, Qt.SIGNAL("exitRequest()"), self._main_window.exit)
 
 		#####
 
 		self._main_window.load()
-		if not self._no_tray_icon :
+		if not self._no_tray_icon_flag :
 			self._tray_icon.show()
 
 		if not self._no_splash_flag :

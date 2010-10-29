@@ -31,6 +31,7 @@ import HistoryPanel
 import TabbedTranslateBrowser
 import StatusBar
 import DictsManagerWindow
+import SettingsWindow
 import TranslateWindow
 import SpyMenu
 import IfaMenu
@@ -80,6 +81,7 @@ class MainWindow(Qt.QMainWindow) :
 		self._translate_window = TranslateWindow.TranslateWindow(self)
 
 		self._dicts_manager_window = DictsManagerWindow.DictsManagerWindow(self)
+		self._settings_window = SettingsWindow.SettingsWindow(self)
 
 		self._help_browser_window = HelpBrowserWindow.HelpBrowserWindow(self)
 		self._about_window = AboutWindow.AboutWindow(self)
@@ -132,8 +134,10 @@ class MainWindow(Qt.QMainWindow) :
 
 		self._tools_menu = self.menuBar().addMenu(tr("&Tools"))
 		ActionsCollection.setAction("tools_menu", "tools_menu", self._tools_menu.menuAction())
-		ActionsCollection.setAction("tools_menu", "dicts_manager", self._tools_menu.addAction(IconsLoader.icon("configure"),
+		ActionsCollection.setAction("tools_menu", "dicts_manager_window", self._tools_menu.addAction(IconsLoader.icon("configure"),
 			tr("Dicts management"), self._dicts_manager_window.show, Qt.QKeySequence("Ctrl+D")))
+		ActionsCollection.setAction("tools_menu", "settings_window", self._tools_menu.addAction(IconsLoader.icon("configure"),
+			tr("Settings"), self._settings_window.show))
 		self._tools_menu.addSeparator()
 		self._translate_sites_menu = TranslateSitesMenu.TranslateSitesMenu(tr("Web translate"), self)
 		self._translate_sites_menu.setIcon(IconsLoader.icon("applications-internet"))
@@ -217,6 +221,7 @@ class MainWindow(Qt.QMainWindow) :
 			panels_list_item.saveSettings()
 
 		self._dicts_manager_window.saveSettings()
+		self._settings_window.saveSettings()
 		self._translate_window.saveSettings()
 		self._help_browser_window.saveSettings()
 		self._spy_menu.saveSettings()
@@ -230,6 +235,7 @@ class MainWindow(Qt.QMainWindow) :
 			panels_list_item.loadSettings()
 
 		self._dicts_manager_window.loadSettings()
+		self._settings_window.loadSettings()
 		self._translate_window.loadSettings()
 		self._help_browser_window.loadSettings()
 		self._spy_menu.loadSettings()

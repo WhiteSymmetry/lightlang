@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.0" language="ru_RU">
+<!DOCTYPE TS><TS version="1.1" language="ru_RU">
 <context>
     <name>@default</name>
     <message>
@@ -853,8 +852,7 @@ If not, remove lock file &quot;%2&quot;</source>
     <message>
         <location filename="CssSettingsTab.py" line="41"/>
         <source>With &lt;a href=&quot;http://wikipedia.org/wiki/CSS&quot;&gt;CSS&lt;/a&gt; you can customize the appearance of any element of XSL.&lt;br&gt;Use &lt;a href=&quot;http://doc.qt.nokia.com/stylesheet.html&quot;&gt;Qt&lt;/a&gt; CSS and built-in classes &lt;a href=&quot;xslhelp://common_style_sheets.html&quot;&gt;SL/XSL&lt;/a&gt; to override the properties of the elements.&lt;br&gt;Edit user CSS in an &lt;a href=&quot;file://%1&quot;&gt;external editor&lt;/a&gt;. The new settings will be applied the next run.</source>
-        <translation>С помощью &lt;a href=&quot;http://wikipedia.org/wiki/CSS&quot;&gt;CSS&lt;/a&gt; вы можете настроить внешний вид любого элемента XSL.&lt;br&gt; Используйте &lt;a href=&quot;http://doc.qt.nokia.com/stylesheet.html&quot;&gt;Qt&lt;/a&gt; CSS и встроенные классы  &lt;a href=&quot;xslhelp://common_style_sheets.html&quot;&gt;SL/XSL&lt;/a&gt; для переопределения свойств элементов.&lt;br&gt;
-Редактировать пользовательский CSS во &lt;a href=&quot;file://%1&quot;&gt;внешнем редакторе&lt;/a&gt;. Новые параметры будут применены при следующем запуске.</translation>
+        <translation type="unfinished">С помощью &lt;a href=&quot;http://wikipedia.org/wiki/CSS&quot;&gt;CSS&lt;/a&gt; вы можете настроить внешний вид любого элемента XSL.&lt;br&gt; Используйте &lt;a href=&quot;http://doc.qt.nokia.com/stylesheet.html&quot;&gt;Qt&lt;/a&gt; CSS и встроенные классы  &lt;a href=&quot;xslhelp://common_style_sheets.html&quot;&gt;SL/XSL&lt;/a&gt; для переопределения&lt;br&gt;свойств элементов.&lt;br&gt;Редактировать пользовательский CSS во &lt;a href=&quot;file://%1&quot;&gt;внешнем редакторе&lt;/a&gt;. Новые&lt;br&gt;параметры будут применены при следующем запуске.</translation>
     </message>
     <message>
         <location filename="CssSettingsTab.py" line="56"/>
@@ -894,7 +892,7 @@ If not, remove lock file &quot;%2&quot;</source>
     <message>
         <location filename="MiscSettingsTab.py" line="45"/>
         <source>Force locale (on next start, for example, &quot;ru_RU&quot;):</source>
-        <translation>Использовать локаль (при следующем запуске, например, &quot;ru_RU&quot;):</translation>
+        <translation type="unfinished">Использовать локаль (например, &quot;ru_RU&quot;):</translation>
     </message>
     <message>
         <location filename="MiscSettingsTab.py" line="53"/>

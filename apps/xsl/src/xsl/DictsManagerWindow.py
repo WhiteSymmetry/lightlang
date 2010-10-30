@@ -45,26 +45,29 @@ class DictsManagerWindow(Qt.QDialog) :
 
 		#####
 
-		self._main_layout = Qt.QVBoxLayout()
-		self._main_layout.setContentsMargins(0, 0, 0, 0)
-		self.setLayout(self._main_layout)
-
 		left_margin = self.style().pixelMetric(Qt.QStyle.PM_LayoutLeftMargin)
 		top_margin = self.style().pixelMetric(Qt.QStyle.PM_LayoutTopMargin)
 		right_margin = self.style().pixelMetric(Qt.QStyle.PM_LayoutRightMargin)
 		bottom_margin = self.style().pixelMetric(Qt.QStyle.PM_LayoutBottomMargin)
 		vertical_spacing = self.style().pixelMetric(Qt.QStyle.PM_LayoutVerticalSpacing)
 
+		self._main_layout = Qt.QVBoxLayout()
+		self._main_layout.setContentsMargins(0, 0, 0, 0)
+		self.setLayout(self._main_layout)
+
 		self._line_edit_layout = Qt.QHBoxLayout()
 		self._line_edit_layout.setContentsMargins(left_margin, top_margin, right_margin, vertical_spacing)
 		self._main_layout.addLayout(self._line_edit_layout)
 
-		self._stacked_widget = Qt.QStackedWidget()
-		self._main_layout.addWidget(self._stacked_widget)
+		self._dicts_list_stacked_layout = Qt.QStackedLayout()
+		self._main_layout.addLayout(self._dicts_list_stacked_layout)
 
 		self._control_buttons_layout = Qt.QHBoxLayout()
 		self._control_buttons_layout.setContentsMargins(left_margin, vertical_spacing, right_margin, bottom_margin)
 		self._main_layout.addLayout(self._control_buttons_layout)
+
+		self._message_labels_stacked_widget = Qt.QStackedWidget()
+		self._control_buttons_layout.addWidget(self._message_labels_stacked_widget)
 
 		#####
 
@@ -85,7 +88,7 @@ class DictsManagerWindow(Qt.QDialog) :
 		self._line_edit_layout.addWidget(self._line_edit)
 
 		self._dicts_list = DictsListWidget.DictsListWidget()
-		self._stacked_widget.addWidget(self._dicts_list)
+		self._dicts_list_stacked_layout.addWidget(self._dicts_list)
 
 		self._wait_picture_movie = IconsLoader.gifMovie("circular")
 		self._wait_picture_movie.setScaledSize(Qt.QSize(32, 32))
@@ -93,11 +96,15 @@ class DictsManagerWindow(Qt.QDialog) :
 		self._wait_picture_movie_label = Qt.QLabel()
 		self._wait_picture_movie_label.setAlignment(Qt.Qt.AlignHCenter|Qt.Qt.AlignVCenter)
 		self._wait_picture_movie_label.setMovie(self._wait_picture_movie)
-		self._stacked_widget.addWidget(self._wait_picture_movie_label)
+		self._dicts_list_stacked_layout.addWidget(self._wait_picture_movie_label)
+
+		self._install_dicts_label = Qt.QLabel(tr("<a href=\"xslhelp://llrepo_usage.html\">How toinstall a new dictionary?</a>"))
+		self._install_dicts_label.setOpenExternalLinks(True)
+		self._install_dicts_label.setTextFormat(Qt.Qt.RichText)
+		self._message_labels_stacked_widget.addWidget(self._install_dicts_label)
 
 		self._wait_message_label = Qt.QLabel(tr("Please wait..."))
-		self._wait_message_label.hide()
-		self._control_buttons_layout.addWidget(self._wait_message_label)
+		self._message_labels_stacked_widget.addWidget(self._wait_message_label)
 
 		self._control_buttons_layout.addStretch()
 
@@ -111,6 +118,8 @@ class DictsManagerWindow(Qt.QDialog) :
 		self._ok_button.setDefault(False)
 		self._control_buttons_layout.addWidget(self._ok_button)
 
+		self._message_labels_stacked_widget.setMaximumHeight(self._control_buttons_layout.minimumSize().height())
+
 		#####
 
 		self.connect(self._all_dicts_dir_watcher, Qt.SIGNAL("directoryChanged(const QString &)"), self.planToUpdateDicts)
@@ -122,6 +131,10 @@ class DictsManagerWindow(Qt.QDialog) :
 
 		self.connect(self._update_dicts_button, Qt.SIGNAL("clicked()"), self.updateDicts)
 		self.connect(self._ok_button, Qt.SIGNAL("clicked()"), self.accept)
+
+		#####
+
+		self._message_labels_stacked_widget.setCurrentIndex(0)
 
 
 	### Public ###
@@ -135,8 +148,8 @@ class DictsManagerWindow(Qt.QDialog) :
 		self._line_edit.clear()
 		self._line_edit.setEnabled(False)
 
-		self._wait_message_label.show()
-		self._stacked_widget.setCurrentIndex(1)
+		self._message_labels_stacked_widget.setCurrentIndex(1)
+		self._dicts_list_stacked_layout.setCurrentIndex(1)
 		self._wait_picture_movie.start()
 
 		###
@@ -145,8 +158,8 @@ class DictsManagerWindow(Qt.QDialog) :
 
 		###
 
-		self._wait_message_label.hide()
-		self._stacked_widget.setCurrentIndex(0)
+		self._message_labels_stacked_widget.setCurrentIndex(0)
+		self._dicts_list_stacked_layout.setCurrentIndex(0)
 		self._wait_picture_movie.stop()
 		self._wait_picture_movie.jumpToFrame(0)
 

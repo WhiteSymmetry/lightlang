@@ -37,8 +37,8 @@ HtmlDocsDir = Utils.joinPath(Config.DocsDir, "lightlang/html")
 HtmlDocsIndex = "index.html"
 
 
-##### Public classes #####
-class HelpBrowserWindow(Qt.QDialog) :
+##### Private classes #####
+class HelpBrowserWindowPrivate(Qt.QDialog) :
 	def __init__(self, parent = None) :
 		Qt.QDialog.__init__(self, parent)
 
@@ -152,6 +152,10 @@ class HelpBrowserWindow(Qt.QDialog) :
 		self.connect(self._text_browser, Qt.SIGNAL("backwardAvailable(bool)"), self._backward_button.setEnabled)
 		self.connect(self._text_browser, Qt.SIGNAL("forwardAvailable(bool)"), self._forward_button.setEnabled)
 
+		#####
+
+		Qt.QDesktopServices.setUrlHandler("xslhelp", self.showInternalHelp)
+
 
 	### Public ###
 
@@ -164,6 +168,17 @@ class HelpBrowserWindow(Qt.QDialog) :
 		settings = Settings.settings()
 		self.resize(settings.value("help_browser_window/size", Qt.QVariant(Qt.QSize(800, 600))).toSize())
 		self._text_browser.setSource(settings.value("help_browser_window/url", Qt.QVariant(self._index_file_url)).toUrl())
+
+	###
+
+	@Qt.pyqtSignature("QUrl")
+	def showInternalHelp(self, url) :
+		relative_file_path = url.toString().remove("xslhelp://")
+		absolute_file_path = Utils.joinPath(HtmlDocsDir, Locale.mainLang(), relative_file_path)
+		if not Qt.QFile.exists(absolute_file_path) :
+			absolute_file_path = Utils.joinPath(HtmlDocsDir, Const.DefaultLang, relative_file_path)
+		self._text_browser.setSource(Qt.QUrl(absolute_file_path))
+		self.show()
 
 	###
 
@@ -190,4 +205,18 @@ class HelpBrowserWindow(Qt.QDialog) :
 	def keyPressEvent(self, event) :
 		if event.key() != Qt.Qt.Key_Escape :
 			Qt.QDialog.keyPressEvent(self, event)
+
+
+##### Public classes #####
+class HelpBrowserWindow(HelpBrowserWindowPrivate) :
+	_help_browser_window_private_object = None
+
+	def __new__(self, parent = None) :
+		if self._help_browser_window_private_object == None :
+			self._help_browser_window_private_object = HelpBrowserWindowPrivate.__new__(self, parent)
+			HelpBrowserWindowPrivate.__init__(self._help_browser_window_private_object, parent)
+		return self._help_browser_window_private_object
+
+	def __init__(self, parent = None) :
+		pass
 

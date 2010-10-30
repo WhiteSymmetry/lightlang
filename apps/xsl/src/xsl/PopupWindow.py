@@ -66,33 +66,6 @@ class PopupWindow(Qt.QFrame) :
 		self.connect(self._move_timer, Qt.SIGNAL("timeout()"), self.doMove)
 
 
-	### Public ###
-
-	def show(self) :
-		cursor_position = Qt.QCursor.pos() + Qt.QPoint(15, 15)
-		if cursor_position.x() < 0 :
-			cursor_position.setX(0)
-		if cursor_position.y() < 0 :
-			cursor_position.setY(0)
-
-		if cursor_position.x() + self.width() > Qt.QApplication.desktop().width() :
-			x_window_position = cursor_position.x() - self.width() - 20
-			if x_window_position < 0 :
-				x_window_position = Qt.QApplication.desktop().width() - self.width() - 20
-		else :
-			x_window_position = cursor_position.x()
-
-		if cursor_position.y() + self.height() > Qt.QApplication.desktop().height() :
-			y_window_position = cursor_position.y() - self.height() - 20
-			if y_window_position < 0 :
-				y_window_position = Qt.QApplication.desktop().height() - self.height() - 20
-		else :
-			y_window_position = cursor_position.y()
-
-		self.move(Qt.QPoint(x_window_position, y_window_position))
-		Qt.QWidget.show(self)
-
-
 	### Private ###
 
 	def startResize(self) :
@@ -153,6 +126,32 @@ class PopupWindow(Qt.QFrame) :
 
 
 	### Handlers ###
+
+	def showEvent(self, event) :
+		cursor_position = Qt.QCursor.pos() + Qt.QPoint(15, 15)
+		if cursor_position.x() < 0 :
+			cursor_position.setX(0)
+		if cursor_position.y() < 0 :
+			cursor_position.setY(0)
+
+		if cursor_position.x() + self.width() > Qt.QApplication.desktop().width() :
+			x_window_position = cursor_position.x() - self.width() - 20
+			if x_window_position < 0 :
+				x_window_position = Qt.QApplication.desktop().width() - self.width() - 20
+		else :
+			x_window_position = cursor_position.x()
+
+		if cursor_position.y() + self.height() > Qt.QApplication.desktop().height() :
+			y_window_position = cursor_position.y() - self.height() - 20
+			if y_window_position < 0 :
+				y_window_position = Qt.QApplication.desktop().height() - self.height() - 20
+		else :
+			y_window_position = cursor_position.y()
+
+		self.move(Qt.QPoint(x_window_position, y_window_position))
+		Qt.QWidget.showEvent(self, event)
+
+	###
 
 	def mousePressEvent(self, event) :
 		if not self.frameGeometry().contains(event.globalPos()) :

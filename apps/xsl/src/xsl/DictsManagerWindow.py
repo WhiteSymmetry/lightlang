@@ -201,14 +201,6 @@ class DictsManagerWindow(Qt.QDialog) :
 		self._update_dicts_button.blockSignals(False)
 		self._all_dicts_dir_watcher.blockSignals(False)
 
-	###
-
-	def show(self) :
-		Qt.QDialog.show(self)
-		self.raise_()
-		self.activateWindow()
-		self._dicts_list.setFocus(Qt.Qt.OtherFocusReason)
-
 
 	### Private ###
 
@@ -263,4 +255,13 @@ class DictsManagerWindow(Qt.QDialog) :
 
 	def dictsListChangedSignal(self, list) :
 		self.emit(Qt.SIGNAL("dictsListChanged(const QStringList &)"), list)
+
+
+	### Handlers ###
+
+	def showEvent(self, event) :
+		Qt.QDialog.showEvent(self, event)
+		self.raise_()
+		self.activateWindow()
+		self._dicts_list.setFocus(Qt.Qt.OtherFocusReason)
 

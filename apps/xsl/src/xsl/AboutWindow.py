@@ -90,10 +90,11 @@ class AboutWindow(Qt.QDialog) :
 		self.connect(self._ok_button, Qt.SIGNAL("clicked()"), self.accept)
 
 
-	### Public ###
+	### Private ###
+	### Handlers ###
 
-	def show(self) :
-		Qt.QDialog.show(self)
+	def showEvent(self, event) :
+		Qt.QDialog.showEvent(self, event)
 		self.raise_()
 		self.activateWindow()
 

@@ -104,16 +104,6 @@ class DictInfoWindow(Qt.QDialog) :
 	def dictInfo(self) :
 		return self._dict_info_browser.text()
 
-	###
-
-	def show(self) :
-		Qt.QDialog.show(self)
-		self.raise_()
-		self.activateWindow()
-
-		if not self._is_loaded_flag :
-			self.loadInfo()
-
 
 	### Private ###
 
@@ -165,4 +155,15 @@ class DictInfoWindow(Qt.QDialog) :
 
 	def tagInfo(self, caption, tag) :
 		return tr("<font class=\"text_label_font\">%1</font>: %2").arg(caption, SlDictsInfoLoader.info(tag, self._dict_name))
+
+
+	### Handlers ###
+
+	def showEvent(self, event) :
+		Qt.QDialog.showEvent(self, event)
+		self.raise_()
+		self.activateWindow()
+
+		if not self._is_loaded_flag :
+			self.loadInfo()
 

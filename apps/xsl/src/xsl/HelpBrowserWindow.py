@@ -180,14 +180,6 @@ class HelpBrowserWindowPrivate(Qt.QDialog) :
 		self._text_browser.setSource(Qt.QUrl(absolute_file_path))
 		self.show()
 
-	###
-
-	def show(self) :
-		Qt.QDialog.show(self)
-		self.raise_()
-		self.activateWindow()
-		self._text_browser.setFocus(Qt.Qt.OtherFocusReason)
-
 
 	### Private ###
 
@@ -201,6 +193,13 @@ class HelpBrowserWindowPrivate(Qt.QDialog) :
 
 
 	### Handlers ###
+
+	def showEvent(self, event) :
+		Qt.QDialog.showEvent(self, event)
+		self.raise_()
+		self.activateWindow()
+		self._text_browser.setFocus(Qt.Qt.OtherFocusReason)
+
 
 	def keyPressEvent(self, event) :
 		if event.key() != Qt.Qt.Key_Escape :

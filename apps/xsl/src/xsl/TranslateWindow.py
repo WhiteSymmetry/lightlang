@@ -127,12 +127,16 @@ class TranslateWindow(PopupWindow.PopupWindow) :
 	def setFocus(self, reason = Qt.Qt.OtherFocusReason) :
 		self._translate_browser.setFocus(reason)
 
-	def show(self) :
-		self._text_search_frame.hide()
-		PopupWindow.PopupWindow.show(self)
-
 
 	### Private ###
+
+	### Handlers ###
+
+	def showEvent(self, event) :
+		self._text_search_frame.hide()
+		PopupWindow.PopupWindow.showEvent(self, event)
+
+
 	### Signals ###
 
 	def newTabRequestSignal(self) :

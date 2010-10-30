@@ -59,6 +59,10 @@ def initCss() :
 	user_style_css_file = Qt.QFile(Utils.joinPath(Settings.settingsPath(), UserStyleCssName))
 	user_style_css_file_stream = Qt.QTextStream(user_style_css_file)
 
+	if not user_style_css_file.exists() :
+		user_style_css_file.open(Qt.QIODevice.WriteOnly)
+		user_style_css_file.close()
+
 	if user_style_css_file.open(Qt.QIODevice.ReadOnly) :
 		CssObject.append("\n"+user_style_css_file_stream.readAll()+"\n")
 		CssObject.remove(Qt.QRegExp("/\\*([^*]|\\*[^/]|\\n)*\\*/"))
@@ -71,4 +75,7 @@ def css() :
 		initCss()
 
 	return Qt.QString(CssObject)
+
+def userStyleCssPath() :
+	return Utils.joinPath(Settings.settingsPath(), UserStyleCssName)
 

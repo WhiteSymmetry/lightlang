@@ -154,7 +154,7 @@ class DictInfoWindow(Qt.QDialog) :
 	###
 
 	def tagInfo(self, caption, tag) :
-		return tr("<font class=\"text_label_font\">%1</font>: %2").arg(caption, SlDictsInfoLoader.info(tag, self._dict_name))
+		return Qt.QString("<font class=\"text_label_font\">%1</font>: %2").arg(caption, SlDictsInfoLoader.info(tag, self._dict_name))
 
 
 	### Handlers ###

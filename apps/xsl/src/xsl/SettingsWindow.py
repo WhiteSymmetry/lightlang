@@ -51,6 +51,7 @@ class SettingsWindow(Qt.QDialog) :
 		self.setLayout(self._main_layout)
 
 		self._tabs_layout = Qt.QHBoxLayout()
+		self._tabs_layout.setContentsMargins(0, 0, right_margin, 0)
 		self._main_layout.addLayout(self._tabs_layout)
 
 		self._control_buttons_layout = Qt.QHBoxLayout()
@@ -118,12 +119,19 @@ class SettingsWindow(Qt.QDialog) :
 		settings = Settings.settings()
 		self.resize(settings.value("settings_window/size", Qt.QVariant(Qt.QSize(600, 450))).toSize())
 
-	###
+
+	##### Private #####
 
 	def addSettingsTab(self, tab) :
 		requisites = tab.requisites()
+
 		self._tabs_list_browser.addItem(Qt.QListWidgetItem(requisites["icon"], requisites["title"], self._tabs_list_browser))
-		self._stacked_layout.addWidget(tab)
+
+		tab_groupbox = Qt.QGroupBox(requisites["title"], self)
+		tab_groupbox_layout = Qt.QVBoxLayout()
+		tab_groupbox.setLayout(tab_groupbox_layout)
+		tab_groupbox_layout.addWidget(tab)
+		self._stacked_layout.addWidget(tab_groupbox)
 
 		self.connect(self, Qt.SIGNAL("loadSettings()"), tab.loadSettings)
 		self.connect(self, Qt.SIGNAL("saveSettings()"), tab.saveSettings)

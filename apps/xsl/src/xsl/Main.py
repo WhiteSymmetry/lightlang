@@ -57,7 +57,6 @@ class Main(Qt.QObject) :
 		self._app = MainApplication.MainApplication(sys.argv)
 		show_tray_icon_flag = Settings.settings().value("application/misc/show_tray_icon_flag", Qt.QVariant(True)).toBool()
 		show_splash_flag = Settings.settings().value("application/misc/show_splash_flag", Qt.QVariant(True)).toBool()
-		self._app.setQuitOnLastWindowClosed(not show_tray_icon_flag)
 
 		tr_file_path = Utils.joinPath(Const.TrDir, Locale.mainLang()+Const.TrPostfix)
 		if Qt.QFile.exists(tr_file_path) :
@@ -97,9 +96,9 @@ class Main(Qt.QObject) :
 
 		#####
 
+		self._app.setQuitOnLastWindowClosed(not show_tray_icon_flag)
+		self._tray_icon.setVisible(show_tray_icon_flag)
 		self._main_window.load()
-		if show_tray_icon_flag :
-			self._tray_icon.show()
 
 		if show_splash_flag :
 			self._splash.finish(self._main_window)

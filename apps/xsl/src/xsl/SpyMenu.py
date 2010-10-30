@@ -20,6 +20,8 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 
+import sys
+
 import Qt
 import Settings
 import IconsLoader
@@ -60,7 +62,7 @@ class SpyMenu(Qt.QMenu) :
 		self._auto_detect_window_menu_action = self.addAction(tr("Auto-detect window"))
 		self._auto_detect_window_menu_action.setCheckable(True)
 
-		try :
+		if sys.modules.has_key("KeyboardModifiersTest") :
 			self._keyboard_modifiers_menu = RadioButtonsMenu.RadioButtonsMenu(tr("Keyboard modifiers"), self)
 			self._keyboard_modifiers_menu.setIcon(IconsLoader.icon("configure-shortcuts"))
 			self._keyboard_modifiers_menu.addRadioButton(tr("No modifier"), Qt.QVariant(KeyboardModifiersTest.NoModifier))
@@ -81,8 +83,7 @@ class SpyMenu(Qt.QMenu) :
 
 			self._keyboard_modifiers_menu.setIndex(0)
 			self.addMenu(self._keyboard_modifiers_menu)
-		except :
-			Logger.attachException(Logger.DebugMessage)
+		else :
 			self._fictive_keyboard_modifiers_menu = Qt.QMenu(tr("Keyboard modifiers"), self)
 			self._fictive_keyboard_modifiers_menu.setIcon(IconsLoader.icon("configure-shortcuts"))
 			self._fictive_keyboard_modifiers_menu.setEnabled(False)
@@ -99,11 +100,9 @@ class SpyMenu(Qt.QMenu) :
 		self.connect(self._mouse_selector, Qt.SIGNAL("selectionChanged(const QString &)"), self.translateRequestSignal)
 		self.connect(self._mouse_selector, Qt.SIGNAL("selectionChanged(const QString &)"), self.showTranslateWindow)
 
-		try :
+		if self.__dict__.has_key("_keyboard_modifiers_menu") :
 			self.connect(self._keyboard_modifiers_menu, Qt.SIGNAL("dataChanged(const QVariant &)"),
 				lambda data : self._mouse_selector.setModifier(data.toInt()[0]))
-		except :
-			Logger.attachException(Logger.DebugMessage)
 
 		#####
 
@@ -150,10 +149,8 @@ class SpyMenu(Qt.QMenu) :
 		settings.setValue("spy_menu/show_translate_window_flag", Qt.QVariant(self._show_translate_window_menu_action.isChecked()))
 		settings.setValue("spy_menu/auto_detect_window_flag", Qt.QVariant(self._auto_detect_window_menu_action.isChecked()))
 		settings.setValue("spy_menu/spy_is_running_flag", Qt.QVariant(self._mouse_selector.isRunning()))
-		try :
+		if self.__dict__.has_key("_keyboard_modifiers_menu") :
 			settings.setValue("spy_menu/keyboard_modifier_index", Qt.QVariant(self._keyboard_modifiers_menu.index()))
-		except :
-			Logger.attachException(Logger.DebugMessage)
 		settings.setValue("spy_menu/translate_method_index", Qt.QVariant(self._translate_methods_menu.index()))
 
 	def loadSettings(self) :
@@ -162,10 +159,8 @@ class SpyMenu(Qt.QMenu) :
 		self._auto_detect_window_menu_action.setChecked(settings.value("spy_menu/auto_detect_window_flag", Qt.QVariant(True)).toBool())
 		if settings.value("spy_menu/spy_is_running_flag", Qt.QVariant(False)).toBool() :
 			self.startSpy()
-		try :
+		if self.__dict__.has_key("_keyboard_modifiers_menu") :
 			self._keyboard_modifiers_menu.setIndex(settings.value("spy_menu/keyboard_modifier_index", Qt.QVariant(0)).toInt()[0])
-		except :
-			Logger.attachException(Logger.DebugMessage)
 		self._translate_methods_menu.setIndex(settings.value("spy_menu/translate_method_index", Qt.QVariant(0)).toInt()[0])
 
 

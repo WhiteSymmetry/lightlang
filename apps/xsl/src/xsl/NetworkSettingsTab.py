@@ -39,45 +39,45 @@ class NetworkSettingsTab(Qt.QWidget) :
 		self._use_proxy_checkbox = Qt.QCheckBox(tr("Use proxy server for internet connections"), self)
 		self._main_layout.addWidget(self._use_proxy_checkbox)
 
-		self._proxy_settings_group_box = Qt.QGroupBox(tr("Proxy settings"), self)
-		self._proxy_settings_group_box.setEnabled(False)
-		self._proxy_settings_group_box_layout = Qt.QGridLayout()
-		self._proxy_settings_group_box.setLayout(self._proxy_settings_group_box_layout)
-		self._main_layout.addWidget(self._proxy_settings_group_box)
+		self._proxy_settings_groupbox = Qt.QGroupBox(tr("Proxy settings"), self)
+		self._proxy_settings_groupbox.setEnabled(False)
+		self._proxy_settings_groupbox_layout = Qt.QGridLayout()
+		self._proxy_settings_groupbox.setLayout(self._proxy_settings_groupbox_layout)
+		self._main_layout.addWidget(self._proxy_settings_groupbox)
 
 		self._main_layout.addStretch()
 
 		###
 
 		self._proxy_server_label = Qt.QLabel(tr("Proxy server:"), self)
-		self._proxy_settings_group_box_layout.addWidget(self._proxy_server_label, 0, 0)
+		self._proxy_settings_groupbox_layout.addWidget(self._proxy_server_label, 0, 0)
 
 		self._proxy_server_line_edit = LineEdit.LineEdit(self)
-		self._proxy_settings_group_box_layout.addWidget(self._proxy_server_line_edit, 0, 1)
+		self._proxy_settings_groupbox_layout.addWidget(self._proxy_server_line_edit, 0, 1)
 
 		self._proxy_port_label = Qt.QLabel(tr("Proxy port:"), self)
-		self._proxy_settings_group_box_layout.addWidget(self._proxy_port_label, 1, 0)
+		self._proxy_settings_groupbox_layout.addWidget(self._proxy_port_label, 1, 0)
 
 		self._proxy_port_spin_box = Qt.QSpinBox(self)
 		self._proxy_port_spin_box.setRange(0, 50000)
-		self._proxy_settings_group_box_layout.addWidget(self._proxy_port_spin_box, 1, 1)
+		self._proxy_settings_groupbox_layout.addWidget(self._proxy_port_spin_box, 1, 1)
 
 		self._proxy_user_label = Qt.QLabel(tr("Username:"), self)
-		self._proxy_settings_group_box_layout.addWidget(self._proxy_user_label, 2, 0)
+		self._proxy_settings_groupbox_layout.addWidget(self._proxy_user_label, 2, 0)
 
 		self._proxy_user_line_edit = LineEdit.LineEdit(self)
-		self._proxy_settings_group_box_layout.addWidget(self._proxy_user_line_edit, 2, 1)
+		self._proxy_settings_groupbox_layout.addWidget(self._proxy_user_line_edit, 2, 1)
 
 		self._proxy_passwd_label = Qt.QLabel(tr("Password:"), self)
-		self._proxy_settings_group_box_layout.addWidget(self._proxy_passwd_label, 3, 0)
+		self._proxy_settings_groupbox_layout.addWidget(self._proxy_passwd_label, 3, 0)
 
 		self._proxy_passwd_line_edit = LineEdit.LineEdit(self)
 		self._proxy_passwd_line_edit.setEchoMode(Qt.QLineEdit.Password)
-		self._proxy_settings_group_box_layout.addWidget(self._proxy_passwd_line_edit, 3, 1)
+		self._proxy_settings_groupbox_layout.addWidget(self._proxy_passwd_line_edit, 3, 1)
 
 		#####
 
-		self.connect(self._use_proxy_checkbox, Qt.SIGNAL("stateChanged(int)"), self._proxy_settings_group_box.setEnabled)
+		self.connect(self._use_proxy_checkbox, Qt.SIGNAL("stateChanged(int)"), self._proxy_settings_groupbox.setEnabled)
 
 
 	### Public ###

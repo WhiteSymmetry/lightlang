@@ -20,6 +20,8 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 
+import sys
+
 import Qt
 import Const
 import IconsLoader
@@ -46,12 +48,10 @@ class TrayIcon(Qt.QSystemTrayIcon) :
 
 		self.connect(ActionsCollection.action("spy_menu", "start_spy"), Qt.SIGNAL("changed()"), self.startSpyChanged)
 
-		try :
+		if sys.modules.has_key("KeysGrabberThread") :
 			self._keys_grabber_thread = KeysGrabberThread.KeysGrabberThread()
 			signal = self._keys_grabber_thread.addHotkey(self.objectName(), KeysGrabberThread.Key_L, KeysGrabberThread.WinModifier)
 			self.connect(self._keys_grabber_thread, Qt.SIGNAL(signal), self.visibleChangeRequestSignal)
-		except :
-			Logger.attachException(Logger.DebugMessage)
 
 		self.connect(self, Qt.SIGNAL("activated(QSystemTrayIcon::ActivationReason)"), self.act)
 

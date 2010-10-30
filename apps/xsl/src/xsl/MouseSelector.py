@@ -20,6 +20,8 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 
+import sys
+
 import Qt
 import Logger
 
@@ -44,10 +46,8 @@ class MouseSelector(Qt.QObject) :
 		self._timer = Qt.QTimer(self)
 		self._timer.setInterval(300)
 
-		try :
+		if sys.modules.has_key("KeyboardModifiersTest") :
 			self._modifier = KeyboardModifiersTest.NoModifier
-		except :
-			Logger.attachException(Logger.DebugMessage)
 
 		#####
 
@@ -76,11 +76,9 @@ class MouseSelector(Qt.QObject) :
 	### Private ###
 
 	def checkSelection(self) :
-		try :
+		if sys.modules.has_key("MouseButtonsTest") :
 			if MouseButtonsTest.checkMainButtons() :
 				return
-		except :
-			Logger.attachException(Logger.DebugMessage)
 
 		word = self._clipboard.text(Qt.QClipboard.Selection)
 		word = word.simplified().toLower()
@@ -91,11 +89,9 @@ class MouseSelector(Qt.QObject) :
 			return
 		self._old_selection = word
 
-		try :
+		if sys.modules.has_key("KeyboardModifiersTest") :
 			if not KeyboardModifiersTest.checkModifier(self._modifier) :
 				return
-		except :
-			Logger.attachException(Logger.DebugMessage)
 
 		self.selectionChangedSignal(word)
 

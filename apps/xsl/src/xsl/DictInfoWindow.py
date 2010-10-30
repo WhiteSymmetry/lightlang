@@ -124,17 +124,17 @@ class DictInfoWindow(Qt.QDialog) :
 		###
 
 		dict_info = Qt.QString()
-		dict_info.append(self.tagInfo("Caption", SlDictsInfoLoader.CaptionTag)).append("<hr>")
-		dict_info.append(self.tagInfo("Translate direction", SlDictsInfoLoader.DirectionTag)).append("<hr>")
-		dict_info.append(self.tagInfo("Dictionary group", SlDictsInfoLoader.GroupTag)).append("<hr>")
-		dict_info.append(self.tagInfo("Dictionary version", SlDictsInfoLoader.VersionTag)).append("<hr>")
-		dict_info.append(self.tagInfo("Count of words", SlDictsInfoLoader.WordCountTag)).append("<hr>")
-		dict_info.append(self.tagInfo("File size (KB)", SlDictsInfoLoader.FileSizeTag)).append("<hr>")
-		dict_info.append(self.tagInfo("Author", SlDictsInfoLoader.AuthorTag)).append("<hr>")
-		dict_info.append(self.tagInfo("Homepage", SlDictsInfoLoader.UrlTag)).append("<hr>")
-		dict_info.append(self.tagInfo("License", SlDictsInfoLoader.LicenseTag)).append("<hr>")
-		dict_info.append(self.tagInfo("Copyright", SlDictsInfoLoader.CopyrightTag)).append("<hr>")
-		dict_info.append(self.tagInfo("Description", SlDictsInfoLoader.MiscTag))
+		dict_info.append(self.tagInfo(tr("Caption"), SlDictsInfoLoader.CaptionTag)).append("<hr>")
+		dict_info.append(self.tagInfo(tr("Translate direction"), SlDictsInfoLoader.DirectionTag)).append("<hr>")
+		dict_info.append(self.tagInfo(tr("Dictionary group"), SlDictsInfoLoader.GroupTag)).append("<hr>")
+		dict_info.append(self.tagInfo(tr("Dictionary version"), SlDictsInfoLoader.VersionTag)).append("<hr>")
+		dict_info.append(self.tagInfo(tr("Count of words"), SlDictsInfoLoader.WordCountTag)).append("<hr>")
+		dict_info.append(self.tagInfo(tr("File size (KB)"), SlDictsInfoLoader.FileSizeTag)).append("<hr>")
+		dict_info.append(self.tagInfo(tr("Author"), SlDictsInfoLoader.AuthorTag)).append("<hr>")
+		dict_info.append(self.tagInfo(tr("Homepage"), SlDictsInfoLoader.UrlTag)).append("<hr>")
+		dict_info.append(self.tagInfo(tr("License"), SlDictsInfoLoader.LicenseTag)).append("<hr>")
+		dict_info.append(self.tagInfo(tr("Copyright"), SlDictsInfoLoader.CopyrightTag)).append("<hr>")
+		dict_info.append(self.tagInfo(tr("Description"), SlDictsInfoLoader.MiscTag))
 		self._dict_info_browser.setText(dict_info)
 
 		###

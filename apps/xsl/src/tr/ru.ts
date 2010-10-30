@@ -950,5 +950,60 @@ If not, remove lock file &quot;%2&quot;</source>
         <source>&amp;Cancel</source>
         <translation>О&amp;тмена</translation>
     </message>
+    <message>
+        <location filename="DictInfoWindow.py" line="127"/>
+        <source>Caption</source>
+        <translation>Заголовок</translation>
+    </message>
+    <message>
+        <location filename="DictInfoWindow.py" line="128"/>
+        <source>Translate direction</source>
+        <translation>Направление перевода</translation>
+    </message>
+    <message>
+        <location filename="DictInfoWindow.py" line="129"/>
+        <source>Dictionary group</source>
+        <translation>Группа словаря</translation>
+    </message>
+    <message>
+        <location filename="DictInfoWindow.py" line="130"/>
+        <source>Dictionary version</source>
+        <translation>Версия словаря</translation>
+    </message>
+    <message>
+        <location filename="DictInfoWindow.py" line="131"/>
+        <source>Count of words</source>
+        <translation>Количество слов</translation>
+    </message>
+    <message>
+        <location filename="DictInfoWindow.py" line="132"/>
+        <source>File size (KB)</source>
+        <translation>Размер файла (КБ)</translation>
+    </message>
+    <message>
+        <location filename="DictInfoWindow.py" line="133"/>
+        <source>Author</source>
+        <translation>Автор</translation>
+    </message>
+    <message>
+        <location filename="DictInfoWindow.py" line="134"/>
+        <source>Homepage</source>
+        <translation>Домашняя страница</translation>
+    </message>
+    <message>
+        <location filename="DictInfoWindow.py" line="135"/>
+        <source>License</source>
+        <translation>Лицензия</translation>
+    </message>
+    <message>
+        <location filename="DictInfoWindow.py" line="136"/>
+        <source>Copyright</source>
+        <translation>Копирайт</translation>
+    </message>
+    <message>
+        <location filename="DictInfoWindow.py" line="137"/>
+        <source>Description</source>
+        <translation>Описание</translation>
+    </message>
 </context>
 </TS>

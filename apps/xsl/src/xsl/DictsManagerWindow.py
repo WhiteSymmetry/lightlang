@@ -98,7 +98,7 @@ class DictsManagerWindow(Qt.QDialog) :
 		self._wait_picture_movie_label.setMovie(self._wait_picture_movie)
 		self._dicts_list_stacked_layout.addWidget(self._wait_picture_movie_label)
 
-		self._install_dicts_label = Qt.QLabel(tr("<a href=\"xslhelp://llrepo_usage.html\">How toinstall a new dictionary?</a>"))
+		self._install_dicts_label = Qt.QLabel(tr("<a href=\"xslhelp://llrepo_usage.html\">How to install a new dictionary?</a>"))
 		self._install_dicts_label.setOpenExternalLinks(True)
 		self._install_dicts_label.setTextFormat(Qt.Qt.RichText)
 		self._message_labels_stacked_widget.addWidget(self._install_dicts_label)

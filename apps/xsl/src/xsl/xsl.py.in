@@ -73,5 +73,5 @@ if __name__ == "__main__" :
 
 	sys.path.append(xsl_libs_path)
 	import Main
-	Main.Main(sys.argv).run()
+	Main.Main().run()
 

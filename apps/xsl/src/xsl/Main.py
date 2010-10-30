@@ -20,6 +20,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 
+import sys
 import __builtin__
 
 import Qt
@@ -42,12 +43,8 @@ MainObject = None
 
 ##### Public classes #####
 class Main(Qt.QObject) :
-	def __init__(self, argv, parent = None) :
+	def __init__(self, parent = None) :
 		Qt.QObject.__init__(self, parent)
-
-		#####
-
-		self._argv = argv
 
 		#####
 
@@ -57,7 +54,7 @@ class Main(Qt.QObject) :
 	### Public ###
 
 	def run(self) :
-		self._app = MainApplication.MainApplication(self._argv)
+		self._app = MainApplication.MainApplication(sys.argv)
 		show_tray_icon_flag = Settings.settings().value("application/misc/show_tray_icon_flag", Qt.QVariant(True)).toBool()
 		show_splash_flag = Settings.settings().value("application/misc/show_splash_flag", Qt.QVariant(True)).toBool()
 		self._app.setQuitOnLastWindowClosed(not show_tray_icon_flag)

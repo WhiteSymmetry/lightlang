@@ -134,6 +134,7 @@ class DictsManagerWindow(Qt.QDialog) :
 
 		#####
 
+		self._dicts_list_stacked_layout.setCurrentIndex(0)
 		self._message_labels_stacked_widget.setCurrentIndex(0)
 
 

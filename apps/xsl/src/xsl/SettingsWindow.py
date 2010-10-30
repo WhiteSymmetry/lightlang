@@ -105,6 +105,7 @@ class SettingsWindow(Qt.QDialog) :
 		#####
 
 		self._tabs_list_browser.setCurrentRow(0)
+		self._stacked_layout.setCurrentIndex(0)
 
 
 	##### Public #####

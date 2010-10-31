@@ -64,7 +64,9 @@ class CssMultiple(Qt.QObject) :
 
 		#####
 
+		self.blockSignals(True)
 		self.applyUserStyleCss()
+		self.blockSignals(False)
 
 
 	### Public static ###

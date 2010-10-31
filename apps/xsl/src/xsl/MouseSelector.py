@@ -26,10 +26,9 @@ import Qt
 import Logger
 
 try : # Optional python-xlib requires
-	import MouseButtonsTest
-	import KeyboardModifiersTest
+	import X11Inputs
 except :
-	Logger.warning("Ignored X11 hooks: MouseButtonsTest, KeyboardModifiersTest")
+	Logger.warning("Ignored X11Inputs")
 	Logger.attachException(Logger.WarningMessage)
 
 
@@ -40,58 +39,55 @@ class MouseSelector(Qt.QObject) :
 
 		#####
 
-		self._clipboard = Qt.QApplication.clipboard()
-		self._old_selection = Qt.QString()
+		self.__clipboard = Qt.QApplication.clipboard()
+		self.__old_selection = Qt.QString()
 
-		self._timer = Qt.QTimer(self)
-		self._timer.setInterval(300)
+		self.__timer = Qt.QTimer(self)
+		self.__timer.setInterval(300)
 
-		if sys.modules.has_key("KeyboardModifiersTest") :
-			self._modifier = KeyboardModifiersTest.NoModifier
+		if sys.modules.has_key("X11Inputs") :
+			self.__x11_inputs = X11Inputs.X11Inputs()
+			self.__modifier = KeyboardModifiersTest.NoModifier
 
 		#####
 
-		self.connect(self._timer, Qt.SIGNAL("timeout()"), self.checkSelection)
+		self.connect(self.__timer, Qt.SIGNAL("timeout()"), self.checkSelection)
 
 
 	### Public ###
 
 	def start(self) :
-		self._clipboard.setText(Qt.QString(""), Qt.QClipboard.Selection)
-		self._old_selection.clear()
-		self._timer.start()
+		self.__clipboard.setText(Qt.QString(""), Qt.QClipboard.Selection)
+		self.__old_selection.clear()
+		self.__timer.start()
 
 	def stop(self) :
-		self._timer.stop()
+		self.__timer.stop()
 
 	def isRunning(self) :
-		return self._timer.isActive()
+		return self.__timer.isActive()
 
 	###
 
 	def setModifier(self, modifier) :
-		self._modifier = modifier
+		self.__modifier = modifier
 
 
 	### Private ###
 
 	def checkSelection(self) :
-		if sys.modules.has_key("MouseButtonsTest") :
-			if MouseButtonsTest.checkMainButtons() :
+		if self.__dict__.has_key("__x11_inputs") :
+			if self.__x11_inputs.checkMouseButtons() or self.__x11_inputs.checkModifier(self.__modifier) :
 				return
 
-		word = self._clipboard.text(Qt.QClipboard.Selection)
+		word = self.__clipboard.text(Qt.QClipboard.Selection)
 		word = word.simplified().toLower()
 		if word.isEmpty() :
 			return
 
-		if word == self._old_selection : # FIXME (Issue 78)
+		if word == self.__old_selection : # FIXME (Issue 78)
 			return
-		self._old_selection = word
-
-		if sys.modules.has_key("KeyboardModifiersTest") :
-			if not KeyboardModifiersTest.checkModifier(self._modifier) :
-				return
+		self.__old_selection = word
 
 		self.selectionChangedSignal(word)
 

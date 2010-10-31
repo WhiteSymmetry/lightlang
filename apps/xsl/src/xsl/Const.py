@@ -20,33 +20,37 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 
-import Config
+import Qt
 import Utils
 
 
 ##### Public constants #####
 
-Organization = "LightLang"
-MyName = "XSL"
-Version = "6.6"
-PackageVersion = "0.8.6"
+Package = Qt.QString("LightLang")
+PackageVersion = Qt.QString("0.8.6")
+MyName = Qt.QString("XSL")
+Version = Qt.QString("6.6")
 
-DeveloperMail = "mdevaev@gmail.com"
-OffersMail = "developers@lightlang.org.ru"
-BugtrackMail = "bugtrack@lightlang.org.ru"
-UserCountMail = "usercount@lightlang.org.ru"
-HomePageAddress = "http://lightlang.org.ru"
+DeveloperMail = Qt.QString("mdevaev@gmail.com")
+OffersMail = Qt.QString("developers@lightlang.org.ru")
+BugtrackMail = Qt.QString("bugtrack@lightlang.org.ru")
+UserCountMail = Qt.QString("usercount@lightlang.org.ru")
+HomePageAddress = Qt.QString("http://lightlang.org.ru")
 
 
-DefaultLang = "en"
+#PrefixDirPath = Qt.QString("@prefix@")
+#ExecPrefixDirPath = Qt.QString("@exec_prefix@")
+BinsDirPath = Qt.QString("/usr/bin")#Qt.QString("@bindir@")
+LibsDirPath = Qt.QString("/usr/lib64")#Qt.QString("@libdir@")
+DataRootDirPath = Qt.QString("/usr/share")#Qt.QString("@datarootdir@")
+#MansDirPath = Qt.QString("@mandir@")
+DocsDirPath = Qt.QString("/usr/share/doc")#Qt.QString("@docdir@")
 
-Sl = Utils.joinPath(Config.BinsDir, "sl")
+TrDirPath = Utils.joinPath(DataRootDirPath, "xsl/tr")
+QtTrDirPath = Qt.QString("@QT_TR_DIR@")
 
-AllDictsDir = Utils.joinPath(Config.DataRootDir, "sl/dicts")
-AllSoundsDir = Utils.joinPath(Config.DataRootDir, "sl/sounds")
+AllDictsDirPath = Utils.joinPath(DataRootDirPath, "sl/dicts")
+AllSoundsDirPath = Utils.joinPath(DataRootDirPath, "sl/sounds")
 
-TrDir = Utils.joinPath(Config.DataRootDir, "xsl/tr")
-
-AudioPostfix = ".ogg"
-TrPostfix = ".qm"
+SlBin = Utils.joinPath(BinsDirPath, "sl")
 

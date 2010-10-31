@@ -32,6 +32,10 @@ def pathName(path) :
 	index = path.lastIndexOf(Qt.QDir.separator())
 	return ( path.left(index) if index >= 0 else Qt.QString() )
 
+def baseName(path) :
+	names_list = Qt.QString(path).split(Qt.QDir.separator())
+	return names_list[names_list.count() -1]
+
 ###
 
 def styledHtml(style, body) :

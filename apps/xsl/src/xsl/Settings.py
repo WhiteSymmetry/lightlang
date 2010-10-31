@@ -23,36 +23,59 @@
 import Qt
 import Const
 import Utils
+import Logger
 
 
 ##### Private constants #####
 SettingsPostfix = ".conf"
 
 
-##### Private objects #####
-SettingsObject = None
+##### Private classes #####
+class SettingsMultiple(Qt.QSettings) :
+	def __init__(self, parent = None) :
+		settings_dir_path = self.dirPath()
+		settings_file_path = Utils.joinPath(settings_dir_path, Const.MyName.toLower()+SettingsPostfix)
+
+		if not Qt.QDir(settings_dir_path).exists() :
+			Logger.debug(Qt.QString(" \"%1\" does not exists, trying to create").arg(settings_dir_path))
+
+			if not Qt.QDir.home().mkdir(Utils.baseName(settings_dir_path)) :
+				Logger.critical(Qt.QString("Cannot create config directory \"%1\"").arg(settings_dir_path))
+
+		Qt.QSettings.__init__(self, settings_file_path, Qt.QSettings.IniFormat, parent)
 
 
-##### Private methods #####
-def initSettings() :
-	global SettingsObject
+	### Public static ###
 
-	my_name = Qt.QString(Const.MyName).toLower()
-	if not Qt.QDir(Utils.joinPath(Qt.QDir.homePath(), "."+my_name)).exists() :
-		Qt.QDir.home().mkdir("."+my_name)
-
-	SettingsObject = Qt.QSettings(Utils.joinPath(Qt.QDir.homePath(), "."+my_name, my_name+SettingsPostfix), Qt.QSettings.IniFormat)
+	@classmethod
+	def dirPath(self) :
+		return Utils.joinPath(Qt.QDir.homePath(), "."+Const.MyName.toLower())
 
 
-##### Public methods #####
-def settings() :
-	if SettingsObject == None :
-		initSettings()
-	return SettingsObject
+	### Public ###
 
-def settingsPath() :
-	if SettingsObject == None :
-		initSettings()
+	def setValue(self, key, value) :
+		if not self.contains(key) or self.value(key) != Qt.QVariant(value) :
+			Qt.QSettings.setValue(self, key, value)
+			self.settingsChangedSignal(key)
 
-	return Utils.pathName(SettingsObject.fileName())
+
+	### Signals ###
+
+	def settingsChangedSignal(self, key) :
+		self.emit(Qt.SIGNAL("settingsChanged(const QString &)"), key)
+
+
+##### Public classes #####
+class Settings(SettingsMultiple) :
+	__settings_multiple_object = None
+
+	def __new__(self, parent = None) :
+		if self.__settings_multiple_object == None :
+			self.__settings_multiple_object = SettingsMultiple.__new__(self, parent)
+			SettingsMultiple.__init__(self.__settings_multiple_object, parent)
+		return self.__settings_multiple_object
+
+	def __init__(self, parent = None) :
+		pass
 

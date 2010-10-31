@@ -25,33 +25,90 @@ import Const
 import Settings
 
 
-##### Private objects #####
-LocaleObject = None
+##### Public constants #####
+DefaultLang = "en"
 
 
-##### Private methdos #####
-def initLocale() :
-	global LocaleObject
+##### Private classes #####
+class LocaleMultiple(Qt.QObject) :
+	def __init__(self, parent = None) :
+		Qt.QObject.__init__(self, parent)
 
-	force_locale = Settings.settings().value("application/locale/force_locale", Qt.QVariant(Qt.QString())).toString()
-	LocaleObject = ( Qt.QLocale() if force_locale.isEmpty() else Qt.QLocale(force_locale) )
+		#####
+
+		force_locale_name = Settings.Settings().value("application/locale/force_locale_name").toString()
+		self.__locale = ( Qt.QLocale() if force_locale_name.isEmpty() else Qt.QLocale(force_locale_name) )
+
+		#####
+
+		self.connect(Settings.Settings(), Qt.SIGNAL("valueChanged(const QString &"), self.applySettingsLocale)
 
 
-##### Public methods #####
-def locale() :
-	if LocaleObject == None :
-		initLocale()
-	return LocaleObject
+	### Public static ###
 
-def mainLang() :
-	if LocaleObject == None :
-		initLocale()
+	@classmethod
+	def validLangs(self) :
+		tr_dir = Qt.QDir(Const.TrDirPath)
+		tr_dir.setSorting(Qt.QDir.Name)
+		tr_dir.setNameFilters(Qt.QStringList() << "*.qm")
 
-	lang = LocaleObject.name()
-	lang.remove(lang.indexOf("_"), lang.length())
+		tr_dir_entry_list = tr_dir.entryList()
+		tr_dir_entry_list.replaceInStrings(Qt.QRegExp("^(.*)\\.qm$"), "\\1")
+		tr_dir_entry_list.append(DefaultLang)
 
-	if lang.simplified().isEmpty() :
-		lang = Const.DefaultLang
+		return tr_dir_entry_list
 
-	return Qt.QString(lang)
+
+	### Public ###
+
+	def locale(self) :
+		return Qt.QLocale(self.__locale)
+
+	def mainLang(self) :
+		lang = self.__locale.name()
+		lang.remove(lang.indexOf("_"), lang.length())
+
+		if lang.simplified().isEmpty() :
+			lang = DefaultLang
+
+		return Qt.QString(lang)
+
+	###
+
+	def htmlDocsLang(self) :
+		main_lang = self.mainLang()
+		docs_dir_path = Utils.joinPath(HtmlDocsDir, main_lang)
+		if not Qt.QDir.exists(docs_dir_path) :
+			return Qt.QString(DefaultLang)
+		return main_lang
+
+
+	### Private ###
+
+	def applySettingsLocale(self, key) :
+		if key == "application/locale/force_locale_name" :
+			force_locale_name = Settings.Settings().value("application/locale/force_locale_name").toString()
+			if force_locale_name != self.__locale.name() :
+				self.__locale = ( Qt.QLocale() if force_locale_name.isEmpty() else Qt.QLocale(force_locale_name) )
+				self.localeChangedSignal(self.__locale.name())
+
+
+	### Signals ###
+
+	def localeChangedSignal(self, name) :
+		self.emit(Qt.SIGNAL("localeChanged(const QString &)"), name)
+
+
+##### Public classes #####
+class Locale(LocaleMultiple) :
+	__locale_multiple_object = None
+
+	def __new__(self, parent = None) :
+		if self.__locale_multiple_object == None :
+			self.__locale_multiple_object = LocaleMultiple.__new__(self, parent)
+			LocaleMultiple.__init__(self.__locale_multiple_object, parent)
+		return self.__locale_multiple_object
+
+	def __init__(self, parent = None) :
+		pass
 

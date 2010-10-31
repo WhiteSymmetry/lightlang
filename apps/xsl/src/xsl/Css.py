@@ -23,10 +23,11 @@
 import Qt
 import Utils
 import Settings
+import Logger
 
 
 ##### Private constants #####
-UserStyleCssName = "user-style.css"
+UserStyleCssFileName = "user-style.css"
 
 DefaultCss = Qt.QString("\n.dict_header_background {background-color: #DFEDFF;}\n"
 	".red_alert_background {background-color: #FF6E6E;}\n"
@@ -46,36 +47,81 @@ DefaultCss = Qt.QString("\n.dict_header_background {background-color: #DFEDFF;}\
 	".text_label_font {color: #494949; font-weight: bold;}\n")
 
 
-##### Private objects #####
-CssObject = None
+##### Private classes #####
+class CssMultiple(Qt.QObject) :
+	def __init__(self, parent = None) :
+		Qt.QObject.__init__(self, parent)
+
+		#####
+
+		self.__css = Qt.QString(DefaultCss)
+
+		self.__user_style_css_watcher = Qt.QFileSystemWatcher(self)
+
+		#####
+
+		self.connect(self.__user_style_css_watcher, Qt.SIGNAL("fileChanged(const QString &)"), self.applyUserStyleCss)
+
+		#####
+
+		self.applyUserStyleCss()
 
 
-##### Private methods #####
-def initCss() :
-	global CssObject
+	### Public static ###
 
-	CssObject = Qt.QString(DefaultCss)
-
-	user_style_css_file = Qt.QFile(Utils.joinPath(Settings.settingsPath(), UserStyleCssName))
-	user_style_css_file_stream = Qt.QTextStream(user_style_css_file)
-
-	if not user_style_css_file.exists() :
-		user_style_css_file.open(Qt.QIODevice.WriteOnly)
-		user_style_css_file.close()
-
-	if user_style_css_file.open(Qt.QIODevice.ReadOnly) :
-		CssObject.append("\n"+user_style_css_file_stream.readAll()+"\n")
-		CssObject.remove(Qt.QRegExp("/\\*([^*]|\\*[^/]|\\n)*\\*/"))
-		user_style_css_file.close()
+	@classmethod
+	def userStyleCssPath(self) :
+		return Utils.joinPath(Settings.Settings.dirPath(), UserStyleCssFileName)
 
 
-##### Public methods #####
-def css() :
-	if CssObject == None :
-		initCss()
+	### Public ###
 
-	return Qt.QString(CssObject)
+	def css(self) :
+		return Qt.QString(self.__css)
 
-def userStyleCssPath() :
-	return Utils.joinPath(Settings.settingsPath(), UserStyleCssName)
+
+	### Private ### :
+
+	def applyUserStyleCss(self) :
+		user_style_css_file_path = self.userStyleCssPath()
+		user_style_css_file = Qt.QFile(user_style_css_file_path)
+		user_style_css_file_stream = Qt.QTextStream(user_style_css_file)
+
+		if not user_style_css_file.exists() :
+			Logger.debug(Qt.QString("Creating empty CSS file \"%1\"").arg(user_style_css_file_path))
+			user_style_css_file.open(Qt.QIODevice.WriteOnly)
+			user_style_css_file.close()
+
+		if self.__user_style_css_watcher.files().count() < 1 :
+			 self.__user_style_css_watcher.addPath(user_style_css_file_path)
+
+		if user_style_css_file.open(Qt.QIODevice.ReadOnly) :
+			Logger.debug(Qt.QString("Apply user CSS from \"%1\"").arg(user_style_css_file_path))
+			user_style_css = Qt.QString("%1\n%2\n").arg(DefaultCss).arg(user_style_css_file_stream.readAll())
+			user_style_css.remove(Qt.QRegExp("/\\*([^*]|\\*[^/]|\\n)*\\*/"))
+			user_style_css_file.close()
+
+			if self.__css.trimmed() != user_style_css.trimmed() :
+				self.__css = user_style_css
+				self.cssChangedSignal()
+
+
+	### Signals ###
+
+	def cssChangedSignal(self) :
+		self.emit(Qt.SIGNAL("cssChanged()"))
+
+
+##### Public classes #####
+class Css(CssMultiple) :
+	__css_multiple_object = None
+
+	def __new__(self, parent = None) :
+		if self.__css_multiple_object == None :
+			self.__css_multiple_object = CssMultiple.__new__(self, parent)
+			CssMultiple.__init__(self.__css_multiple_object, parent)
+		return self.__css_multiple_object
+
+	def __init__(self, parent = None) :
+		pass
 

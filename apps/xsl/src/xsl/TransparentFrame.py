@@ -34,28 +34,37 @@ class TransparentFrame(Qt.QFrame) :
 
 		#####
 
-		self._color = CssCollection.value("transparent_frame_background", "color")
-		self._alpha = CssCollection.value("transparent_frame_background", "opacity")
+		self.__css_collection = CssCollection.CssCollection()
+
+		self.__enter_flag = False
 
 		#####
 
-		self.setAlpha(self._alpha)
+		self.connect(self.__css_collection, Qt.SIGNAL("cssChanged()"), self.updateAlpha)
+
+		#####
+
+		self.updateAlpha()
 
 
 	### Private ###
 
-	def setAlpha(self, alpha) :
+	def updateAlpha(self) :
+		color = self.__css_collection.value("transparent_frame_background", "color")
+		alpha = ( 255 if self.__enter_flag else self.__css_collection.value("transparent_frame_background", "opacity") )
 		self.setStyleSheet(Qt.QString("QFrame {border: 1px solid gray; border-radius: 4px; background-color: rgb(%1, %2, %3, %4);}")
-			.arg(self._color.red()).arg(self._color.green()).arg(self._color.blue()).arg(alpha))
+			.arg(color.red()).arg(color.green()).arg(color.blue()).arg(alpha))
 
 
 	### Handlers ###
 
 	def enterEvent(self, event) :
-		self.setAlpha(255)
+		self.__enter_flag = True
+		self.updateAlpha()
 		Qt.QFrame.enterEvent(self, event)
 
 	def leaveEvent(self, event) :
-		self.setAlpha(self._alpha)
+		self.__enter_flag = False
+		self.updateAlpha()
 		Qt.QFrame.leaveEvent(self, event)
 

@@ -36,12 +36,14 @@ class LocaleMultiple(Qt.QObject) :
 
 		#####
 
-		force_locale_name = Settings.Settings().value("application/locale/force_locale_name").toString()
+		self.__settings = Settings.Settings()
+
+		force_locale_name = self.__settings.value("application/locale/force_locale_name").toString()
 		self.__locale = ( Qt.QLocale() if force_locale_name.isEmpty() else Qt.QLocale(force_locale_name) )
 
 		#####
 
-		self.connect(Settings.Settings(), Qt.SIGNAL("valueChanged(const QString &"), self.applySettingsLocale)
+		self.connect(self.__settings, Qt.SIGNAL("valueChanged(const QString &"), self.applySettingsLocale)
 
 
 	### Public static ###
@@ -87,7 +89,7 @@ class LocaleMultiple(Qt.QObject) :
 
 	def applySettingsLocale(self, key) :
 		if key == "application/locale/force_locale_name" :
-			force_locale_name = Settings.Settings().value("application/locale/force_locale_name").toString()
+			force_locale_name = self.__settings.value("application/locale/force_locale_name").toString()
 			if force_locale_name != self.__locale.name() :
 				self.__locale = ( Qt.QLocale() if force_locale_name.isEmpty() else Qt.QLocale(force_locale_name) )
 				self.localeChangedSignal(self.__locale.name())

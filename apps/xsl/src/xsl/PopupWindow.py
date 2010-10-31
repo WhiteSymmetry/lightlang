@@ -52,52 +52,52 @@ class PopupWindow(Qt.QFrame) :
 
 		####
 
-		self._resize_timer = Qt.QTimer(self)
-		self._resize_timer.setInterval(10)
+		self.__resize_timer = Qt.QTimer(self)
+		self.__resize_timer.setInterval(10)
 
-		self._resize_direction = ResizeDirectionNone
+		self.__resize_direction = ResizeDirectionNone
 
-		self._move_timer = Qt.QTimer(self)
-		self._move_timer.setInterval(10)
+		self.__move_timer = Qt.QTimer(self)
+		self.__move_timer.setInterval(10)
 
 		#####
 
-		self.connect(self._resize_timer, Qt.SIGNAL("timeout()"), self.doResize)
-		self.connect(self._move_timer, Qt.SIGNAL("timeout()"), self.doMove)
+		self.connect(self.__resize_timer, Qt.SIGNAL("timeout()"), self.doResize)
+		self.connect(self.__move_timer, Qt.SIGNAL("timeout()"), self.doMove)
 
 
 	### Private ###
 
 	def startResize(self) :
-		self._resize_timer.start()
+		self.__resize_timer.start()
 
 	def stopResize(self) :
-		self._resize_timer.stop()
-		self._resize_direction = ResizeDirectionNone
+		self.__resize_timer.stop()
+		self.__resize_direction = ResizeDirectionNone
 
 	def doResize(self) :
 		if Qt.QApplication.mouseButtons() == Qt.Qt.NoButton :
 			self.stopResize()
 			return
 
-		if self._resize_direction == ResizeDirectionNone :
+		if self.__resize_direction == ResizeDirectionNone :
 			return
 
 		new_geometry = self.frameGeometry()
 
-		if self._resize_direction == ResizeDirectionTop :
+		if self.__resize_direction == ResizeDirectionTop :
 			new_geometry.setTop(Qt.QCursor.pos().y())
-		elif self._resize_direction == ResizeDirectionBottom :
+		elif self.__resize_direction == ResizeDirectionBottom :
 			new_geometry.setBottom(Qt.QCursor.pos().y())
-		elif self._resize_direction == ResizeDirectionLeft :
+		elif self.__resize_direction == ResizeDirectionLeft :
 			new_geometry.setLeft(Qt.QCursor.pos().x())
-		elif self._resize_direction == ResizeDirectionRight :
+		elif self.__resize_direction == ResizeDirectionRight :
 			new_geometry.setRight(Qt.QCursor.pos().x())
-		elif self._resize_direction == ResizeDirectionTopRight :
+		elif self.__resize_direction == ResizeDirectionTopRight :
 			new_geometry.setTopRight(Qt.QCursor.pos())
-		elif self._resize_direction == ResizeDirectionBottomLeft :
+		elif self.__resize_direction == ResizeDirectionBottomLeft :
 			new_geometry.setBottomLeft(Qt.QCursor.pos())
-		elif self._resize_direction == ResizeDirectionBottomRight :
+		elif self.__resize_direction == ResizeDirectionBottomRight :
 			new_geometry.setBottomRight(Qt.QCursor.pos())
 
 		if new_geometry.width() < self.size().width() / 2 :
@@ -113,10 +113,10 @@ class PopupWindow(Qt.QFrame) :
 	###
 
 	def startMove(self) :
-		self._move_timer.start()
+		self.__move_timer.start()
 
 	def stopMove(self) :
-		self._move_timer.stop()
+		self.__move_timer.stop()
 
 	def doMove(self) :
 		if Qt.QApplication.mouseButtons() == Qt.Qt.NoButton :
@@ -173,23 +173,23 @@ class PopupWindow(Qt.QFrame) :
 			return
 
 		if x >= w - c and y < c :
-			self._resize_direction = ResizeDirectionTopRight
+			self.__resize_direction = ResizeDirectionTopRight
 		elif x < c and y >= h - c :
-			self._resize_direction = ResizeDirectionBottomLeft
+			self.__resize_direction = ResizeDirectionBottomLeft
 		elif x >= w - c and y >= h - c :
-			self._resize_direction = ResizeDirectionBottomRight
+			self.__resize_direction = ResizeDirectionBottomRight
 		elif x < f :
-			self._resize_direction = ResizeDirectionLeft
+			self.__resize_direction = ResizeDirectionLeft
 		elif x >= w - f :
-			self._resize_direction = ResizeDirectionRight
+			self.__resize_direction = ResizeDirectionRight
 		elif y < f :
-			self._resize_direction = ResizeDirectionTop
+			self.__resize_direction = ResizeDirectionTop
 		elif y >= h - f :
-			self._resize_direction = ResizeDirectionBottom
+			self.__resize_direction = ResizeDirectionBottom
 		else :
-			self._resize_direction = ResizeDirectionNone
+			self.__resize_direction = ResizeDirectionNone
 
-		if self._resize_direction != ResizeDirectionNone :
+		if self.__resize_direction != ResizeDirectionNone :
 			self.stopMove()
 			self.startResize()
 

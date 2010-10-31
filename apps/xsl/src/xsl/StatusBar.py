@@ -20,8 +20,6 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 
-import sys
-
 import Qt
 import IconsLoader
 
@@ -33,59 +31,59 @@ class StatusBar(Qt.QStatusBar) :
 
 		#####
 
-		self._activation_semaphore = 0
+		self.__activation_semaphore = 0
 
-		self._timer = Qt.QTimer(self)
+		self.__timer = Qt.QTimer(self)
 
 		#####
 
 		icon_width = icon_height = label_height = self.style().pixelMetric(Qt.QStyle.PM_SmallIconSize)
 
-		self._message_label = Qt.QLabel(self)
-		self._message_label.setTextFormat(Qt.Qt.PlainText)
-		self._message_label.setMaximumHeight(label_height)
-		self.addWidget(self._message_label, 1)
+		self.__message_label = Qt.QLabel(self)
+		self.__message_label.setTextFormat(Qt.Qt.PlainText)
+		self.__message_label.setMaximumHeight(label_height)
+		self.addWidget(self.__message_label, 1)
 
-		self._wait_picture_movie = IconsLoader.gifMovie("circular")
-		self._wait_picture_movie.setScaledSize(Qt.QSize(icon_width, icon_height))
-		self._wait_picture_movie.jumpToFrame(0)
-		self._wait_picture_movie_label = Qt.QLabel(self)
-		self._wait_picture_movie_label.setMovie(self._wait_picture_movie)
-		self._wait_picture_movie_label.hide()
-		self.addWidget(self._wait_picture_movie_label)
+		self.__wait_picture_movie = IconsLoader.gifMovie("circular")
+		self.__wait_picture_movie.setScaledSize(Qt.QSize(icon_width, icon_height))
+		self.__wait_picture_movie.jumpToFrame(0)
+		self.__wait_picture_movie_label = Qt.QLabel(self)
+		self.__wait_picture_movie_label.setMovie(self.__wait_picture_movie)
+		self.__wait_picture_movie_label.hide()
+		self.addWidget(self.__wait_picture_movie_label)
 
 		#####
 
-		self.connect(self._timer, Qt.SIGNAL("timeout()"), self.clearStatusMessage)
+		self.connect(self.__timer, Qt.SIGNAL("timeout()"), self.clearStatusMessage)
 
 
 	### Public ###
 
 	def startWaitMovie(self) :
-		if self._activation_semaphore != 0 :
-			self._activation_semaphore += 1
+		if self.__activation_semaphore != 0 :
+			self.__activation_semaphore += 1
 			return
 
-		self._wait_picture_movie_label.show()
-		self._wait_picture_movie.start()
+		self.__wait_picture_movie_label.show()
+		self.__wait_picture_movie.start()
 
 	def stopWaitMovie(self) :
-		if self._activation_semaphore > 1 :
+		if self.__activation_semaphore > 1 :
 			return
-		if self._activation_semaphore > 0 :
-			self._activation_semaphore -= 1
+		if self.__activation_semaphore > 0 :
+			self.__activation_semaphore -= 1
 
-		self._wait_picture_movie_label.hide()
-		self._wait_picture_movie.stop()
-		self._wait_picture_movie.jumpToFrame(0)
+		self.__wait_picture_movie_label.hide()
+		self.__wait_picture_movie.stop()
+		self.__wait_picture_movie.jumpToFrame(0)
 
 	###
 
 	def showStatusMessage(self, message, timeout = 2000) :
-		self._message_label.setText(message)
+		self.__message_label.setText(message)
 		if timeout != 0 :
-			self._timer.start(timeout)
+			self.__timer.start(timeout)
 
 	def clearStatusMessage(self) :
-		self._message_label.clear()
+		self.__message_label.clear()
 

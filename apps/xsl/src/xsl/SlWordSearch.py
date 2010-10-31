@@ -38,43 +38,36 @@ class SlWordSearch(Qt.QObject) :
 
 		#####
 
-		self._proc = Qt.QProcess(self)
-		self._proc.setReadChannelMode(Qt.QProcess.MergedChannels)
-		self._proc.setReadChannel(Qt.QProcess.StandardOutput)
+		self.__proc = Qt.QProcess(self)
+		self.__proc.setReadChannelMode(Qt.QProcess.MergedChannels)
+		self.__proc.setReadChannel(Qt.QProcess.StandardOutput)
 
-		self._proc_block_flag = False
-		self._proc_kill_flag = False
+		self.__proc_block_flag = False
+		self.__proc_kill_flag = False
 
-		self._proc_args = Qt.QStringList()
+		self.__proc_args = Qt.QStringList()
 
-		self._proc_output = Qt.QByteArray()
+		self.__proc_output = Qt.QByteArray()
 
-		self._dicts_list = Qt.QStringList()
+		self.__dicts_list = Qt.QStringList()
 
 		###
 
-		self._info_item_regexp = Qt.QRegExp("<font class=\"info_font\">(.*)</font>")
-		self._info_item_regexp.setMinimal(True)
+		self.__info_item_regexp = Qt.QRegExp("<font class=\"info_font\">(.*)</font>")
+		self.__info_item_regexp.setMinimal(True)
 
-		self._caption_item_regexp = Qt.QRegExp("<font class=\"dict_header_font\">(.*)</font>")
-		self._caption_item_regexp.setMinimal(True)
+		self.__caption_item_regexp = Qt.QRegExp("<font class=\"dict_header_font\">(.*)</font>")
+		self.__caption_item_regexp.setMinimal(True)
 
-		self._word_item_regexp = Qt.QRegExp("<a href=.*>(.*)</a>")
-		self._word_item_regexp.setMinimal(True)
-
-		#####
-
-		self._replaces_dict = {
-			"<font class=\"info_font\">This word is not found</font>" : tr("<font class=\"info_font\">This word is not found</font>"),
-			"<font class=\"info_font\">No dict is connected</font>" : tr("<font class=\"info_font\">No dict is connected</font>")
-		}
+		self.__word_item_regexp = Qt.QRegExp("<a href=.*>(.*)</a>")
+		self.__word_item_regexp.setMinimal(True)
 
 		#####
 
-		self.connect(self._proc, Qt.SIGNAL("error(QProcess::ProcessError)"), self.processError)
-		self.connect(self._proc, Qt.SIGNAL("finished(int, QProcess::ExitStatus)"), self.processFinished)
-		self.connect(self._proc, Qt.SIGNAL("stateChanged(QProcess::ProcessState)"), self.processStateChenged)
-		self.connect(self._proc, Qt.SIGNAL("readyReadStandardOutput()"), self.setText)
+		self.connect(self.__proc, Qt.SIGNAL("error(QProcess::ProcessError)"), self.processError)
+		self.connect(self.__proc, Qt.SIGNAL("finished(int, QProcess::ExitStatus)"), self.processFinished)
+		self.connect(self.__proc, Qt.SIGNAL("stateChanged(QProcess::ProcessState)"), self.processStateChenged)
+		self.connect(self.__proc, Qt.SIGNAL("readyReadStandardOutput()"), self.setText)
 
 
 	### Public ###
@@ -92,7 +85,7 @@ class SlWordSearch(Qt.QObject) :
 		self.find(word, IllDefinedSearchOption)
 
 	def setDictsList(self, dicts_list) :
-		self._dicts_list = dicts_list
+		self.__dicts_list = dicts_list
 
 
 	### Private ###
@@ -102,58 +95,62 @@ class SlWordSearch(Qt.QObject) :
 		if word.isEmpty() :
 			return
 
-		if self._proc.state() in (Qt.QProcess.Starting, Qt.QProcess.Running) :
+		if self.__proc.state() in (Qt.QProcess.Starting, Qt.QProcess.Running) :
 			self.setText()
-			self._proc_kill_flag = True
-			self._proc.kill()
+			self.__proc_kill_flag = True
+			self.__proc.kill()
 
 		self.processStartedSignal()
 
 		self.clearRequestSignal()
 
-		self._proc_output.clear()
+		self.__proc_output.clear()
 
-		self._proc_args.clear()
-		self._proc_args << "--output-format=html" << "--use-css=no" << "--use-list="+self._dicts_list.join("|") << option << word
+		self.__proc_args.clear()
+		self.__proc_args << "--output-format=html" << "--use-css=no" << "--use-list="+self.__dicts_list.join("|") << option << word
 
-		while self._proc_block_flag :
-			self._proc.waitForFinished()
-		self._proc_kill_flag = False
-		self._proc.start(Const.Sl, self._proc_args)
+		while self.__proc_block_flag :
+			self.__proc.waitForFinished()
+		self.__proc_kill_flag = False
+		self.__proc.start(Const.SlBin, self.__proc_args)
 
 	###
 
 	def processError(self, error_code) :
-		if error_code == Qt.QProcess.FailedToStart and not self._proc_kill_flag :
+		if error_code == Qt.QProcess.FailedToStart and not self.__proc_kill_flag :
 			Qt.QMessageBox.warning(None, Const.MyName, tr("An error occured when creating the search process"))
-		elif error_code == Qt.QProcess.Crashed and not self._proc_kill_flag :
+		elif error_code == Qt.QProcess.Crashed and not self.__proc_kill_flag :
 			Qt.QMessageBox.warning(None, Const.MyName, tr("Error of the search process"))
-		elif error_code == Qt.QProcess.Timedout and not self._proc_kill_flag :
+		elif error_code == Qt.QProcess.Timedout and not self.__proc_kill_flag :
 			Qt.QMessageBox.warning(None, Const.MyName, tr("Connection lost with search process"))
-		elif error_code == Qt.QProcess.WriteError and not self._proc_kill_flag :
+		elif error_code == Qt.QProcess.WriteError and not self.__proc_kill_flag :
 			Qt.QMessageBox.warning(None, Const.MyName, tr("Error while writing data into the search process"))
-		elif error_code == Qt.QProcess.ReadError and not self._proc_kill_flag :
+		elif error_code == Qt.QProcess.ReadError and not self.__proc_kill_flag :
 			Qt.QMessageBox.warning(None, Const.MyName, tr("Error while reading data from the search process"))
-		elif not self._proc_kill_flag :
+		elif not self.__proc_kill_flag :
 			Qt.QMessageBox.warning(None, Const.MyName, tr("Unknown error occured while executing the search process"))
 
 	def processFinished(self, exit_code) :
-		if exit_code and not self._proc_kill_flag :
+		if exit_code and not self.__proc_kill_flag :
 			Qt.QMessageBox.warning(None, Const.MyName, tr("Error of the search process"))
 		self.processFinishedSignal()
 
 	def processStateChenged(self, state) :
-		self._proc_block_flag = ( state in (Qt.QProcess.Starting, Qt.QProcess.Running) )
+		self.__proc_block_flag = ( state in (Qt.QProcess.Starting, Qt.QProcess.Running) )
 
 	def setText(self) :
-		self._proc_output.append(self._proc.readAllStandardOutput())
+		self.__proc_output.append(self.__proc.readAllStandardOutput())
 
-		text = Qt.QString.fromLocal8Bit(str(self._proc_output))
+		text = Qt.QString.fromLocal8Bit(str(self.__proc_output))
+		for replaces_list_item in (
+			("<font class=\"info_font\">This word is not found</font>", tr("<font class=\"info_font\">This word is not found</font>"))
+			("<font class=\"info_font\">No dict is connected</font>", tr("<font class=\"info_font\">No dict is connected</font>")) ) :
 
-		for replaces_dict_key in self._replaces_dict.keys() :
-			text.replace(replaces_dict_key, self._replaces_dict[replaces_dict_key])
+			text.replace(replaces_list_item[0], replaces_list_item[1])
 
-		if self._proc_args[3] in (UsuallySearchOption, WordCombinationsSearchOption) :
+		#####
+
+		if self.__proc_args[3] in (UsuallySearchOption, WordCombinationsSearchOption) :
 			self.textChangedSignal(text)
 		else :
 			text_list = Qt.QStringList()
@@ -162,11 +159,11 @@ class SlWordSearch(Qt.QObject) :
 			#####
 
 			if parts_list.count() == 1 :
-				info_item_pos = self._info_item_regexp.indexIn(text, 0)
+				info_item_pos = self.__info_item_regexp.indexIn(text, 0)
 				while info_item_pos != -1 :
-					text_list << "{{"+self._info_item_regexp.cap(1)+"}}"
-					info_item_pos = self._info_item_regexp.indexIn(text, info_item_pos +
-						self._info_item_regexp.matchedLength())
+					text_list << "{{"+self.__info_item_regexp.cap(1)+"}}"
+					info_item_pos = self.__info_item_regexp.indexIn(text, info_item_pos +
+						self.__info_item_regexp.matchedLength())
 
 				if text_list.count() == 0 :
 					text_list << "{{"+text+"}}"
@@ -174,16 +171,16 @@ class SlWordSearch(Qt.QObject) :
 			###
 
 			for parts_list_count in xrange(1, parts_list.count()) :
-				if self._caption_item_regexp.indexIn(parts_list[parts_list_count]) < 0 :
+				if self.__caption_item_regexp.indexIn(parts_list[parts_list_count]) < 0 :
 					continue
 
-				text_list << "[["+self._caption_item_regexp.cap(1)+"]]"
+				text_list << "[["+self.__caption_item_regexp.cap(1)+"]]"
 
-				word_item_pos = self._word_item_regexp.indexIn(parts_list[parts_list_count], 0)
+				word_item_pos = self.__word_item_regexp.indexIn(parts_list[parts_list_count], 0)
 				while word_item_pos != -1 :
-					text_list << self._word_item_regexp.cap(1)
-					word_item_pos = self._word_item_regexp.indexIn(parts_list[parts_list_count], word_item_pos +
-						self._word_item_regexp.matchedLength())
+					text_list << self.__word_item_regexp.cap(1)
+					word_item_pos = self.__word_item_regexp.indexIn(parts_list[parts_list_count], word_item_pos +
+						self.__word_item_regexp.matchedLength())
 
 			#####
 

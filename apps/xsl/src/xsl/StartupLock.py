@@ -27,31 +27,31 @@ import Qt
 import Const
 import Utils
 import Settings
+import Logger
 
 
 ##### Private constants #####
-ProcDir = "/proc"
 LockFilePostfix = ".lock"
 
 
 ##### Public methods #####
 def test() :
-	lock_file_path = Utils.joinPath(Settings.settingsPath(), Qt.QString(Const.MyName).toLower()+LockFilePostfix)
+	lock_file_path = Utils.joinPath(Settings.Settings.dirPath(), Qt.QString(Const.MyName).toLower()+LockFilePostfix)
 	lock_file = Qt.QFile(lock_file_path)
 	lock_file_stream = Qt.QTextStream(lock_file)
 
 	if not lock_file.exists() :
 		if not lock_file.open(Qt.QIODevice.WriteOnly|Qt.QIODevice.Truncate) :
-			print >> sys.stderr, Const.MyName+": cannot create lock file: ignored"
+			Logger.critical(Qt.QString("Cannot create lock file \"%1\"").arg(lock_file_path))
 			return
 		lock_file.close()
 
 	if not lock_file.open(Qt.QIODevice.ReadOnly) :
-		print >> sys.stderr, Const.MyName+": cannot open lock file: ignored"
+		Logger.critical(Qt.QString("Cannot open lock file \"%1\"").arg(lock_file_path))
 		return
 
 	old_pid = Qt.QString(lock_file_stream.readLine())
-	if old_pid.length() and Qt.QDir(Utils.joinPath(ProcDir, old_pid)).exists() and not Qt.QApplication.instance().isSessionRestored() :
+	if old_pid.length() and Qt.QDir(Utils.joinPath("/proc", old_pid)).exists() and not Qt.QApplication.instance().isSessionRestored() :
 		Qt.QMessageBox.warning(None, Const.MyName, tr("Oops, %1 process is already running, kill old process and try again.\n"
 			"If not, remove lock file \"%2\"").arg(Const.MyName).arg(lock_file_path))
 		lock_file.close()

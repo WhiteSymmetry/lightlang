@@ -20,19 +20,47 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 
-##### Private objects #####
-ActionsCollectionDictObject = {}
+import Qt
 
 
-##### Public methods #####
-def setAction(group, name, action) :
-	group = str(group)
-	name = str(name)
+##### Private classes #####
+class ActionsCollectionMultiple(Qt.QObject) :
+	def __init__(self, parent = None) :
+		Qt.QObject.__init__(self, parent)
 
-	if not ActionsCollectionDictObject.has_key(group) :
-		ActionsCollectionDictObject[group] = {}
-	ActionsCollectionDictObject[group][name] = action
+		#####
 
-def action(group, name) :
-	return ActionsCollectionDictObject[str(group)][str(name)]
+		self.__actions_dict = {}
+
+
+	### Public ###
+
+	def setAction(self, group, name, action) :
+		group = str(group)
+		name = str(name)
+		if not self.__actions_dict.has_key(group) :
+			self.__actions_dict[group] = {}
+		self.__actions_dict[group][name] = action
+
+	def action(self, group, name) :
+		group = str(group)
+		name = str(name)
+		if self.__actions_dict.has_key(group) and self.__actions_dict[group].has_key(name) :
+			return self.__actions_dict[group][name]
+		else :
+			return None
+
+
+##### Public classes #####
+class ActionsCollection(ActionsCollectionMultiple) :
+	__actions_collection_multiple_object = None
+
+	def __new__(self, parent = None) :
+		if self.__actions_collection_multiple_object == None :
+			self.__actions_collection_multiple_object = ActionsCollectionMultiple.__new__(self, parent)
+			ActionsCollectionMultiple.__init__(self.__actions_collection_multiple_object, parent)
+		return self.__actions_collection_multiple_object
+
+	def __init__(self, parent = None) :
+		pass
 

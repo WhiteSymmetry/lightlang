@@ -29,7 +29,7 @@ import Qt
 
 ##### Public constants #####
 Key_L = Xlib.XK.XK_L
-Key_F1 = Xlib.XK.XK_F1
+Key_F1 = Xlib.XK.XK_F1 # For example
 
 CtrlModifier = Xlib.X.ControlMask
 AltModifier = Xlib.X.Mod1Mask
@@ -38,19 +38,19 @@ WinModifier = Xlib.X.Mod4Mask
 
 
 ##### Private classes #####
-class KeysGrabberThreadPrivate(Qt.QThread) :
+class KeysGrabberThreadMultiple(Qt.QThread) :
 	def __init__(self, parent = None) :
 		Qt.QThread.__init__(self, parent)
 
 		#####
 
-		self._is_stopped_flag = True
+		self.__is_stopped_flag = True
 
-		self._hotkeys_list = []
+		self.__hotkeys_list = []
 
-		self._display = Xlib.display.Display()
-		self._root = self._display.screen().root
-		self._root.change_attributes(event_mask = Xlib.X.PropertyChangeMask|Xlib.X.KeyPressMask)
+		self.__display = Xlib.display.Display()
+		self.__root = self.__display.screen().root
+		self.__root.change_attributes(event_mask = Xlib.X.PropertyChangeMask|Xlib.X.KeyPressMask)
 
 		#####
 
@@ -59,55 +59,60 @@ class KeysGrabberThreadPrivate(Qt.QThread) :
 
 	### Public ###
 
-	def addHotkey(self, object_name, key, modifier) :
-		self._is_stopped_flag = True
+	def addHotkey(self, key, modifier) :
+		self.__is_stopped_flag = True
 		if not self.wait(100) :
 			self.terminate()
 
-		key = self._display.keysym_to_keycode(key)
+		key = self.__display.keysym_to_keycode(key)
 		modifier = modifier & ~(Xlib.X.AnyModifier << 1)
-		signal_string = Qt.QString("%1__%2__%3__globalHotkey()").arg(object_name).arg(key).arg(modifier)
+		identifier = str(key)+str(modifier)
+		self.__hotkeys_list.append({ "key" : key, "modifier" : modifier, "identifier" : identifier })
+		self.__root.grab_key(key, modifier, True, Xlib.X.GrabModeAsync, Xlib.X.GrabModeAsync)
 
-		self._hotkeys_list.append({ "key" : key, "modifier" : modifier, "signal_string" : signal_string })
-		self._root.grab_key(key, modifier, True, Xlib.X.GrabModeAsync, Xlib.X.GrabModeAsync)
-
-		self._is_stopped_flag = False
+		self.__is_stopped_flag = False
 		self.start()
 
-		return Qt.QString(signal_string)
+		return identifier
 
 
 	### Private ###
 
 	def run(self) :
-		while not self._is_stopped_flag :
-			event = self._root.display.next_event()
+		while not self.__is_stopped_flag :
+			event = self.__root.display.next_event()
 			if event.type != Xlib.X.KeyRelease :
 				continue
 
-			for hotkeys_list_item in self._hotkeys_list :
+			for hotkeys_list_item in self.__hotkeys_list :
 				if ( (event.state & hotkeys_list_item["modifier"]) == hotkeys_list_item["modifier"] and
 					event.detail == hotkeys_list_item["key"] ) :
-					self.emit(Qt.SIGNAL(hotkeys_list_item["signal_string"]))
+					self.keyPressedSignal(hotkeys_list_item["identifier"])
 
 	def stop(self) :
-		self._is_stopped_flag = True
+		self.__is_stopped_flag = True
 		if not self.wait(100) :
 			self.terminate()
 
-		for hotkeys_list_item in self._hotkeys_list :
-			self._root.ungrab_key(hotkeys_list_item["key"], hotkeys_list_item["modifier"])
+		for hotkeys_list_item in self.__hotkeys_list :
+			self.__root.ungrab_key(hotkeys_list_item["key"], hotkeys_list_item["modifier"])
+
+
+	### Signals ###
+
+	def keyPressedSignal(self, identifier) :
+		self.emit(Qt.QString("keyPressed(const QString &)"), identifier)
 
 
 ##### Public classes #####
-class KeysGrabberThread(KeysGrabberThreadPrivate) :
-	_keys_grabber_thread_private_object = None
+class KeysGrabberThread(KeysGrabberThreadMultiple) :
+	__keys_grabber_thread_multiple_object = None
 
 	def __new__(self, parent = None) :
-		if self._keys_grabber_thread_private_object == None :
-			self._keys_grabber_thread_private_object = KeysGrabberThreadPrivate.__new__(self, parent)
-			KeysGrabberThreadPrivate.__init__(self._keys_grabber_thread_private_object, parent)
-		return self._keys_grabber_thread_private_object
+		if self.__keys_grabber_thread_multiple_object == None :
+			self.__keys_grabber_thread_multiple_object = KeysGrabberThreadMultiple.__new__(self, parent)
+			KeysGrabberThreadMultiple.__init__(self.__keys_grabber_thread_multiple_object, parent)
+		return self.__keys_grabber_thread_multiple_object
 
 	def __init__(self, parent = None) :
 		pass

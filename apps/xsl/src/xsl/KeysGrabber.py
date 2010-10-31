@@ -38,7 +38,7 @@ WinModifier = Xlib.X.Mod4Mask
 
 
 ##### Private classes #####
-class KeysGrabberThreadMultiple(Qt.QThread) :
+class KeysGrabberMultiple(Qt.QThread) :
 	def __init__(self, parent = None) :
 		Qt.QThread.__init__(self, parent)
 
@@ -105,14 +105,14 @@ class KeysGrabberThreadMultiple(Qt.QThread) :
 
 
 ##### Public classes #####
-class KeysGrabberThread(KeysGrabberThreadMultiple) :
-	__keys_grabber_thread_multiple_object = None
+class KeysGrabber(KeysGrabberMultiple) :
+	__keys_grabber_multiple_object = None
 
 	def __new__(self, parent = None) :
-		if self.__keys_grabber_thread_multiple_object == None :
-			self.__keys_grabber_thread_multiple_object = KeysGrabberThreadMultiple.__new__(self, parent)
-			KeysGrabberThreadMultiple.__init__(self.__keys_grabber_thread_multiple_object, parent)
-		return self.__keys_grabber_thread_multiple_object
+		if self.__keys_grabber_multiple_object == None :
+			self.__keys_grabber_multiple_object = KeysGrabberMultiple.__new__(self, parent)
+			KeysGrabberMultiple.__init__(self.__keys_grabber_multiple_object, parent)
+		return self.__keys_grabber_multiple_object
 
 	def __init__(self, parent = None) :
 		pass

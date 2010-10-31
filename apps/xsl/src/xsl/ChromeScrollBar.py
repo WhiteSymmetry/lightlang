@@ -38,30 +38,48 @@ class ChromeScrollBar(Qt.QScrollBar) :
 
 		#####
 
-		self._highlight_positions_list = []
+		self.__highlight_positions_list = []
 
-		self._highlight_color = CssCollection.value("highlight_background", "color")
-		self._highlight_color.setAlpha(CssCollection.value("highlight_background", "opacity"))
+		self.__css_collection = CssCollection.CssCollection()
 
-		self._highlight_pen = Qt.QPen()
-		self._highlight_pen.setColor(self._highlight_color)
-		self._highlight_pen.setStyle(Qt.Qt.SolidLine)
+		self.__highlight_color = Qt.QColor()
+		self.__highlight_pen = Qt.QPen()
+
+		#####
+
+		self.connect(self.__css_collection, Qt.SIGNAL("cssChanged()"), self.initDrawInstruments)
+
+		#####
+
+		self.initDrawInstruments()
 
 
 	### Public ###
 
 	def addHighlight(self, pos, count) :
-		if len(self._highlight_positions_list) == 0 or abs(self._highlight_positions_list[-1]["pos"] - pos) > MinCharacterDistance :
-			self._highlight_positions_list.append({ "pos" : pos, "count" : count })
+		if len(self.__highlight_positions_list) == 0 or abs(self.__highlight_positions_list[-1]["pos"] - pos) > MinCharacterDistance :
+			self.__highlight_positions_list.append({ "pos" : pos, "count" : count })
 
 	def drawHighlight(self) :
 		self.update()
 
 	def isHighlighted(self) :
-		return bool(len(self._highlight_positions_list))
+		return bool(len(self.__highlight_positions_list))
 
 	def clearHighlight(self) :
-		self._highlight_positions_list = []
+		self.__highlight_positions_list = []
+		self.update()
+
+
+	### Private ###
+
+	def initDrawInstruments(self) :
+		self.__highlight_color = self.__css_collection.value("highlight_background", "color")
+		self.__highlight_color.setAlpha(__css_collection.value("highlight_background", "opacity"))
+
+		self.__highlight_pen.setColor(self.__highlight_color)
+		self.__highlight_pen.setStyle(Qt.Qt.SolidLine)
+
 		self.update()
 
 
@@ -70,7 +88,7 @@ class ChromeScrollBar(Qt.QScrollBar) :
 	def paintEvent(self, event) :
 		Qt.QScrollBar.paintEvent(self, event)
 
-		if len(self._highlight_positions_list) == 0 :
+		if len(self.__highlight_positions_list) == 0 :
 			return
 
 		highlight_rects_list = []
@@ -78,7 +96,7 @@ class ChromeScrollBar(Qt.QScrollBar) :
 		highlight_pass = self.style().pixelMetric(Qt.QStyle.PM_ScrollBarSliderMin) - 1
 		highlight_area_height = self.height() - highlight_pass * 3
 
-		for highlight_positions_list_item in self._highlight_positions_list :
+		for highlight_positions_list_item in self.__highlight_positions_list :
 			pos = highlight_area_height * highlight_positions_list_item["pos"] / highlight_positions_list_item["count"] + highlight_pass
 
 			if len(highlight_rects_list) == 0 or pos > highlight_rects_list[-1].bottom() :
@@ -92,8 +110,8 @@ class ChromeScrollBar(Qt.QScrollBar) :
 					(highlight_area_height + highlight_pass)))
 
 		painter = Qt.QPainter(self)
-		painter.setPen(self._highlight_pen)
-		painter.setBrush(self._highlight_color)
+		painter.setPen(self.__highlight_pen)
+		painter.setBrush(self.__highlight_color)
 		for highlight_rects_list_item in highlight_rects_list :
 			painter.drawRect(highlight_rects_list_item)
 

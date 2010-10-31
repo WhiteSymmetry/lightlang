@@ -24,104 +24,152 @@ import Qt
 import Css
 
 
-##### Private objects #####
-CollectionDictObject = {
-	"dict_header_font" : {
-		"bold_flag" : (None, False, bool),
-		"italic_flag" : (None, False, bool),
-		"large_flag" : (None, False, bool),
-		"color" : (None, Qt.QColor(), Qt.QColor)
-	},
-	"dict_header_background" : {
-		"color" : (None, Qt.QColor(), Qt.QColor)
-	},
-	"red_alert_background" : {
-		"color" : (None, Qt.QColor(), Qt.QColor)
-	},
-	"highlight_background" : {
-		"color" : (None, Qt.QColor(), Qt.QColor),
-		"opacity" : (None, 255, int)
-	},
-	"transparent_frame_background" : {
-		"color" : (None, Qt.QColor(), Qt.QColor),
-		"opacity" : (None, 255, int)
-	}
-}
+##### Private classes #####
+class CssCollectionMultiple(Qt.QObject) :
+	def __init__(self, parent = None) :
+		Qt.QObject.__init__(self, parent = None)
+
+		#####
+
+		self.__css_collection_dict = {
+			"dict_header_font" : {
+				"bold_flag" : (None, False, bool),
+				"italic_flag" : (None, False, bool),
+				"large_flag" : (None, False, bool),
+				"color" : (None, Qt.QColor(), Qt.QColor)
+			},
+			"dict_header_background" : {
+				"color" : (None, Qt.QColor(), Qt.QColor)
+			},
+			"red_alert_background" : {
+				"color" : (None, Qt.QColor(), Qt.QColor)
+			},
+			"highlight_background" : {
+				"color" : (None, Qt.QColor(), Qt.QColor),
+				"opacity" : (None, 255, int)
+			},
+			"transparent_frame_background" : {
+				"color" : (None, Qt.QColor(), Qt.QColor),
+				"opacity" : (None, 255, int)
+			}
+		}
+
+		self.__css = Css.Css()
+
+		###
+
+		self.__css_class_regexp = Qt.QRegExp("\\.([^(\\{|\\})]*)\\{([^(\\{|\\})]*)\\}")
+		self.__css_class_regexp.setMinimal(True)
+
+		self.__css_option_regexp = Qt.QRegExp("([^(\\{|\\})]*):([^(\\{|\\})]*);")
+		self.__css_option_regexp.setMinimal(True)
+
+		#####
+
+		self.connect(self.__css, Qt.SIGNAL("cssChanged()"), self.applyCss)
+
+		#####
+
+		self.blockSignals(True)
+		self.applyCss()
+		self.blockSignals(False)
 
 
-##### Private methods #####
-def initCollection() :
-	for section_name in CollectionDictObject.keys() :
-		for option_name in CollectionDictObject[section_name].keys() :
-			setValue(section_name, option_name)
+	### Public ###
+
+	def value(self, group, name) :
+		group = str(group)
+		name = str(name)
+		if self.__css_collection_dict.has_key(group) and self.__css_collection_dict[group].has_key(name) :
+			return self.__css_collection_dict[group][name][0]
+		else :
+			return None
+
+	### Private ###
+
+	def setValue(self, group, name, value = None) :
+		group = str(group)
+		name = str(name)
+		(old_value, default_value, validator) = self.__css_collection_dict[group][name]
+		self.__css_collection_dict[group][name] = (validator( value if value != None else default_value ), default_value, validator)
 
 	###
 
-	css = Css.css().remove(Qt.QRegExp("\\s"))
+	def applyCss(self) :
+		for group_key in self.__css_collection_dict.keys() :
+			for name_key in self.__css_collection_dict[group_key].keys() :
+				self.setValue(group_key, name_key)
 
-	css_class_regexp = Qt.QRegExp("\\.([^(\\{|\\})]*)\\{([^(\\{|\\})]*)\\}")
-	css_class_regexp.setMinimal(True)
+		css = self.__css.css().remove(Qt.QRegExp("\\s"))
 
-	css_option_regexp = Qt.QRegExp("([^(\\{|\\})]*):([^(\\{|\\})]*);")
-	css_option_regexp.setMinimal(True)
+		css_class_pos = self.__css_class_regexp.indexIn(css)
+		while css_class_pos != -1 :
+			css_class_name = self.__css_class_regexp.cap(1)
+			css_class_body = self.__css_class_regexp.cap(2)
 
-	css_class_pos = css_class_regexp.indexIn(css)
-	while css_class_pos != -1 :
-		css_class_name = css_class_regexp.cap(1)
-		css_class_body = css_class_regexp.cap(2)
+			css_option_pos = self.__css_option_regexp.indexIn(css_class_body)
+			while css_option_pos != -1 :
+				css_option_name = self.__css_option_regexp.cap(1)
+				css_option_value = self.__css_option_regexp.cap(2)
 
-		css_option_pos = css_option_regexp.indexIn(css_class_body)
-		while css_option_pos != -1 :
-			css_option_name = css_option_regexp.cap(1)
-			css_option_value = css_option_regexp.cap(2)
+				if css_class_name == "dict_header_font" :
+					if css_option_name == "font-weight" :
+						self.setValue(css_class_name, "bold_flag", ( css_option_value == "bold" ))
+					elif css_option_name == "font-style" :
+						self.setValue(css_class_name, "italic_flag", ( css_option_value == "italic" ))
+					elif css_option_name == "font-size" :
+						self.setValue(css_class_name, "large_flag", ( css_option_value == "large" ))
+					elif css_option_name == "color" :
+						self.setValue(css_class_name, "color", css_option_value)
 
-			if css_class_name == "dict_header_font" :
-				if css_option_name == "font-weight" :
-					setValue(str(css_class_name), "bold_flag", ( css_option_value == "bold" ))
-				elif css_option_name == "font-style" :
-					setValue(str(css_class_name), "italic_flag", ( css_option_value == "italic" ))
-				elif css_option_name == "font-size" :
-					setValue(str(css_class_name), "large_flag", ( css_option_value == "large" ))
-				elif css_option_name == "color" :
-					setValue(str(css_class_name), "color", css_option_value)
+				elif css_class_name == "dict_header_background" :
+					if css_option_name == "background-color" :
+						self.setValue(css_class_name, "color", css_option_value)
 
-			elif css_class_name == "dict_header_background" :
-				if css_option_name == "background-color" :
-					setValue(str(css_class_name), "color", css_option_value)
+				elif css_class_name == "red_alert_background" :
+					if css_option_name == "background-color" :
+						self.setValue(css_class_name, "color", css_option_value)
 
-			elif css_class_name == "red_alert_background" :
-				if css_option_name == "background-color" :
-					setValue(str(css_class_name), "color", css_option_value)
+				elif css_class_name == "highlight_background" :
+					if css_option_name == "background-color" :
+						if css_option_value == "from-palette" :
+							self.setValue(css_class_name, "color", Qt.QApplication.palette().color(Qt.QPalette.Highlight))
+						else :
+							self.setValue(css_class_name, "color", css_option_value)
+					if css_option_name == "opacity" :
+						self.setValue(css_class_name, "opacity", ( css_option_value.toInt()[0] if css_option_value.toInt()[1] else 255 ))
 
-			elif css_class_name == "highlight_background" :
-				if css_option_name == "background-color" :
-					if css_option_value == "from-palette" :
-						setValue(str(css_class_name), "color", Qt.QApplication.palette().color(Qt.QPalette.Highlight))
-					else :
-						setValue(str(css_class_name), "color", css_option_value)
-				if css_option_name == "opacity" :
-					setValue(str(css_class_name), "opacity", ( css_option_value.toInt()[0] if css_option_value.toInt()[1] else 255 ))
+				elif css_class_name == "transparent_frame_background" :
+					if css_option_name == "background-color" :
+						if css_option_value == "from-palette" :
+							self.setValue(css_class_name, "color", Qt.QApplication.palette().color(Qt.QPalette.Window))
+						else :
+							self.setValue(css_class_name, "color", css_option_value)
+					if css_option_name == "opacity" :
+						self.setValue(css_class_name, "opacity", ( css_option_value.toInt()[0] if css_option_value.toInt()[1] else 255 ))
 
-			elif css_class_name == "transparent_frame_background" :
-				if css_option_name == "background-color" :
-					if css_option_value == "from-palette" :
-						setValue(str(css_class_name), "color", Qt.QApplication.palette().color(Qt.QPalette.Window))
-					else :
-						setValue(str(css_class_name), "color", css_option_value)
-				if css_option_name == "opacity" :
-					setValue(str(css_class_name), "opacity", ( css_option_value.toInt()[0] if css_option_value.toInt()[1] else 255 ))
+				css_option_pos = self.__css_option_regexp.indexIn(css_class_body, css_option_pos + self.__css_option_regexp.matchedLength())
+			css_class_pos = self.__css_class_regexp.indexIn(css, css_class_pos + self.__css_class_regexp.matchedLength())
 
-			css_option_pos = css_option_regexp.indexIn(css_class_body, css_option_pos + css_option_regexp.matchedLength())
-		css_class_pos = css_class_regexp.indexIn(css, css_class_pos + css_class_regexp.matchedLength())
-
-def setValue(section_name, option_name, value = None) :
-	(old_value, default_value, validator) = CollectionDictObject[section_name][option_name]
-	CollectionDictObject[section_name][option_name] = (validator( value if value != None else default_value ), default_value, validator)
+		self.cssChangedSignal()
 
 
-##### Public methods #####
-def value(section_name, option_name) :
-	if CollectionDictObject[section_name][option_name][0] == None :
-		initCollection()
-	return CollectionDictObject[section_name][option_name][0]
+	### Signals ###
+
+	def cssChangedSignal(self) :
+		self.emit(Qt.SIGNAL("cssChanged()"))
+
+
+##### Public classes #####
+class CssCollection(CssCollectionMultiple) :
+	__css_collection_multiple_object = None
+
+	def __new__(self, parent = None) :
+		if self.__css_collection_multiple_object == None :
+			self.__css_collection_multiple_object = CssCollectionMultiple.__new__(self, parent)
+			CssCollectionMultiple.__init__(self.__css_collection_multiple_object, parent)
+		return self.__css_collection_multiple_object
+
+	def __init__(self, parent = None) :
+		pass
 

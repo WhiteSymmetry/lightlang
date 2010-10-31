@@ -33,27 +33,27 @@ class TextEdit(Qt.QTextEdit) :
 
 		#####
 
-		self._main_layout = Qt.QVBoxLayout()
-		self._main_layout.setAlignment(Qt.Qt.AlignRight|Qt.Qt.AlignBottom)
-		self._main_layout.setContentsMargins(0, 0, 0, 0)
-		self._main_layout.setSpacing(0)
-		self.setLayout(self._main_layout)
+		self.__main_layout = Qt.QVBoxLayout()
+		self.__main_layout.setAlignment(Qt.Qt.AlignRight|Qt.Qt.AlignBottom)
+		self.__main_layout.setContentsMargins(0, 0, 0, 0)
+		self.__main_layout.setSpacing(0)
+		self.setLayout(self.__main_layout)
 
 		#####
 
-		self._clear_button = Qt.QToolButton(self)
-		self._clear_button.setIcon(IconsLoader.icon("edit-clear-locationbar-rtl"))
-		self._clear_button.setIconSize(Qt.QSize(16, 16))
-		self._clear_button.setCursor(Qt.Qt.ArrowCursor)
-		self._clear_button.setAutoRaise(True)
-		self._clear_button.setEnabled(False)
-		self._main_layout.addWidget(self._clear_button)
+		self.__clear_button = Qt.QToolButton(self)
+		self.__clear_button.setIcon(IconsLoader.icon("edit-clear-locationbar-rtl"))
+		self.__clear_button.setIconSize(Qt.QSize(16, 16))
+		self.__clear_button.setCursor(Qt.Qt.ArrowCursor)
+		self.__clear_button.setAutoRaise(True)
+		self.__clear_button.setEnabled(False)
+		self.__main_layout.addWidget(self.__clear_button)
 
 		#####
 
 		self.connect(self, Qt.SIGNAL("textChanged()"), self.setStatusFromTextEdit)
 
-		self.connect(self._clear_button, Qt.SIGNAL("clicked()"), self.clearTextEdit)
+		self.connect(self.__clear_button, Qt.SIGNAL("clicked()"), self.clearTextEdit)
 
 
 	### Private ###
@@ -63,7 +63,7 @@ class TextEdit(Qt.QTextEdit) :
 		self.setFocus(Qt.Qt.OtherFocusReason)
 
 	def setStatusFromTextEdit(self) :
-		self._clear_button.setEnabled(not self.toPlainText().simplified().isEmpty())
+		self.__clear_button.setEnabled(not self.toPlainText().simplified().isEmpty())
 
 
 	### Signals ###

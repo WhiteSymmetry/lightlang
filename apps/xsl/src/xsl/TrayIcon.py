@@ -24,7 +24,6 @@ import sys
 
 import Qt
 import Const
-import Locale
 import IconsLoader
 import ActionsCollection
 import EntitledMenu
@@ -44,12 +43,9 @@ class TrayIcon(Qt.QSystemTrayIcon) :
 
 		#####
 
-		self.__locale = Locale.Locale()
 		self.__actions_collection = ActionsCollection.ActionsCollection()
 
 		#####
-
-		self.connect(self.__locale, Qt.SIGNAL("localeChanged(const QString &)"), self.translateObject)
 
 		self.connect(self.__actions_collection.action("spy_menu", "start_spy"), Qt.SIGNAL("changed()"), self.translateObject)
 
@@ -92,6 +88,16 @@ class TrayIcon(Qt.QSystemTrayIcon) :
 			menu.addSeparator()
 			menu.addAction(self.__actions_collection.action("application", "exit"))
 			menu.exec_(Qt.QCursor.pos())
+
+
+	### Handlers ###
+
+	def event(self, event) :
+		if event.type() == Qt.QEvent.LanguageChange :
+			self.translateObject()
+			return True
+		else :
+			return Qt.QSystemTrayIcon.event(self, event)
 
 
 	### Signals ###

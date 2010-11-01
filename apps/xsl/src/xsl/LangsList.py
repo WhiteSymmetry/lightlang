@@ -80,9 +80,9 @@ class LangsListMultiple(Qt.QObject) :
 
 
 		self.__langs_list = []
-		for lang_codes_dict_key in self.__langs_codes_dict.keys() :
+		for lang_codes_dict_key in self.__lang_codes_dict.keys() :
 			self.__langs_list.append({
-				"name" : Qt.QString(self.__langs_codes_dict[lang_codes_dict_key]),
+				"name" : Qt.QString(self.__lang_codes_dict[lang_codes_dict_key]),
 				"code" : Qt.QString(lang_codes_dict_key)
 				})
 

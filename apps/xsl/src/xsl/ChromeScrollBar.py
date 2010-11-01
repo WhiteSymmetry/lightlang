@@ -75,7 +75,7 @@ class ChromeScrollBar(Qt.QScrollBar) :
 
 	def initDrawInstruments(self) :
 		self.__highlight_color = self.__css_collection.value("highlight_background", "color")
-		self.__highlight_color.setAlpha(__css_collection.value("highlight_background", "opacity"))
+		self.__highlight_color.setAlpha(self.__css_collection.value("highlight_background", "opacity"))
 
 		self.__highlight_pen.setColor(self.__highlight_color)
 		self.__highlight_pen.setStyle(Qt.Qt.SolidLine)

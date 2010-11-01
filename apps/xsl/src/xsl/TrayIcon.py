@@ -24,15 +24,16 @@ import sys
 
 import Qt
 import Const
+import Locale
 import IconsLoader
 import ActionsCollection
 import EntitledMenu
 import Logger
 
 try :
-	import KeysGrabberThread
+	import KeysGrabber
 except :
-	Logger.warning("Ignored X11 hooks: KeysGrabberThread")
+	Logger.warning("Ignored X11 hooks: KeysGrabber")
 	Logger.attachException(Logger.WarningMessage)
 
 
@@ -41,46 +42,56 @@ class TrayIcon(Qt.QSystemTrayIcon) :
 	def __init__(self, parent = None) :
 		Qt.QSystemTrayIcon.__init__(self, parent)
 
-		self.setIcon(IconsLoader.icon("xsl_22"))
-		self.setToolTip(tr("%1 - graphical interface for SL\nSpy is stopped").arg(Const.MyName))
+		#####
+
+		self.__locale = Locale.Locale()
+		self.__actions_collection = ActionsCollection.ActionsCollection()
 
 		#####
 
-		self.connect(ActionsCollection.action("spy_menu", "start_spy"), Qt.SIGNAL("changed()"), self.startSpyChanged)
+		self.connect(self.__locale, Qt.SIGNAL("localeChanged(const QString &)"), self.translateObject)
 
-		if sys.modules.has_key("KeysGrabberThread") :
-			self._keys_grabber_thread = KeysGrabberThread.KeysGrabberThread()
-			signal = self._keys_grabber_thread.addHotkey(self.objectName(), KeysGrabberThread.Key_L, KeysGrabberThread.WinModifier)
-			self.connect(self._keys_grabber_thread, Qt.SIGNAL(signal), self.visibleChangeRequestSignal)
+		self.connect(self.__actions_collection.action("spy_menu", "start_spy"), Qt.SIGNAL("changed()"), self.translateObject)
+
+		if sys.modules.has_key("KeysGrabber") :
+			self.__keys_grabber = KeysGrabber.KeysGrabber()
+			self.__hotkey = self.__keys_grabber.addHotkey(KeysGrabber.Key_L, KeysGrabber.WinModifier)
+			self.connect(self.__keys_grabber, Qt.SIGNAL("keyPressed(const QString &)"), self.act)
 
 		self.connect(self, Qt.SIGNAL("activated(QSystemTrayIcon::ActivationReason)"), self.act)
+
+		#####
+
+		self.translateObject()
 
 
 	### Private ###
 
-	def act(self, reason) :
-		if reason == Qt.QSystemTrayIcon.Trigger :
-			self.visibleChangeRequestSignal()
-		elif reason == Qt.QSystemTrayIcon.Context :
-			menu = EntitledMenu.EntitledMenu(IconsLoader.icon("xsl"), Const.Organization+" "+Const.MyName)
-			menu.addAction(ActionsCollection.action("spy_menu", "start_spy"))
-			menu.addAction(ActionsCollection.action("spy_menu", "stop_spy"))
-			menu.addSeparator()
-			menu.addAction(tr("Dictionary window")+( "\tWin+L" if self.__dict__.has_key("_keys_grabber_thread") else "" ),
-				self.visibleChangeRequestSignal)
-			menu.addSeparator()
-			menu.addAction(ActionsCollection.action("application", "exit"))
-			menu.exec_(Qt.QCursor.pos())
-
-	###
-
-	def startSpyChanged(self) :
-		if ActionsCollection.action("spy_menu", "start_spy").isEnabled() :
+	def translateObject(self) :
+		if self.__actions_collection.action("spy_menu", "start_spy").isEnabled() :
 			self.setIcon(IconsLoader.icon("xsl_22"))
 			self.setToolTip(tr("%1 - graphical interface for SL\nSpy is stopped").arg(Const.MyName))
 		else :
 			self.setIcon(IconsLoader.icon("xsl+spy_22"))
 			self.setToolTip(tr("%1 - graphical interface for SL\nSpy is running").arg(Const.MyName))
+
+	###
+
+	def act(self, reason) :
+		if self.__dict__.has_key("__keys_grabber") and reason == self.__hotkey :
+			self.visibleChangeRequestSignal()
+		elif reason == Qt.QSystemTrayIcon.Trigger :
+			self.visibleChangeRequestSignal()
+		elif reason == Qt.QSystemTrayIcon.Context :
+			menu = EntitledMenu.EntitledMenu(IconsLoader.icon("xsl"), Const.Organization+" "+Const.MyName)
+			menu.addAction(self.__actions_collection.action("spy_menu", "start_spy"))
+			menu.addAction(self.__actions_collection.action("spy_menu", "stop_spy"))
+			menu.addSeparator()
+			menu.addAction(tr("Dictionary window")+( "\tWin+L" if self.__dict__.has_key("__keys_grabber") else "" ),
+				self.visibleChangeRequestSignal)
+			menu.addSeparator()
+			menu.addAction(self.__actions_collection.action("application", "exit"))
+			menu.exec_(Qt.QCursor.pos())
 
 
 	### Signals ###

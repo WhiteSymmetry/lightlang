@@ -23,7 +23,8 @@
 import sys
 
 import Qt
-import Const
+import Css
+import Logger
 
 
 ##### Public classes #####
@@ -31,8 +32,25 @@ class MainApplication(Qt.QApplication) :
 	def __init__(self, argv) :
 		Qt.QApplication.__init__(self, argv)
 
+		#####
+
+		self.__css = Css.Css()
+
+		#####
+
+		self.connect(self.__css, Qt.SIGNAL("cssChanged()"), self.applyCss)
+
+		#####
+
+		self.applyCss()
+
 
 	### Private ###
+
+	def applyCss(self) :
+		self.setStyleSheet(self.__css.css())
+
+	###
 
 	def commitData(self, session_manager) :
 		if session_manager.allowsInteraction() :
@@ -40,7 +58,7 @@ class MainApplication(Qt.QApplication) :
 			session_manager.setRestartHint(Qt.QSessionManager.RestartIfRunning)
 			session_manager.release()
 		else :
-			print >> sys.stderr, Const.MyName+": cannot save session: ignored"
+			Logger.warning("Cannot save session")
 
 
 	### Signals ###

@@ -79,7 +79,7 @@ class TrayIcon(Qt.QSystemTrayIcon) :
 		elif reason == Qt.QSystemTrayIcon.Trigger :
 			self.visibleChangeRequestSignal()
 		elif reason == Qt.QSystemTrayIcon.Context :
-			menu = EntitledMenu.EntitledMenu(IconsLoader.icon("xsl"), Const.Organization+" "+Const.MyName)
+			menu = EntitledMenu.EntitledMenu(IconsLoader.icon("xsl"), Const.Package+" "+Const.MyName)
 			menu.addAction(self.__actions_collection.action("spy_menu", "start_spy"))
 			menu.addAction(self.__actions_collection.action("spy_menu", "stop_spy"))
 			menu.addSeparator()

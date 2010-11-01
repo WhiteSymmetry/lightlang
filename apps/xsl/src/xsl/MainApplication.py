@@ -20,7 +20,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 
-import sys
+import __builtin__
 
 import Qt
 import Css
@@ -33,6 +33,8 @@ class MainApplication(Qt.QApplication) :
 		Qt.QApplication.__init__(self, argv)
 
 		#####
+
+		__builtin__.__dict__["tr"] = ( lambda text : Qt.QApplication.translate("@default", text) )
 
 		self.__css = Css.Css()
 

@@ -196,7 +196,7 @@ class TextBrowser(Qt.QTextBrowser) :
 
 	def setCursorInfo(self, info) :
 		if not info.simplified().isEmpty() :
-			if Qt.QUrl(info).scheme() in ("http", "mailto", "HTTP", "MAILTO") :
+			if Qt.QUrl(info).scheme().toLower() in ("http", "mailto") :
 				Qt.QToolTip.showText(Qt.QCursor.pos(), info)
 
 

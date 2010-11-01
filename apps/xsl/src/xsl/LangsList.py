@@ -21,7 +21,6 @@
 
 
 import Qt
-import Locale
 
 
 ##### Private classes #####
@@ -33,12 +32,6 @@ class LangsListMultiple(Qt.QObject) :
 
 		self.__langs_list = []
 		self.__lang_codes_dict = {}
-
-		self.__locale = Locale.Locale()
-
-		#####
-
-		self.connect(self.__locale, Qt.SIGNAL("localeChanged(const QString &)"), self.translateObject)
 
 		#####
 
@@ -105,6 +98,16 @@ class LangsListMultiple(Qt.QObject) :
 
 		self.sortLangsList(langs_list, left, i - 2)
 		self.sortLangsList(langs_list, i, right)
+
+
+	### Handlers ###
+
+	def event(self, event) :
+		if event.type() == Qt.QEvent.LanguageChange :
+			self.translateObject()
+			return True
+		else :
+			return Qt.QObject.event(self, event)
 
 
 ##### Public classes #####

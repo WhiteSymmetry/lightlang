@@ -37,54 +37,58 @@ class GoogleTranslate(Qt.QObject) :
 
 		#####
 
-		self._http = Qt.QHttp(self)
-		self._http_request_id = -1
-		self._http_abort_flag = False
+		self.__locale = Locale.Locale()
+		self.__settings = Settings.Settings()
+		self.__langs_list = LangsList.LangsList()
 
-		self._http_output = Qt.QByteArray()
+		self.__http = Qt.QHttp(self)
+		self.__http_request_id = -1
+		self.__http_abort_flag = False
 
-		self._timer = Qt.QTimer(self)
-		self._timer.setInterval(30000)
+		self.__http_output = Qt.QByteArray()
 
-		self._sl = Qt.QString()
-		self._tl = Qt.QString()
+		self.__timer = Qt.QTimer(self)
+		self.__timer.setInterval(30000)
+
+		self.__sl = Qt.QString()
+		self.__tl = Qt.QString()
 
 		#####
 
-		self.connect(self._http, Qt.SIGNAL("stateChanged(int)"), self.setStatus)
-		self.connect(self._http, Qt.SIGNAL("requestFinished(int, bool)"), self.requestFinished)
-		self.connect(self._http, Qt.SIGNAL("readyRead(const QHttpResponseHeader &)"), self.setText)
+		self.connect(self.__http, Qt.SIGNAL("stateChanged(int)"), self.setStatus)
+		self.connect(self.__http, Qt.SIGNAL("requestFinished(int, bool)"), self.requestFinished)
+		self.connect(self.__http, Qt.SIGNAL("readyRead(const QHttpResponseHeader &)"), self.setText)
 
-		self.connect(self._timer, Qt.SIGNAL("timeout()"), self.abort)
+		self.connect(self.__timer, Qt.SIGNAL("timeout()"), self.abort)
 
 
 	### Public ###
 
 	def translate(self, sl, tl, text) :
-		self._http_abort_flag = True
-		self._http.abort()
-		self._http_abort_flag = False
+		self.__http_abort_flag = True
+		self.__http.abort()
+		self.__http_abort_flag = False
 
 		self.processStartedSignal()
 
 		self.clearRequestSignal()
 
-		self._http.clearPendingRequests()
-		self._http_output.clear()
+		self.__http.clearPendingRequests()
+		self.__http_output.clear()
 
 		self.wordChangedSignal(tr("Google Translate"))
 		self.textChangedSignal(tr("<font class=\"info_font\">Please wait...</font>"))
 
 		text = text.trimmed()
 
-		self._sl = sl
-		self._tl = tl
+		self.__sl = sl
+		self.__tl = tl
 
 		###
 
 		if text.startsWith("http:", Qt.Qt.CaseInsensitive) :
 			site = ( Qt.QString("http://translate.google.com/translate?js=y&prev=_t&hl=%1&ie=UTF-8&sl=%2&tl=%3&u=%4")
-				.arg(Locale.mainLang()).arg(sl).arg(tl).arg(text) )
+				.arg(self.__locale.mainLang()).arg(sl).arg(tl).arg(text) )
 			Qt.QDesktopServices.openUrl(Qt.QUrl(site))
 			self.textChangedSignal(tr("<font class=\"word_header_font\">Link of site \"%1\" translation "
 				"was opened in your browser</font><hr><br><a href=\"%2\">%2</a>").arg(text).arg(site))
@@ -109,23 +113,23 @@ class GoogleTranslate(Qt.QObject) :
 		http_request_header.setContentLength(text.length())
 		http_request_header.setValue("Connection", "close")
 
-		if Settings.settings().value("application/network/use_proxy_flag", Qt.QVariant(False)).toBool() :
-			self._http.setProxy(Settings.settings().value("application/network/proxy/host").toString(),
-				Settings.settings().value("application/network/proxy/port").toInt()[0],
-				Settings.settings().value("application/network/proxy/user").toString(),
-				Settings.settings().value("application/network/proxy/passwd").toString())
+		if self.__settings.value("application/network/use_proxy_flag").toBool() :
+			self.__http.setProxy(self.__settings.value("application/network/proxy/host").toString(),
+				self.__settings.value("application/network/proxy/port").toInt()[0],
+				self.__settings.value("application/network/proxy/user").toString(),
+				self.__settings.value("application/network/proxy/passwd").toString())
 		else :
-			self._http.setProxy(Qt.QString(), 0)
+			self.__http.setProxy(Qt.QString(), 0)
 
-		self._http.setHost("ajax.googleapis.com")
-		self._http_request_id = self._http.request(http_request_header, text)
+		self.__http.setHost("ajax.googleapis.com")
+		self.__http_request_id = self.__http.request(http_request_header, text)
 
-		self._timer.start()
+		self.__timer.start()
 
 	def abort(self) :
-		self._http_abort_flag = True
-		self._http.abort()
-		self._http_abort_flag = False
+		self.__http_abort_flag = True
+		self.__http.abort()
+		self.__http_abort_flag = False
 
 		self.statusChangedSignal(Qt.QString())
 		self.textChangedSignal(tr("<font class=\"info_font\">Aborted</font>"))
@@ -150,20 +154,20 @@ class GoogleTranslate(Qt.QObject) :
 			self.statusChangedSignal(tr("Closing connection..."))
 
 	def setText(self) :
-		self._http_output.append(self._http.readAll())
+		self.__http_output.append(self.__http.readAll())
 
 	def requestFinished(self, request_id, error_flag) :
-		if request_id != self._http_request_id :
+		if request_id != self.__http_request_id :
 			return
 
-		if error_flag and not self._http_abort_flag :
-			Qt.QMessageBox.warning(None, Const.MyName, tr("HTTP error: %1\nPress \"Yes\" to ignore").arg(self._http.errorString()))
+		if error_flag and not self.__http_abort_flag :
+			Qt.QMessageBox.warning(None, Const.MyName, tr("HTTP error: %1\nPress \"Yes\" to ignore").arg(self.__http.errorString()))
 
-		self._timer.stop()
+		self.__timer.stop()
 
 		###
 
-		text = Qt.QTextCodec.codecForName("UTF-8").toUnicode(self._http_output.data())
+		text = Qt.QTextCodec.codecForName("UTF-8").toUnicode(self.__http_output.data())
 
 		###
 
@@ -182,10 +186,10 @@ class GoogleTranslate(Qt.QObject) :
 
 				if responce_data != None :
 					if responce_data.has_key("detectedSourceLanguage") :
-						sl_name = tr("%1 (guessed)").arg(LangsList.langName(responce_data["detectedSourceLanguage"]))
+						sl_name = tr("%1 (guessed)").arg(self.__langs_list.langName(responce_data["detectedSourceLanguage"]))
 					else :
-						sl_name = LangsList.langName(self._sl)
-					tl_name = LangsList.langName(self._tl)
+						sl_name = self.__langs_list.langName(self.__sl)
+					tl_name = self.__langs_list.langName(self.__tl)
 
 					text = ( tr("<font class=\"word_header_font\">Translated: %1 &#187; %2</font><hr>%3")
 						.arg(sl_name).arg(tl_name).arg(Qt.QString(responce_data["translatedText"])) )

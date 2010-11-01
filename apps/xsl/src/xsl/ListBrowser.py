@@ -32,11 +32,11 @@ class ListBrowser(Qt.QListWidget) :
 
 		#####
 
-		self._info_item_regexp = Qt.QRegExp("\\{\\{(.*)\\}\\}")
-		self._info_item_regexp.setMinimal(True)
+		self.__info_item_regexp = Qt.QRegExp("\\{\\{(.*)\\}\\}")
+		self.__info_item_regexp.setMinimal(True)
 
-		self._caption_item_regexp = Qt.QRegExp("\\[\\[(.*)\\]\\]")
-		self._caption_item_regexp.setMinimal(True)
+		self.__caption_item_regexp = Qt.QRegExp("\\[\\[(.*)\\]\\]")
+		self.__caption_item_regexp.setMinimal(True)
 
 
 	### Public ###
@@ -44,13 +44,13 @@ class ListBrowser(Qt.QListWidget) :
 	def setList(self, items_list) :
 		self.clear()
 
-		for count in xrange(items_list.count()) :
-			if self._info_item_regexp.exactMatch(items_list[count]) :
-				self.addItem(ListBrowserInfoItem.ListBrowserInfoItem(self._info_item_regexp.cap(1), self))
-			elif self._caption_item_regexp.exactMatch(items_list[count]) :
-				self.addItem(ListBrowserCaptionItem.ListBrowserCaptionItem(self._caption_item_regexp.cap(1), self))
+		for items_list_item in items_list :
+			if self.__info_item_regexp.exactMatch(items_list_item) :
+				self.addItem(ListBrowserInfoItem.ListBrowserInfoItem(self.__info_item_regexp.cap(1), self))
+			elif self.__caption_item_regexp.exactMatch(items_list_item) :
+				self.addItem(ListBrowserCaptionItem.ListBrowserCaptionItem(self.__caption_item_regexp.cap(1), self))
 			else :
-				self.addItem(items_list[count])
+				self.addItem(items_list_item)
 
 	def setText(self, text) :
 		self.clear()

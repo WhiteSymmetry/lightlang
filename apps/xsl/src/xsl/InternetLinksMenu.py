@@ -32,23 +32,39 @@ class InternetLinksMenu(Qt.QMenu) :
 
 		#####
 
-		self.addMailLink(IconsLoader.icon("mail-send"), tr("Developer e-mail"), Const.DeveloperMail, Const.Organization)
-		self.addMailLink(IconsLoader.icon("mail-send"), tr("Offers e-mail"), Const.OffersMail, Const.Organization)
-		self.addMailLink(IconsLoader.icon("mail-send"), tr("Bugtrack e-mail"), Const.BugtrackMail, Const.Organization)
+		self.translateObject()
+
+
+	### Private ###
+
+	def translateObject(self) :
+		self.clear()
+
+		self.addMailLink(IconsLoader.icon("mail-send"), tr("Developer e-mail"), Const.DeveloperMail, Const.Package)
+		self.addMailLink(IconsLoader.icon("mail-send"), tr("Offers e-mail"), Const.OffersMail, Const.Package)
+		self.addMailLink(IconsLoader.icon("mail-send"), tr("Bugtrack e-mail"), Const.BugtrackMail, Const.Package)
 		self.addSeparator()
 		self.addLink(IconsLoader.icon("applications-internet"), tr("Home page"), Const.HomePageAddress)
 		self.addSeparator()
 
-		self.addMailLink(IconsLoader.icon("mail-send"), tr("Register %1").arg(Const.Organization), Const.UserCountMail,
+		self.addMailLink(IconsLoader.icon("mail-send"), tr("Register %1").arg(Const.Package), Const.UserCountMail,
 			"&body="+tr("Count me, please :-)\nRegistration date/time: %1\nPackage version: %2")
 				.arg(Qt.QDateTime().currentDateTime().toString()).arg(Const.PackageVersion))
 
-
-	### Private ###
+	###
 
 	def addLink(self, icon, title, link) :
 		self.addAction(icon, title, lambda : Qt.QDesktopServices.openUrl(Qt.QUrl(link)))
 
 	def addMailLink(self, icon, title, mailto, subject) :
 		self.addLink(icon, title, Qt.QString("mailto:%1?subject=%2").arg(mailto).arg(subject))
+
+
+	### Handlers ###
+
+	def changeEvent(self, event) :
+		if event.type() == Qt.QEvent.LanguageChange :
+			self.translateObject()
+		else :
+			Qt.QMenu.changeEvent(self, event)
 

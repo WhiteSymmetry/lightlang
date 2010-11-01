@@ -35,9 +35,9 @@ class TranslateBrowser(TextBrowser.TextBrowser) :
 
 		#####
 
-		self._sound_search = SlSoundSearch.SlSoundSearch(self)
+		self.__sound_search = SlSoundSearch.SlSoundSearch(self)
 
-		self._clipboard = Qt.QApplication.clipboard()
+		self.__clipboard = Qt.QApplication.clipboard()
 
 		#####
 
@@ -77,8 +77,8 @@ class TranslateBrowser(TextBrowser.TextBrowser) :
 			word = word.simplified()
 			if word.isEmpty() :
 				return
-			self._sound_search.find(word)
-		elif word.startsWith("http:", Qt.Qt.CaseInsensitive) or word.startsWith("mailto:", Qt.Qt.CaseInsensitive) :
+			self.__sound_search.find(word)
+		elif url.scheme().toLower() in ("http", "mailto") :
 			Qt.QDesktopServices.openUrl(url)
 
 
@@ -109,7 +109,7 @@ class TranslateBrowser(TextBrowser.TextBrowser) :
 					return
 
 				for count in xrange(1, words_list.count()) :
-					if not self._sound_search.checkWord(words_list[0], words_list[count]) :
+					if not self.__sound_search.checkWord(words_list[0], words_list[count]) :
 						Qt.QToolTip.showText(Qt.QCursor.pos(), tr("Sound is not full"))
 						return
 			elif info.startsWith("http:", Qt.Qt.CaseInsensitive) or info.startsWith("mailto:", Qt.Qt.CaseInsensitive) :
@@ -121,7 +121,7 @@ class TranslateBrowser(TextBrowser.TextBrowser) :
 		if event.button() == Qt.Qt.MidButton :
 			word = self.textCursor().selectedText().simplified()
 			if word.isEmpty() :
-				word = self._clipboard.text(Qt.QClipboard.Selection).simplified()
+				word = self.__clipboard.text(Qt.QClipboard.Selection).simplified()
 			if not word.isEmpty() :
 				self.newTabRequestSignal()
 				self.uFindRequestSignal(word)

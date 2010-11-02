@@ -23,6 +23,9 @@
 import __builtin__
 
 import Qt
+import Const
+import Utils
+import Locale
 import Css
 import Logger
 
@@ -35,19 +38,38 @@ class MainApplication(Qt.QApplication) :
 		#####
 
 		__builtin__.__dict__["tr"] = ( lambda text : Qt.QApplication.translate("@default", text) )
+		self.__locale = Locale.Locale()
+		self.__translators_list = []
+		self.applyTranslate()
 
 		self.__css = Css.Css()
+		self.applyCss()
 
 		#####
+
+		self.connect(self.__locale, Qt.SIGNAL("localeChanged(const QString &)"), self.applyTranslate)
 
 		self.connect(self.__css, Qt.SIGNAL("cssChanged()"), self.applyCss)
 
-		#####
-
-		self.applyCss()
-
 
 	### Private ###
+
+	def applyTranslate(self) :
+		for translators_list_item in self.__translators_list :
+			self.removeTranslator(translators_list_item)
+		self.__translators_list = []
+
+		main_lang = self.__locale.mainLang()
+		Logger.debug(Qt.QString("Request to new main lang \"%1\"").arg(main_lang))
+		for tr_file_path in ( Utils.joinPath(Const.TrDirPath, main_lang),
+			Utils.joinPath(Qt.QLibraryInfo.location(Qt.QLibraryInfo.TranslationsPath), "qt_"+main_lang) ) :
+
+			translator = Qt.QTranslator()
+			translator.load(tr_file_path)
+			self.installTranslator(translator)
+			self.__translators_list.append(translator)
+			if not translator.isEmpty() :
+				Logger.debug(Qt.QString("Installed new tr file \"%1\"").arg(tr_file_path))
 
 	def applyCss(self) :
 		self.setStyleSheet(self.__css.css())
@@ -59,6 +81,7 @@ class MainApplication(Qt.QApplication) :
 			self.saveSettingsRequestSignal()
 			session_manager.setRestartHint(Qt.QSessionManager.RestartIfRunning)
 			session_manager.release()
+			Logger.debug("Session saved")
 		else :
 			Logger.warning("Cannot save session")
 

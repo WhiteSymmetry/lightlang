@@ -23,10 +23,11 @@
 import Qt
 import Const
 import Settings
+import Logger
 
 
 ##### Public constants #####
-DefaultLang = "en"
+DefaultLang = Qt.QString("en")
 
 
 ##### Private classes #####
@@ -38,12 +39,12 @@ class LocaleMultiple(Qt.QObject) :
 
 		self.__settings = Settings.Settings()
 
-		force_locale_name = self.__settings.value("application/locale/force_locale_name").toString()
-		self.__locale = ( Qt.QLocale() if force_locale_name.isEmpty() else Qt.QLocale(force_locale_name) )
+		force_main_lang = self.__settings.value("application/locale/force_main_lang").toString()
+		self.__locale = ( Qt.QLocale() if force_main_lang.isEmpty() else Qt.QLocale(force_main_lang) )
 
 		#####
 
-		self.connect(self.__settings, Qt.SIGNAL("valueChanged(const QString &"), self.applySettingsLocale)
+		self.connect(self.__settings, Qt.SIGNAL("settingsChanged(const QString &)"), self.applySettingsLocale)
 
 
 	### Public static ###
@@ -88,11 +89,12 @@ class LocaleMultiple(Qt.QObject) :
 	### Private ###
 
 	def applySettingsLocale(self, key) :
-		if key == "application/locale/force_locale_name" :
-			force_locale_name = self.__settings.value("application/locale/force_locale_name").toString()
-			if force_locale_name != self.__locale.name() :
-				self.__locale = ( Qt.QLocale() if force_locale_name.isEmpty() else Qt.QLocale(force_locale_name) )
+		if key == "application/locale/force_main_lang" :
+			force_main_lang = self.__settings.value("application/locale/force_main_lang").toString()
+			if force_main_lang != self.mainLang() :
+				self.__locale = ( Qt.QLocale() if force_main_lang.isEmpty() else Qt.QLocale(force_main_lang) )
 				self.localeChangedSignal(self.__locale.name())
+				Logger.debug(Qt.QString("Accepted new locale \"%1\"").arg(self.__locale.name()))
 
 
 	### Signals ###

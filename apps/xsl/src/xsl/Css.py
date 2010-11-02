@@ -55,18 +55,13 @@ class CssMultiple(Qt.QObject) :
 		#####
 
 		self.__css = Qt.QString(DefaultCss)
+		self.applyUserStyleCss(False)
 
 		self.__user_style_css_watcher = Qt.QFileSystemWatcher(self)
 
 		#####
 
-		self.connect(self.__user_style_css_watcher, Qt.SIGNAL("fileChanged(const QString &)"), self.applyUserStyleCss)
-
-		#####
-
-		self.blockSignals(True)
-		self.applyUserStyleCss()
-		self.blockSignals(False)
+		self.connect(self.__user_style_css_watcher, Qt.SIGNAL("fileChanged(const QString &)"), ( lambda : self.applyUserStyleCss(True) ))
 
 
 	### Public static ###
@@ -84,7 +79,7 @@ class CssMultiple(Qt.QObject) :
 
 	### Private ### :
 
-	def applyUserStyleCss(self) :
+	def applyUserStyleCss(self, send_signal_flag) :
 		user_style_css_file_path = self.userStyleCssPath()
 		user_style_css_file = Qt.QFile(user_style_css_file_path)
 		user_style_css_file_stream = Qt.QTextStream(user_style_css_file)
@@ -105,7 +100,8 @@ class CssMultiple(Qt.QObject) :
 
 			if self.__css.trimmed() != user_style_css.trimmed() :
 				self.__css = user_style_css
-				self.cssChangedSignal()
+				if send_signal_flag :
+					self.cssChangedSignal()
 
 
 	### Signals ###

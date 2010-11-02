@@ -56,23 +56,17 @@ class CssCollectionMultiple(Qt.QObject) :
 
 		self.__css = Css.Css()
 
-		###
-
 		self.__css_class_regexp = Qt.QRegExp("\\.([^(\\{|\\})]*)\\{([^(\\{|\\})]*)\\}")
 		self.__css_class_regexp.setMinimal(True)
 
 		self.__css_option_regexp = Qt.QRegExp("([^(\\{|\\})]*):([^(\\{|\\})]*);")
 		self.__css_option_regexp.setMinimal(True)
 
-		#####
-
-		self.connect(self.__css, Qt.SIGNAL("cssChanged()"), self.applyCss)
+		self.applyCss(False)
 
 		#####
 
-		self.blockSignals(True)
-		self.applyCss()
-		self.blockSignals(False)
+		self.connect(self.__css, Qt.SIGNAL("cssChanged()"), ( lambda : self.applyCss(True) ))
 
 
 	### Public ###
@@ -95,7 +89,7 @@ class CssCollectionMultiple(Qt.QObject) :
 
 	###
 
-	def applyCss(self) :
+	def applyCss(self, send_signal_flag) :
 		for group_key in self.__css_collection_dict.keys() :
 			for name_key in self.__css_collection_dict[group_key].keys() :
 				self.setValue(group_key, name_key)
@@ -151,7 +145,8 @@ class CssCollectionMultiple(Qt.QObject) :
 				css_option_pos = self.__css_option_regexp.indexIn(css_class_body, css_option_pos + self.__css_option_regexp.matchedLength())
 			css_class_pos = self.__css_class_regexp.indexIn(css, css_class_pos + self.__css_class_regexp.matchedLength())
 
-		self.cssChangedSignal()
+		if send_signal_flag :
+			self.cssChangedSignal()
 
 
 	### Signals ###

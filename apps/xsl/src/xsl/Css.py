@@ -55,9 +55,8 @@ class CssMultiple(Qt.QObject) :
 		#####
 
 		self.__css = Qt.QString(DefaultCss)
-		self.applyUserStyleCss(False)
-
 		self.__user_style_css_watcher = Qt.QFileSystemWatcher(self)
+		self.applyUserStyleCss(False)
 
 		#####
 

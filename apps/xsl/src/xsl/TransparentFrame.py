@@ -41,13 +41,11 @@ class TransparentFrame(Qt.QFrame) :
 		self.__transparent_color = Qt.QColor()
 		self.__transparent_alpha = 0
 
+		self.initDrawInstruments()
+
 		#####
 
 		self.connect(self.__css_collection, Qt.SIGNAL("cssChanged()"), self.initDrawInstruments)
-
-		#####
-
-		self.initDrawInstruments()
 
 
 	### Private ###

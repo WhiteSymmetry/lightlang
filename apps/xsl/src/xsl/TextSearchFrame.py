@@ -82,6 +82,8 @@ class TextSearchFrame(Qt.QFrame) :
 		self.__line_edit_default_palette = Qt.QPalette()
 		self.__line_edit_red_alert_palette = Qt.QPalette()
 
+		self.initDrawInstruments()
+
 		#####
 
 		self.connect(self.__close_button, Qt.SIGNAL("clicked()"), self.hide)
@@ -95,10 +97,6 @@ class TextSearchFrame(Qt.QFrame) :
 		self.connect(self.__previous_button, Qt.SIGNAL("clicked()"), self.findPreviousRequest)
 
 		self.connect(self.__css_collection, Qt.SIGNAL("cssChanged()"), self.initDrawInstruments)
-
-		#####
-
-		self.initDrawInstruments()
 
 
 	### Public ###

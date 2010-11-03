@@ -45,13 +45,11 @@ class ChromeScrollBar(Qt.QScrollBar) :
 		self.__highlight_color = Qt.QColor()
 		self.__highlight_pen = Qt.QPen()
 
+		self.initDrawInstruments()
+
 		#####
 
 		self.connect(self.__css_collection, Qt.SIGNAL("cssChanged()"), self.initDrawInstruments)
-
-		#####
-
-		self.initDrawInstruments()
 
 
 	### Public ###

@@ -45,10 +45,10 @@ class TextBrowser(Qt.QTextBrowser) :
 
 		self.__highlight_color = Qt.QColor()
 
-		#####
-
 		self.__chrome_scroll_bar = ChromeScrollBar.ChromeScrollBar(self)
 		self.setVerticalScrollBar(self.__chrome_scroll_bar)
+
+		self.initDrawInstruments()
 
 		#####
 
@@ -56,10 +56,6 @@ class TextBrowser(Qt.QTextBrowser) :
 		self.connect(self, Qt.SIGNAL("sourceChanged(const QUrl &)"), self.__chrome_scroll_bar.clearHighlight)
 
 		self.connect(self.__css_collection, Qt.SIGNAL("cssChanged()"), self.initDrawInstruments)
-
-		#####
-
-		self.initDrawInstruments()
 
 
 	### Public ###

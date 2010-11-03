@@ -32,12 +32,12 @@ class InternetLinksMenu(Qt.QMenu) :
 
 		#####
 
-		self.translateObject()
+		self.translateUi()
 
 
 	### Private ###
 
-	def translateObject(self) :
+	def translateUi(self) :
 		self.clear()
 
 		self.addMailLink(IconsLoader.icon("mail-send"), tr("Developer e-mail"), Const.DeveloperMail, Const.Package)
@@ -64,7 +64,7 @@ class InternetLinksMenu(Qt.QMenu) :
 
 	def changeEvent(self, event) :
 		if event.type() == Qt.QEvent.LanguageChange :
-			self.translateObject()
+			self.translateUi()
 		else :
 			Qt.QMenu.changeEvent(self, event)
 

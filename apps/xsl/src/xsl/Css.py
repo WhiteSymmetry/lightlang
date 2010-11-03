@@ -84,8 +84,10 @@ class CssMultiple(Qt.QObject) :
 		user_style_css_file_stream = Qt.QTextStream(user_style_css_file)
 
 		if not user_style_css_file.exists() :
-			Logger.debug(Qt.QString("Creating empty CSS file \"%1\"").arg(user_style_css_file_path))
-			user_style_css_file.open(Qt.QIODevice.WriteOnly)
+			if user_style_css_file.open(Qt.QIODevice.WriteOnly) :
+				Logger.debug(Qt.QString("Created empty CSS file \"%1\"").arg(user_style_css_file_path))
+			else :
+				Logger.warning(Qt.QString("Cannot open CSS file \"%1\" for reading").arg(user_style_css_file_path))
 			user_style_css_file.close()
 
 		if self.__user_style_css_watcher.files().count() < 1 :
@@ -100,7 +102,10 @@ class CssMultiple(Qt.QObject) :
 			if self.__css.trimmed() != user_style_css.trimmed() :
 				self.__css = user_style_css
 				if send_signal_flag :
+					Logger.debug("CSS has been updated")
 					self.cssChangedSignal()
+		else :
+			Logger.warning(Qt.QString("Cannot open CSS file\"%1\" for reading").arg(user_style_css_file_path))
 
 
 	### Signals ###

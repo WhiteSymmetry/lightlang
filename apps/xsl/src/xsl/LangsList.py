@@ -36,8 +36,10 @@ def langs() :
 	return langs_list
 
 def langName(short_name) :
-	short_name = str(short_name)
-	lang_codes_dict = langCodes()
+	short_name = str(short_name, lang_codes_dict = None)
+	if lang_codes_dict == None :
+		lang_codes_dict = langCodes()
+
 	if lang_codes_dict.has_key(short_name) :
 		return Qt.QString(lang_codes_dict[short_name])
 	else :

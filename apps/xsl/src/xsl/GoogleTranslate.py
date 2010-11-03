@@ -178,9 +178,10 @@ class GoogleTranslate(Qt.QObject) :
 				responce_details = json_dict["responseDetails"]
 
 				if responce_data != None :
-					sl_name = ( tr("%1 (guessed)").arg(LangsList.langName(responce_data["detectedSourceLanguage"]))
-						if responce_data.has_key("detectedSourceLanguage") else LangsList.langName(self.__sl) )
-					tl_name = LangsList.langName(self.__tl)
+					lang_codes_dict = LangsList.langCodes()
+					sl_name = ( tr("%1 (guessed)").arg(LangsList.langName(responce_data["detectedSourceLanguage"], lang_codes_dict))
+						if responce_data.has_key("detectedSourceLanguage") else LangsList.langName(self.__sl, lang_codes_dict) )
+					tl_name = LangsList.langName(self.__tl, lang_codes_dict)
 					text = ( tr("<font class=\"word_header_font\">Translated: %1 &#187; %2</font><hr>%3")
 						.arg(sl_name).arg(tl_name).arg(Qt.QString(responce_data["translatedText"])) )
 				else :
@@ -190,7 +191,8 @@ class GoogleTranslate(Qt.QObject) :
 				text = ( tr("<font class=\"word_header_font\">Invalid server responce</font><hr>Raw JSON: %1")
 					.arg(Qt.QString(unicode(json_dict).encode("utf-8"))) )
 		except :
-			Logger.warning("JSON parser returned incorrect data")
+			Qt.QMessageBox.warning(None, Const.MyName, tr("JSON parser exception (see logs for more information).\nPress \"Yes\" to ignore"))
+			Logger.warning("JSON parser exception")
 			Logger.attachException(Logger.WarningMessage)
 
 		###

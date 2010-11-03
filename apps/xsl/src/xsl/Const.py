@@ -47,7 +47,6 @@ DataRootDirPath = Qt.QString("/usr/share")#Qt.QString("@datarootdir@")
 DocsDirPath = Qt.QString("/usr/share/doc")#Qt.QString("@docdir@")
 
 TrDirPath = Utils.joinPath(DataRootDirPath, "xsl/tr")
-QtTrDirPath = Qt.QString("@QT_TR_DIR@")
 
 AllDictsDirPath = Utils.joinPath(DataRootDirPath, "sl/dicts")
 AllSoundsDirPath = Utils.joinPath(DataRootDirPath, "sl/sounds")

@@ -39,7 +39,6 @@ class GoogleTranslate(Qt.QObject) :
 
 		self.__locale = Locale.Locale()
 		self.__settings = Settings.Settings()
-		self.__langs_list = LangsList.LangsList()
 
 		self.__http = Qt.QHttp(self)
 		self.__http_request_id = -1
@@ -173,24 +172,15 @@ class GoogleTranslate(Qt.QObject) :
 
 		try :
 			json_dict = json.loads(unicode(text).encode("utf-8"))
-		except :
-			Logger.warning("JSON parser return None instead correct data")
-			Logger.attachException(Logger.WarningMessage)
-			json_dict = None
-
-		if json_dict != None :
 			if json_dict.has_key("responseData") and json_dict.has_key("responseStatus") and json_dict.has_key("responseDetails") :
 				responce_data = json_dict["responseData"]
 				responce_status = json_dict["responseStatus"]
 				responce_details = json_dict["responseDetails"]
 
 				if responce_data != None :
-					if responce_data.has_key("detectedSourceLanguage") :
-						sl_name = tr("%1 (guessed)").arg(self.__langs_list.langName(responce_data["detectedSourceLanguage"]))
-					else :
-						sl_name = self.__langs_list.langName(self.__sl)
-					tl_name = self.__langs_list.langName(self.__tl)
-
+					sl_name = ( tr("%1 (guessed)").arg(LangsList.langName(responce_data["detectedSourceLanguage"]))
+						if responce_data.has_key("detectedSourceLanguage") else LangsList.langName(self.__sl) )
+					tl_name = LangsList.langName(self.__tl)
 					text = ( tr("<font class=\"word_header_font\">Translated: %1 &#187; %2</font><hr>%3")
 						.arg(sl_name).arg(tl_name).arg(Qt.QString(responce_data["translatedText"])) )
 				else :
@@ -199,6 +189,9 @@ class GoogleTranslate(Qt.QObject) :
 			else :
 				text = ( tr("<font class=\"word_header_font\">Invalid server responce</font><hr>Raw JSON: %1")
 					.arg(Qt.QString(unicode(json_dict).encode("utf-8"))) )
+		except :
+			Logger.warning("JSON parser returned incorrect data")
+			Logger.attachException(Logger.WarningMessage)
 
 		###
 

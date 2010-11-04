@@ -32,32 +32,51 @@ class AboutWindow(Qt.QDialog) :
 
 		self.setModal(True)
 
-		self.setWindowTitle(tr("About %1").arg(Const.MyName))
 		self.setWindowIcon(IconsLoader.icon("xsl"))
 
 		#####
 
-		self._main_layout = Qt.QVBoxLayout()
-		self.setLayout(self._main_layout)
+		self.__main_layout = Qt.QVBoxLayout()
+		self.setLayout(self.__main_layout)
 
-		self._info_label_layout = Qt.QHBoxLayout()
-		self._main_layout.addLayout(self._info_label_layout)
+		self.__info_label_layout = Qt.QHBoxLayout()
+		self.__main_layout.addLayout(self.__info_label_layout)
 
-		self._ok_button_layout = Qt.QHBoxLayout()
-		self._ok_button_layout.setAlignment(Qt.Qt.AlignRight)
-		self._main_layout.addLayout(self._ok_button_layout)
+		self.__ok_button_layout = Qt.QHBoxLayout()
+		self.__ok_button_layout.setAlignment(Qt.Qt.AlignRight)
+		self.__main_layout.addLayout(self.__ok_button_layout)
 
 		#####
 
-		self._icon_label = Qt.QLabel(self)
-		self._icon_label.setAlignment(Qt.Qt.AlignTop)
-		self._icon_label.setPixmap(IconsLoader.icon("xsl_64").pixmap(Qt.QSize(64, 64)))
-		self._info_label_layout.addWidget(self._icon_label)
+		self.__icon_label = Qt.QLabel(self)
+		self.__icon_label.setAlignment(Qt.Qt.AlignTop)
+		self.__icon_label.setPixmap(IconsLoader.icon("xsl_64").pixmap(Qt.QSize(64, 64)))
+		self.__info_label_layout.addWidget(self.__icon_label)
 
-		self._text_label = Qt.QLabel(self)
-		self._text_label.setTextFormat(Qt.Qt.RichText)
-		self._text_label.setOpenExternalLinks(True)
-		self._text_label.setText(tr("<h3>%1 - the graphical interface for SL</h3>"
+		self.__text_label = Qt.QLabel(self)
+		self.__text_label.setTextFormat(Qt.Qt.RichText)
+		self.__text_label.setOpenExternalLinks(True)
+		self.__info_label_layout.addWidget(self.__text_label)
+
+		self.__ok_button = Qt.QPushButton(self)
+		self.__ok_button.setDefault(True)
+		self.__ok_button_layout.addWidget(self.__ok_button)
+
+		#####
+
+		self.translateUi()
+
+		#####
+
+		self.connect(self.__ok_button, Qt.SIGNAL("clicked()"), self.accept)
+
+
+	### Private ###
+
+	def translateUi(self) :
+		self.setWindowTitle(tr("About %1").arg(Const.MyName))
+
+		self.__text_label.setText(tr("<h3>%1 - the graphical interface for SL</h3>"
 			"All the programs of the <strong>%2</strong> package are distributable, according<br>"
 			"to the license <strong>GPLv2</strong>. For details visit <em>License agreement</em> of the<br>"
 			"<strong>%2</strong> manual.<br>"
@@ -78,20 +97,18 @@ class AboutWindow(Qt.QDialog) :
 			"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<em>Kirill Nebogin</em><br>"
 			"<br>"
 			"<em>Copyright &copy; 2007-2016 Devaev Maxim (<a href=\"mailto:%3?subject=%2\">%3</a>)</em>")
-				.arg(Const.MyName).arg(Const.Organization).arg(Const.DeveloperMail))
-		self._info_label_layout.addWidget(self._text_label)
+				.arg(Const.MyName).arg(Const.Package).arg(Const.DeveloperMail))
 
-		self._ok_button = Qt.QPushButton(tr("&OK"), self)
-		self._ok_button.setDefault(True)
-		self._ok_button_layout.addWidget(self._ok_button)
-
-		#####
-
-		self.connect(self._ok_button, Qt.SIGNAL("clicked()"), self.accept)
+		self.__ok_button.setText(tr("&OK"))
 
 
-	### Private ###
 	### Handlers ###
+
+	def changeEvent(self, event) :
+		if event.type() == Qt.QEvent.LanguageChange :
+			self.translateUi()
+		else :
+			Qt.QDialog.changeEvent(self, event)
 
 	def showEvent(self, event) :
 		Qt.QDialog.showEvent(self, event)

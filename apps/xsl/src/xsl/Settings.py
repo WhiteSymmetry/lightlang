@@ -37,7 +37,7 @@ class SettingsMultiple(Qt.QSettings) :
 		settings_file_path = Utils.joinPath(settings_dir_path, Const.MyName.toLower()+SettingsPostfix)
 
 		if not Qt.QDir(settings_dir_path).exists() :
-			Logger.debug(Qt.QString(" \"%1\" does not exists, trying to create").arg(settings_dir_path))
+			Logger.debug(Qt.QString("Directory \"%1\" does not exists, trying to create").arg(settings_dir_path))
 
 			if not Qt.QDir.home().mkdir(Utils.baseName(settings_dir_path)) :
 				Logger.critical(Qt.QString("Cannot create config directory \"%1\"").arg(settings_dir_path))

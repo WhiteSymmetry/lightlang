@@ -60,7 +60,7 @@ class MainApplication(Qt.QApplication) :
 		self.__translators_list = []
 
 		main_lang = self.__locale.mainLang()
-		Logger.debug(Qt.QString("Request to new main lang \"%1\"").arg(main_lang))
+		Logger.debug(Qt.QString("Request for new main lang \"%1\"").arg(main_lang))
 		for tr_file_path in ( Utils.joinPath(Const.TrDirPath, main_lang),
 			Utils.joinPath(Qt.QLibraryInfo.location(Qt.QLibraryInfo.TranslationsPath), "qt_"+main_lang) ) :
 

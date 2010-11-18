@@ -45,6 +45,7 @@ LibsDirPath = Qt.QString("/usr/lib64")#Qt.QString("@libdir@")
 DataRootDirPath = Qt.QString("/usr/share")#Qt.QString("@datarootdir@")
 #MansDirPath = Qt.QString("@mandir@")
 DocsDirPath = Qt.QString("/usr/share/doc")#Qt.QString("@docdir@")
+HtmlDocsDirPath = Utils.joinPath(DocsDirPath, "lightlang/html")
 
 TrDirPath = Utils.joinPath(DataRootDirPath, "xsl/tr")
 

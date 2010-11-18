@@ -22,12 +22,13 @@
 
 import Qt
 import Const
+import Utils
 import Settings
 import Logger
 
 
 ##### Public constants #####
-DefaultLang = Qt.QString("en")
+DefaultLang = "en"
 
 
 ##### Private classes #####
@@ -80,8 +81,8 @@ class LocaleMultiple(Qt.QObject) :
 
 	def htmlDocsLang(self) :
 		main_lang = self.mainLang()
-		docs_dir_path = Utils.joinPath(HtmlDocsDir, main_lang)
-		if not Qt.QDir.exists(docs_dir_path) :
+		docs_dir_path = Utils.joinPath(Const.HtmlDocsDirPath, main_lang)
+		if not Qt.QFile.exists(docs_dir_path) :
 			return Qt.QString(DefaultLang)
 		return main_lang
 

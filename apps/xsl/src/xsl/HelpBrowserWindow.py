@@ -21,7 +21,6 @@
 
 
 import Qt
-import Config
 import Const
 import Utils
 import Locale
@@ -32,173 +31,177 @@ import TextSearchFrame
 import TransparentFrame
 
 
-##### Private constants #####
-HtmlDocsDir = Utils.joinPath(Config.DocsDir, "lightlang/html")
-HtmlDocsIndex = "index.html"
-
-
 ##### Private classes #####
-class HelpBrowserWindowPrivate(Qt.QDialog) :
+class HelpBrowserWindowMultiple(Qt.QDialog) : # TODO: setObjectName("help_browser_window")
 	def __init__(self, parent = None) :
 		Qt.QDialog.__init__(self, parent)
 
-		self.setObjectName("help_browser_window")
-
-		self.setWindowTitle(tr("%1 Manual").arg(Const.Organization))
 		self.setWindowIcon(IconsLoader.icon("xsl"))
 
 		#####
 
-		self._main_layout = Qt.QVBoxLayout()
-		self._main_layout.setContentsMargins(0, 0, 0, 0)
-		self._main_layout.setSpacing(0)
-		self.setLayout(self._main_layout)
+		self.__main_layout = Qt.QVBoxLayout()
+		self.__main_layout.setContentsMargins(0, 0, 0, 0)
+		self.__main_layout.setSpacing(0)
+		self.setLayout(self.__main_layout)
 
 		#####
 
-		index_file_path = Utils.joinPath(HtmlDocsDir, Locale.mainLang(), HtmlDocsIndex)
-		if not Qt.QFile.exists(index_file_path) :
-			index_file_path = Utils.joinPath(HtmlDocsDir, Const.DefaultLang, HtmlDocsIndex)
-		self._index_file_url = Qt.QUrl(index_file_path)
+		self.__index_file_url = Qt.QUrl()
+
+		self.__settings = Settings.Settings()
+		self.__locale = Locale.Locale()
 
 		#####
 
-		self._text_browser = TextBrowser.TextBrowser(self)
-		self._text_browser_layout = Qt.QHBoxLayout()
-		self._text_browser_layout.setAlignment(Qt.Qt.AlignLeft|Qt.Qt.AlignTop)
-		self._text_browser.setLayout(self._text_browser_layout)
-		self._main_layout.addWidget(self._text_browser)
+		self.__text_browser = TextBrowser.TextBrowser(self)
+		self.__text_browser_layout = Qt.QHBoxLayout()
+		self.__text_browser_layout.setAlignment(Qt.Qt.AlignLeft|Qt.Qt.AlignTop)
+		self.__text_browser.setLayout(self.__text_browser_layout)
+		self.__main_layout.addWidget(self.__text_browser)
 
 		###
 
-		self._control_buttons_frame = TransparentFrame.TransparentFrame(self)
-		self._control_buttons_frame_layout = Qt.QHBoxLayout()
-		self._control_buttons_frame_layout.setContentsMargins(0, 0, 0, 0)
-		self._control_buttons_frame.setLayout(self._control_buttons_frame_layout)
-		self._text_browser_layout.addWidget(self._control_buttons_frame)
+		self.__control_buttons_frame = TransparentFrame.TransparentFrame(self)
+		self.__control_buttons_frame_layout = Qt.QHBoxLayout()
+		self.__control_buttons_frame_layout.setContentsMargins(0, 0, 0, 0)
+		self.__control_buttons_frame.setLayout(self.__control_buttons_frame_layout)
+		self.__text_browser_layout.addWidget(self.__control_buttons_frame)
 
-		self._backward_button = Qt.QToolButton(self)
-		self._backward_button.setIcon(IconsLoader.icon("go-previous"))
-		self._backward_button.setIconSize(Qt.QSize(22, 22))
-		self._backward_button.setCursor(Qt.Qt.ArrowCursor)
-		self._backward_button.setAutoRaise(True)
-		self._backward_button.setEnabled(False)
-		self._backward_button.setToolTip(tr("Backspace"))
-		self._control_buttons_frame_layout.addWidget(self._backward_button)
+		self.__backward_button = Qt.QToolButton(self)
+		self.__backward_button.setIcon(IconsLoader.icon("go-previous"))
+		self.__backward_button.setIconSize(Qt.QSize(22, 22))
+		self.__backward_button.setCursor(Qt.Qt.ArrowCursor)
+		self.__backward_button.setAutoRaise(True)
+		self.__backward_button.setEnabled(False)
+		self.__control_buttons_frame_layout.addWidget(self.__backward_button)
 
-		self._forward_button = Qt.QToolButton(self)
-		self._forward_button.setIcon(IconsLoader.icon("go-next"))
-		self._forward_button.setIconSize(Qt.QSize(22, 22))
-		self._forward_button.setCursor(Qt.Qt.ArrowCursor)
-		self._forward_button.setAutoRaise(True)
-		self._forward_button.setEnabled(False)
-		self._control_buttons_frame_layout.addWidget(self._forward_button)
+		self.__forward_button = Qt.QToolButton(self)
+		self.__forward_button.setIcon(IconsLoader.icon("go-next"))
+		self.__forward_button.setIconSize(Qt.QSize(22, 22))
+		self.__forward_button.setCursor(Qt.Qt.ArrowCursor)
+		self.__forward_button.setAutoRaise(True)
+		self.__forward_button.setEnabled(False)
+		self.__control_buttons_frame_layout.addWidget(self.__forward_button)
 
-		self._vertical_frame1 = Qt.QFrame(self)
-		self._vertical_frame1.setFrameStyle(Qt.QFrame.VLine|Qt.QFrame.Sunken)
-		self._control_buttons_frame_layout.addWidget(self._vertical_frame1)
+		self.__vertical_frame1 = Qt.QFrame(self)
+		self.__vertical_frame1.setFrameStyle(Qt.QFrame.VLine|Qt.QFrame.Sunken)
+		self.__control_buttons_frame_layout.addWidget(self.__vertical_frame1)
 
-		self._home_button = Qt.QToolButton(self)
-		self._home_button.setIcon(IconsLoader.icon("go-home"))
-		self._home_button.setIconSize(Qt.QSize(22, 22))
-		self._home_button.setCursor(Qt.Qt.ArrowCursor)
-		self._home_button.setAutoRaise(True)
-		self._control_buttons_frame_layout.addWidget(self._home_button)
+		self.__home_button = Qt.QToolButton(self)
+		self.__home_button.setIcon(IconsLoader.icon("go-home"))
+		self.__home_button.setIconSize(Qt.QSize(22, 22))
+		self.__home_button.setCursor(Qt.Qt.ArrowCursor)
+		self.__home_button.setAutoRaise(True)
+		self.__control_buttons_frame_layout.addWidget(self.__home_button)
 
-		self._control_buttons_frame.setFixedSize(self._control_buttons_frame_layout.minimumSize())
-
-		###
-
-		self._tools_buttons_frame = TransparentFrame.TransparentFrame(self)
-		self._tools_buttons_frame_layout = Qt.QHBoxLayout()
-		self._tools_buttons_frame_layout.setContentsMargins(0, 0, 0, 0)
-		self._tools_buttons_frame.setLayout(self._tools_buttons_frame_layout)
-		self._text_browser_layout.addWidget(self._tools_buttons_frame)
-
-		self._show_text_search_frame_button = Qt.QToolButton(self)
-		self._show_text_search_frame_button.setIcon(IconsLoader.icon("edit-find"))
-		self._show_text_search_frame_button.setIconSize(Qt.QSize(22, 22))
-		self._show_text_search_frame_button.setCursor(Qt.Qt.ArrowCursor)
-		self._show_text_search_frame_button.setAutoRaise(True)
-		self._show_text_search_frame_button.setToolTip(tr("Ctrl+F, /"))
-		self._tools_buttons_frame_layout.addWidget(self._show_text_search_frame_button)
-
-		self._tools_buttons_frame.setFixedSize(self._tools_buttons_frame_layout.minimumSize())
+		self.__control_buttons_frame.setFixedSize(self.__control_buttons_frame_layout.minimumSize())
 
 		###
 
-		self._text_search_frame = TextSearchFrame.TextSearchFrame(self)
-		self._text_search_frame.hide()
-		self._main_layout.addWidget(self._text_search_frame)
+		self.__tools_buttons_frame = TransparentFrame.TransparentFrame(self)
+		self.__tools_buttons_frame_layout = Qt.QHBoxLayout()
+		self.__tools_buttons_frame_layout.setContentsMargins(0, 0, 0, 0)
+		self.__tools_buttons_frame.setLayout(self.__tools_buttons_frame_layout)
+		self.__text_browser_layout.addWidget(self.__tools_buttons_frame)
+
+		self.__show_text_search_frame_button = Qt.QToolButton(self)
+		self.__show_text_search_frame_button.setIcon(IconsLoader.icon("edit-find"))
+		self.__show_text_search_frame_button.setIconSize(Qt.QSize(22, 22))
+		self.__show_text_search_frame_button.setCursor(Qt.Qt.ArrowCursor)
+		self.__show_text_search_frame_button.setAutoRaise(True)
+		self.__tools_buttons_frame_layout.addWidget(self.__show_text_search_frame_button)
+
+		self.__tools_buttons_frame.setFixedSize(self.__tools_buttons_frame_layout.minimumSize())
+
+		###
+
+		self.__text_search_frame = TextSearchFrame.TextSearchFrame(self)
+		self.__text_search_frame.hide()
+		self.__main_layout.addWidget(self.__text_search_frame)
 
 		#####
 
-		self.connect(self._text_search_frame, Qt.SIGNAL("findNextRequest(const QString &)"), self._text_browser.findNext)
-		self.connect(self._text_search_frame, Qt.SIGNAL("findPreviousRequest(const QString &)"), self._text_browser.findPrevious)
-		self.connect(self._text_search_frame, Qt.SIGNAL("instantSearchRequest(const QString &)"), self._text_browser.instantSearch)
+		self.connect(self.__text_search_frame, Qt.SIGNAL("findNextRequest(const QString &)"), self.__text_browser.findNext)
+		self.connect(self.__text_search_frame, Qt.SIGNAL("findPreviousRequest(const QString &)"), self.__text_browser.findPrevious)
+		self.connect(self.__text_search_frame, Qt.SIGNAL("instantSearchRequest(const QString &)"), self.__text_browser.instantSearch)
 
-		self.connect(self._text_browser, Qt.SIGNAL("backwardRequest()"), self._backward_button.animateClick)
+		self.connect(self.__text_browser, Qt.SIGNAL("backwardRequest()"), self.__backward_button.animateClick)
 
-		self.connect(self._backward_button, Qt.SIGNAL("clicked()"), self._text_browser.backward)
-		self.connect(self._forward_button, Qt.SIGNAL("clicked()"), self._text_browser.forward)
-		self.connect(self._home_button, Qt.SIGNAL("clicked()"), self.home)
+		self.connect(self.__backward_button, Qt.SIGNAL("clicked()"), self.__text_browser.backward)
+		self.connect(self.__forward_button, Qt.SIGNAL("clicked()"), self.__text_browser.forward)
+		self.connect(self.__home_button, Qt.SIGNAL("clicked()"), self.home)
 
-		self.connect(self._show_text_search_frame_button, Qt.SIGNAL("clicked()"), self._text_search_frame.show)
+		self.connect(self.__show_text_search_frame_button, Qt.SIGNAL("clicked()"), self.__text_search_frame.show)
 
-		self.connect(self._text_browser, Qt.SIGNAL("showTextSearchFrameRequest()"), self._text_search_frame.show)
-		self.connect(self._text_browser, Qt.SIGNAL("hideTextSearchFrameRequest()"), self._text_search_frame.hide)
-		self.connect(self._text_browser, Qt.SIGNAL("setFoundRequest(bool)"), self._text_search_frame.setFound)
-		self.connect(self._text_browser, Qt.SIGNAL("sourceChanged(const QUrl &)"), self.updateTitle)
-		self.connect(self._text_browser, Qt.SIGNAL("backwardAvailable(bool)"), self._backward_button.setEnabled)
-		self.connect(self._text_browser, Qt.SIGNAL("forwardAvailable(bool)"), self._forward_button.setEnabled)
+		self.connect(self.__text_browser, Qt.SIGNAL("showTextSearchFrameRequest()"), self.__text_search_frame.show)
+		self.connect(self.__text_browser, Qt.SIGNAL("hideTextSearchFrameRequest()"), self.__text_search_frame.hide)
+		self.connect(self.__text_browser, Qt.SIGNAL("setFoundRequest(bool)"), self.__text_search_frame.setFound)
+		self.connect(self.__text_browser, Qt.SIGNAL("sourceChanged(const QUrl &)"), self.updateTitle)
+		self.connect(self.__text_browser, Qt.SIGNAL("backwardAvailable(bool)"), self.__backward_button.setEnabled)
+		self.connect(self.__text_browser, Qt.SIGNAL("forwardAvailable(bool)"), self.__forward_button.setEnabled)
 
 		#####
 
 		Qt.QDesktopServices.setUrlHandler("xslhelp", self.showInternalHelp)
 
+		self.translateUi()
+
 
 	### Public ###
 
 	def saveSettings(self) :
-		settings = Settings.settings()
-		settings.setValue("help_browser_window/size", Qt.QVariant(self.size()))
-		settings.setValue("help_browser_window/url", Qt.QVariant(self._text_browser.source()))
+		settings.setValue(Qt.QString("%1/size").arg(self.objectName()), Qt.QVariant(self.size()))
+		settings.setValue(Qt.QString("%1/url").arg(self.objectName()), Qt.QVariant(self.__text_browser.source()))
 
 	def loadSettings(self) :
-		settings = Settings.settings()
-		self.resize(settings.value("help_browser_window/size", Qt.QVariant(Qt.QSize(800, 600))).toSize())
-		self._text_browser.setSource(settings.value("help_browser_window/url", Qt.QVariant(self._index_file_url)).toUrl())
+		self.resize(self.__settings.value(Qt.QString("%1/size").arg(self.objectName()), Qt.QVariant(Qt.QSize(800, 600))).toSize())
+		self.__text_browser.setSource(self.__settings.value(Qt.QString("%1/url").arg(self.objectName()), Qt.QVariant(self.__index_file_url)).toUrl())
 
 	###
 
 	@Qt.pyqtSignature("QUrl")
 	def showInternalHelp(self, url) :
 		relative_file_path = url.toString().remove("xslhelp://")
-		absolute_file_path = Utils.joinPath(HtmlDocsDir, Locale.mainLang(), relative_file_path)
-		if not Qt.QFile.exists(absolute_file_path) :
-			absolute_file_path = Utils.joinPath(HtmlDocsDir, Const.DefaultLang, relative_file_path)
-		self._text_browser.setSource(Qt.QUrl(absolute_file_path))
+		absolute_file_path = Utils.joinPath(HtmlDocsDirPath, self.__locale.htmlDocsLang(), relative_file_path)
+		self.__text_browser.setSource(Qt.QUrl(absolute_file_path))
 		self.show()
 
 
 	### Private ###
 
+	def translateUi(self) :
+		self.__index_file_url = Qt.QUrl(Utils.joinPath(Const.HtmlDocsDirPath, self.__locale.htmlDocsLang(), "index.html"))
+
+		self.__backward_button.setToolTip(tr("Backspace"))
+		self.__show_text_search_frame_button.setToolTip(tr("Ctrl+F, /"))
+
+		self.updateTitle()
+
+	###
+
 	def home(self) :
-		self._text_browser.setSource(self._index_file_url)
+		self.__text_browser.setSource(self.__index_file_url)
 
 	###
 
 	def updateTitle(self) :
-		self.setWindowTitle(tr("%1 Manual - %2").arg(Const.Organization).arg(self._text_browser.documentTitle()))
+		self.setWindowTitle(tr("%1 Manual - %2").arg(Const.Package).arg(self.__text_browser.documentTitle()))
 
 
 	### Handlers ###
+
+	def changeEvent(self, event) :
+		if event.type() == Qt.QEvent.LanguageChange :
+			self.translateUi()
+		else :
+			Qt.QDialog.changeEvent(self, event)
 
 	def showEvent(self, event) :
 		Qt.QDialog.showEvent(self, event)
 		self.raise_()
 		self.activateWindow()
-		self._text_browser.setFocus(Qt.Qt.OtherFocusReason)
+		self.__text_browser.setFocus(Qt.Qt.OtherFocusReason)
 
 
 	def keyPressEvent(self, event) :
@@ -207,14 +210,14 @@ class HelpBrowserWindowPrivate(Qt.QDialog) :
 
 
 ##### Public classes #####
-class HelpBrowserWindow(HelpBrowserWindowPrivate) :
-	_help_browser_window_private_object = None
+class HelpBrowserWindow(HelpBrowserWindowMultiple) :
+	__help_browser_window_multiple_object = None
 
 	def __new__(self, parent = None) :
-		if self._help_browser_window_private_object == None :
-			self._help_browser_window_private_object = HelpBrowserWindowPrivate.__new__(self, parent)
-			HelpBrowserWindowPrivate.__init__(self._help_browser_window_private_object, parent)
-		return self._help_browser_window_private_object
+		if self.__help_browser_window_multiple_object == None :
+			self.__help_browser_window_multiple_object = HelpBrowserWindowMultiple.__new__(self, parent)
+			HelpBrowserWindowMultiple.__init__(self.__help_browser_window_multiple_object, parent)
+		return self.__help_browser_window_multiple_object
 
 	def __init__(self, parent = None) :
 		pass

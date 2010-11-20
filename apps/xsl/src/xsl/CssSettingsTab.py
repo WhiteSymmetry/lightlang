@@ -79,8 +79,7 @@ class CssSettingsTab(Qt.QWidget) :
 		self.__readme_label.setText(tr("With <a href=\"http://wikipedia.org/wiki/CSS\">CSS</a> you can customize the "
 			"appearance of any element of XSL.<br>Use <a href=\"http://doc.qt.nokia.com/stylesheet.html\">Qt</a> CSS and "
 			"built-in classes <a href=\"xslhelp://common_style_sheets.html\">SL/XSL</a> to override the properties of the elements.<br>"
-			"Edit user CSS in an <a href=\"file://%1\">external editor</a>. The new settings will be applied the next run.")
-				.arg(Css.Css.userStyleCssPath()))
+			"Edit user CSS in an <a href=\"file://%1\">external editor</a>.").arg(Css.Css.userStyleCssPath()))
 
 	###
 

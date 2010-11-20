@@ -30,22 +30,30 @@ class CssSettingsTab(Qt.QWidget) :
 	def __init__(self, parent = None) :
 		Qt.QWidget.__init__(self, parent)
 
-		self._main_layout = Qt.QVBoxLayout()
-		self.setLayout(self._main_layout)
+		self.__main_layout = Qt.QVBoxLayout()
+		self.setLayout(self.__main_layout)
 
 		#####
 
-		self._css_browser = Qt.QTextBrowser()
-		self._main_layout.addWidget(self._css_browser)
+		self.__css = Css.Css()
 
-		self._readme_label = Qt.QLabel(tr("With <a href=\"http://wikipedia.org/wiki/CSS\">CSS</a> you can customize the "
-			"appearance of any element of XSL.<br>Use <a href=\"http://doc.qt.nokia.com/stylesheet.html\">Qt</a> CSS and "
-			"built-in classes <a href=\"xslhelp://common_style_sheets.html\">SL/XSL</a> to override the properties of the elements.<br>"
-			"Edit user CSS in an <a href=\"file://%1\">external editor</a>. The new settings will be applied the next run.")
-				.arg(Css.userStyleCssPath()))
-		self._readme_label.setOpenExternalLinks(True)
-		self._readme_label.setTextFormat(Qt.Qt.RichText)
-		self._main_layout.addWidget(self._readme_label)
+		#####
+
+		self.__css_browser = Qt.QTextBrowser(self)
+		self.__main_layout.addWidget(self.__css_browser)
+
+		self.__readme_label = Qt.QLabel(self)
+		self.__readme_label.setOpenExternalLinks(True)
+		self.__readme_label.setTextFormat(Qt.Qt.RichText)
+		self.__main_layout.addWidget(self.__readme_label)
+
+		#####
+
+		self.connect(self.__css, Qt.SIGNAL("cssChanged()"), self.displayCss)
+
+		#####
+
+		self.translateUi()
 
 
 	### Public ###
@@ -53,7 +61,7 @@ class CssSettingsTab(Qt.QWidget) :
 	def requisites(self) :
 		return {
 			"icon" : IconsLoader.icon("text-css"),
-			"title" : tr("Style Sheets"),
+			"title" : Qt.QT_TR_NOOP("Style Sheets"),
 		}
 
 	###
@@ -62,5 +70,28 @@ class CssSettingsTab(Qt.QWidget) :
 		pass
 
 	def loadSettings(self) :
-		self._css_browser.setText(Css.css().trimmed())
+		self.displayCss()
+
+
+	### Private ###
+
+	def translateUi(self) :
+		self.__readme_label.setText(tr("With <a href=\"http://wikipedia.org/wiki/CSS\">CSS</a> you can customize the "
+			"appearance of any element of XSL.<br>Use <a href=\"http://doc.qt.nokia.com/stylesheet.html\">Qt</a> CSS and "
+			"built-in classes <a href=\"xslhelp://common_style_sheets.html\">SL/XSL</a> to override the properties of the elements.<br>"
+			"Edit user CSS in an <a href=\"file://%1\">external editor</a>. The new settings will be applied the next run.")
+				.arg(Css.Css.userStyleCssPath()))
+
+	###
+
+	def displayCss(self) :
+		self.__css_browser.setText(self.__css.css().trimmed())
+
+	### Handlers ###
+
+	def changeEvent(self, event) :
+		if event.type() == Qt.QEvent.LanguageChange :
+			self.translateUi()
+		else :
+			Qt.QWidget.changeEvent(self, event)
 

@@ -62,6 +62,16 @@ class LocaleMultiple(Qt.QObject) :
 
 		return tr_dir_entry_list
 
+	@classmethod
+	def systemLang(self) :
+		lang = Qt.QLocale().name()
+		lang.remove(lang.indexOf("_"), lang.length())
+
+		if lang.simplified().isEmpty() :
+			lang = DefaultLang
+
+		return Qt.QString(lang)
+
 
 	### Public ###
 

@@ -106,7 +106,7 @@ class NetworkSettingsTab(Qt.QWidget) :
 		self.__settings.setValue("application/network/proxy/passwd", Qt.QVariant(self.__proxy_passwd_line_edit.text()))
 
 	def loadSettings(self) :
-		self.__use_proxy_checkbox.setChecked(self.__settings.value("application/network/use_proxy_flag", Qt.QVariant(False)).toBool())
+		self.__use_proxy_checkbox.setChecked(self.__settings.value("application/network/use_proxy_flag").toBool())
 		self.__proxy_server_line_edit.setText(self.__settings.value("application/network/proxy/host").toString())
 		self.__proxy_port_spin_box.setValue(self.__settings.value("application/network/proxy/port").toInt()[0])
 		self.__proxy_user_line_edit.setText(self.__settings.value("application/network/proxy/user").toString())

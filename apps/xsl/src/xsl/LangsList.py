@@ -24,8 +24,10 @@ import Qt
 
 
 ##### Public methods #####
-def langs() :
-	lang_codes_dict = langCodes()
+def langs(lang_codes_dict = None) :
+	if lang_codes_dict == None :
+		lang_codes_dict = langCodes()
+
 	langs_list = []
 	for lang_codes_dict_key in lang_codes_dict.keys() :
 		langs_list.append({
@@ -35,8 +37,8 @@ def langs() :
 	sortLangsList(langs_list)
 	return langs_list
 
-def langName(short_name) :
-	short_name = str(short_name, lang_codes_dict = None)
+def langName(short_name, lang_codes_dict = None) :
+	short_name = str(short_name)
 	if lang_codes_dict == None :
 		lang_codes_dict = langCodes()
 

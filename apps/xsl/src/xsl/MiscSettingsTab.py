@@ -21,9 +21,11 @@
 
 
 import Qt
+import Utils
+import Locale
 import Settings
+import LangsList
 import IconsLoader
-import LineEdit
 
 
 ##### Public classes #####
@@ -31,27 +33,36 @@ class MiscSettingsTab(Qt.QWidget) :
 	def __init__(self, parent = None) :
 		Qt.QWidget.__init__(self, parent)
 
-		self._main_layout = Qt.QGridLayout()
-		self.setLayout(self._main_layout)
+		self.__main_layout = Qt.QGridLayout()
+		self.setLayout(self.__main_layout)
 
 		#####
 
-		self._show_tray_icon_checkbox = Qt.QCheckBox(tr("Show tray icon (on next start)"), self)
-		self._main_layout.addWidget(self._show_tray_icon_checkbox, 0, 0)
+		self.__locale = Locale.Locale()
+		self.__settings = Settings.Settings()
 
-		self._show_splash_checkbox = Qt.QCheckBox(tr("Show splash screen"), self)
-		self._main_layout.addWidget(self._show_splash_checkbox, 1, 0)
+		#####
 
-		self._force_locale_label = Qt.QLabel(tr("Force locale (on next start, for example, \"ru_RU\"):"), self)
-		self._main_layout.addWidget(self._force_locale_label, 2, 0)
+		self.__show_tray_icon_checkbox = Qt.QCheckBox(self)
+		self.__main_layout.addWidget(self.__show_tray_icon_checkbox, 0, 0)
 
-		self._force_locale_line_edit = LineEdit.LineEdit(self)
-		self._main_layout.addWidget(self._force_locale_line_edit, 2, 1)
+		self.__show_splash_checkbox = Qt.QCheckBox(self)
+		self.__main_layout.addWidget(self.__show_splash_checkbox, 1, 0)
 
-		self._main_layout.setRowStretch(3, 1)
+		self.__debug_mode_checkbox = Qt.QCheckBox(self)
+		self.__main_layout.addWidget(self.__debug_mode_checkbox, 2, 0)
 
-		self._debug_mode_checkbox = Qt.QCheckBox(tr("Debug mode (write info to stderr)"), self)
-		self._main_layout.addWidget(self._debug_mode_checkbox, 4, 0)
+		self.__main_layout.setRowStretch(3, 1)
+
+		self.__force_main_lang_label = Qt.QLabel(self)
+		self.__main_layout.addWidget(self.__force_main_lang_label, 4, 0)
+
+		self.__force_main_lang_combobox = Qt.QComboBox(self)
+		self.__main_layout.addWidget(self.__force_main_lang_combobox, 4, 1)
+
+		#####
+
+		self.translateUi()
 
 
 	### Public ###
@@ -59,22 +70,57 @@ class MiscSettingsTab(Qt.QWidget) :
 	def requisites(self) :
 		return {
 			"icon" : IconsLoader.icon("configure"),
-			"title" : tr("Misc"),
+			"title" : Qt.QT_TR_NOOP("Misc"),
 		}
 
 	###
 
 	def saveSettings(self) :
-		settings = Settings.settings()
-		settings.setValue("application/misc/show_tray_icon_flag", Qt.QVariant(self._show_tray_icon_checkbox.isChecked()))
-		settings.setValue("application/misc/show_splash_flag", Qt.QVariant(self._show_splash_checkbox.isChecked()))
-		settings.setValue("application/locale/force_locale", Qt.QVariant(self._force_locale_line_edit.text()))
-		settings.setValue("application/logger/debug_mode_flag", Qt.QVariant(self._debug_mode_checkbox.isChecked()))
+		self.__settings.setValue("application/misc/show_tray_icon_flag", Qt.QVariant(self.__show_tray_icon_checkbox.isChecked()))
+		self.__settings.setValue("application/misc/show_splash_flag", Qt.QVariant(self.__show_splash_checkbox.isChecked()))
+		self.__settings.setValue("application/logger/debug_mode_flag", Qt.QVariant(self.__debug_mode_checkbox.isChecked()))
+
+		self.__settings.setValue("application/locale/force_main_lang",
+			self.__force_main_lang_combobox.itemData(self.__force_main_lang_combobox.currentIndex()).toString())
 
 	def loadSettings(self) :
-		settings = Settings.settings()
-		self._show_tray_icon_checkbox.setChecked(settings.value("application/misc/show_tray_icon_flag", Qt.QVariant(True)).toBool())
-		self._show_splash_checkbox.setChecked(settings.value("application/misc/show_splash_flag", Qt.QVariant(True)).toBool())
-		self._force_locale_line_edit.setText(settings.value("application/locale/force_locale").toString())
-		self._debug_mode_checkbox.setChecked(settings.value("application/logger/debug_mode_flag", Qt.QVariant(False)).toBool())
+		self.__show_tray_icon_checkbox.setChecked(self.__settings.value("application/misc/show_tray_icon_flag", Qt.QVariant(True)).toBool())
+		self.__show_splash_checkbox.setChecked(self.__settings.value("application/misc/show_splash_flag", Qt.QVariant(True)).toBool())
+		self.__debug_mode_checkbox.setChecked(self.__settings.value("application/logger/debug_mode_flag").toBool())
+
+		force_main_lang = self.__settings.value("application/locale/force_main_lang").toString()
+		for count in xrange(self.__force_main_lang_combobox.count()) :
+			if ( self.__force_main_lang_combobox.itemData(count).toString() == force_main_lang and
+				not self.__force_main_lang_combobox.itemText(count).isEmpty() ) :
+				self.__force_main_lang_combobox.setCurrentIndex(count)
+
+
+
+	### Private ###
+
+	def translateUi(self) :
+		self.__show_tray_icon_checkbox.setText(tr("Show tray icon"))
+		self.__show_splash_checkbox.setText(tr("Show splash screen on startup"))
+		self.__force_main_lang_label.setText(tr("Force language:"))
+		self.__debug_mode_checkbox.setText(tr("Debug mode (write info to stderr)"))
+
+		last_index = self.__force_main_lang_combobox.currentIndex()
+		self.__force_main_lang_combobox.clear()
+		lang_codes_dict = LangsList.langCodes()
+		self.__force_main_lang_combobox.addItem(IconsLoader.icon(Utils.joinPath("flags", self.__locale.mainLang())),
+			tr("By default (%1)").arg(LangsList.langName(self.__locale.mainLang(), lang_codes_dict)), Qt.QVariant(""))
+		self.__force_main_lang_combobox.insertSeparator(1)
+		for langs_list_item in Locale.Locale.validLangs() :
+			self.__force_main_lang_combobox.addItem(IconsLoader.icon(Utils.joinPath("flags", langs_list_item)),
+				LangsList.langName(langs_list_item, lang_codes_dict), Qt.QVariant(langs_list_item))
+		self.__force_main_lang_combobox.setCurrentIndex(last_index)
+
+
+	### Handlers ###
+
+	def changeEvent(self, event) :
+		if event.type() == Qt.QEvent.LanguageChange :
+			self.translateUi()
+		else :
+			Qt.QWidget.changeEvent(self, event)
 

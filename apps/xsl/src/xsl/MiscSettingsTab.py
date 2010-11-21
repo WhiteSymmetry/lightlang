@@ -38,7 +38,6 @@ class MiscSettingsTab(Qt.QWidget) :
 
 		#####
 
-		self.__locale = Locale.Locale()
 		self.__settings = Settings.Settings()
 
 		#####
@@ -88,6 +87,8 @@ class MiscSettingsTab(Qt.QWidget) :
 		self.__show_splash_checkbox.setChecked(self.__settings.value("application/misc/show_splash_flag", Qt.QVariant(True)).toBool())
 		self.__debug_mode_checkbox.setChecked(self.__settings.value("application/logger/debug_mode_flag").toBool())
 
+		###
+
 		force_main_lang = self.__settings.value("application/locale/force_main_lang").toString()
 		for count in xrange(self.__force_main_lang_combobox.count()) :
 			if ( self.__force_main_lang_combobox.itemData(count).toString() == force_main_lang and
@@ -104,12 +105,19 @@ class MiscSettingsTab(Qt.QWidget) :
 		self.__force_main_lang_label.setText(tr("Force language:"))
 		self.__debug_mode_checkbox.setText(tr("Debug mode (write info to stderr)"))
 
+		###
+
 		last_index = self.__force_main_lang_combobox.currentIndex()
 		self.__force_main_lang_combobox.clear()
+
 		lang_codes_dict = LangsList.langCodes()
-		self.__force_main_lang_combobox.addItem(IconsLoader.icon(Utils.joinPath("flags", self.__locale.mainLang())),
-			tr("By default (%1)").arg(LangsList.langName(self.__locale.mainLang(), lang_codes_dict)), Qt.QVariant(""))
+		system_lang = Locale.Locale.systemLang()
+
+		self.__force_main_lang_combobox.addItem(IconsLoader.icon(Utils.joinPath("flags", system_lang)),
+			tr("By default (%1)").arg(LangsList.langName(system_lang, lang_codes_dict)), Qt.QVariant(""))
+
 		self.__force_main_lang_combobox.insertSeparator(1)
+
 		for langs_list_item in Locale.Locale.validLangs() :
 			self.__force_main_lang_combobox.addItem(IconsLoader.icon(Utils.joinPath("flags", langs_list_item)),
 				LangsList.langName(langs_list_item, lang_codes_dict), Qt.QVariant(langs_list_item))

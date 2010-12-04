@@ -29,13 +29,10 @@ import CssSettingsTab
 
 
 ##### Public classes #####
-class SettingsWindow(Qt.QDialog) :
+class SettingsWindow(Qt.QDialog) : # TODO: setObjectName("settings_window")
 	def __init__(self, parent = None) :
 		Qt.QDialog.__init__(self, parent)
 
-		self.setObjectName("settings_window")
-
-		self.setWindowTitle(tr("Settings"))
 		self.setWindowIcon(IconsLoader.icon("configure"))
 
 		#####
@@ -46,48 +43,56 @@ class SettingsWindow(Qt.QDialog) :
 		bottom_margin = self.style().pixelMetric(Qt.QStyle.PM_LayoutBottomMargin)
 		vertical_spacing = self.style().pixelMetric(Qt.QStyle.PM_LayoutVerticalSpacing)
 
-		self._main_layout = Qt.QVBoxLayout()
-		self._main_layout.setContentsMargins(0, 0, 0, 0)
-		self.setLayout(self._main_layout)
+		self.__main_layout = Qt.QVBoxLayout()
+		self.__main_layout.setContentsMargins(0, 0, 0, 0)
+		self.setLayout(self.__main_layout)
 
-		self._tabs_layout = Qt.QHBoxLayout()
-		self._tabs_layout.setContentsMargins(0, 0, right_margin, 0)
-		self._main_layout.addLayout(self._tabs_layout)
+		self.__tabs_layout = Qt.QHBoxLayout()
+		self.__tabs_layout.setContentsMargins(0, 0, right_margin, 0)
+		self.__main_layout.addLayout(self.__tabs_layout)
 
-		self._control_buttons_layout = Qt.QHBoxLayout()
-		self._control_buttons_layout.setContentsMargins(left_margin, vertical_spacing, right_margin, bottom_margin)
-		self._main_layout.addLayout(self._control_buttons_layout)
+		self.__control_buttons_layout = Qt.QHBoxLayout()
+		self.__control_buttons_layout.setContentsMargins(left_margin, vertical_spacing, right_margin, bottom_margin)
+		self.__main_layout.addLayout(self.__control_buttons_layout)
 
 		#####
 
-		self._tabs_list_browser = Qt.QListWidget(self)
-		self._tabs_list_browser.setViewMode(Qt.QListWidget.IconMode)
-		self._tabs_list_browser.setIconSize(Qt.QSize(48, 48))
-		self._tabs_list_browser.setHorizontalScrollBarPolicy(Qt.Qt.ScrollBarAlwaysOff)
-		self._tabs_layout.addWidget(self._tabs_list_browser)
+		self.__settings = Settings.Settings()
 
-		self._stacked_layout = Qt.QStackedLayout()
-		self._stacked_layout.setContentsMargins(left_margin, vertical_spacing, right_margin, bottom_margin)
-		self._tabs_layout.addLayout(self._stacked_layout)
+		#####
+
+		self.__tabs_list_browser = Qt.QListWidget(self)
+		self.__tabs_list_browser.setViewMode(Qt.QListWidget.IconMode)
+		self.__tabs_list_browser.setIconSize(Qt.QSize(48, 48))
+		self.__tabs_list_browser.setHorizontalScrollBarPolicy(Qt.Qt.ScrollBarAlwaysOff)
+		self.__tabs_list_browser.setDragDropMode(Qt.QAbstractItemView.NoDragDrop)
+		self.__tabs_layout.addWidget(self.__tabs_list_browser)
+
+		self.__stacked_layout = Qt.QStackedLayout()
+		self.__stacked_layout.setContentsMargins(left_margin, vertical_spacing, right_margin, bottom_margin)
+		self.__tabs_layout.addLayout(self.__stacked_layout)
 
 		###
 
-		self._control_buttons_layout.addStretch()
+		self.__control_buttons_layout.addStretch()
 
-		self._ok_button = Qt.QPushButton(IconsLoader.icon("dialog-ok"), tr("&OK"), self)
-		self._ok_button.setAutoDefault(False)
-		self._ok_button.setDefault(False)
-		self._control_buttons_layout.addWidget(self._ok_button)
+		self.__ok_button = Qt.QPushButton(self)
+		self.__ok_button.setIcon(IconsLoader.icon("dialog-ok"))
+		self.__ok_button.setAutoDefault(False)
+		self.__ok_button.setDefault(False)
+		self.__control_buttons_layout.addWidget(self.__ok_button)
 
-		self._apply_button = Qt.QPushButton(IconsLoader.icon("dialog-ok-apply"), tr("&Apply"), self)
-		self._apply_button.setAutoDefault(False)
-		self._apply_button.setDefault(False)
-		self._control_buttons_layout.addWidget(self._apply_button)
+		self.__apply_button = Qt.QPushButton(self)
+		self.__apply_button.setIcon(IconsLoader.icon("dialog-ok-apply"))
+		self.__apply_button.setAutoDefault(False)
+		self.__apply_button.setDefault(False)
+		self.__control_buttons_layout.addWidget(self.__apply_button)
 
-		self._cancel_button = Qt.QPushButton(IconsLoader.icon("dialog-cancel"), tr("&Cancel"), self)
-		self._cancel_button.setAutoDefault(False)
-		self._cancel_button.setDefault(False)
-		self._control_buttons_layout.addWidget(self._cancel_button)
+		self.__cancel_button = Qt.QPushButton(self)
+		self.__cancel_button.setIcon(IconsLoader.icon("dialog-cancel"))
+		self.__cancel_button.setAutoDefault(False)
+		self.__cancel_button.setDefault(False)
+		self.__control_buttons_layout.addWidget(self.__cancel_button)
 
 		#####
 
@@ -97,51 +102,64 @@ class SettingsWindow(Qt.QDialog) :
 
 		#####
 
-		self.connect(self._tabs_list_browser, Qt.SIGNAL("currentRowChanged(int)"), self._stacked_layout.setCurrentIndex)
+		self.connect(self.__tabs_list_browser, Qt.SIGNAL("currentRowChanged(int)"), self.__stacked_layout.setCurrentIndex)
 
-		self.connect(self._ok_button, Qt.SIGNAL("clicked()"), self.accept)
-		self.connect(self._apply_button, Qt.SIGNAL("clicked()"), self.saveSettingsSignal)
-		self.connect(self._cancel_button, Qt.SIGNAL("clicked()"), self.reject)
+		self.connect(self.__ok_button, Qt.SIGNAL("clicked()"), self.accept)
+		self.connect(self.__apply_button, Qt.SIGNAL("clicked()"), self.saveSettingsSignal)
+		self.connect(self.__cancel_button, Qt.SIGNAL("clicked()"), self.reject)
 
 		#####
 
-		self._tabs_list_browser.setCurrentRow(0)
-		self._stacked_layout.setCurrentIndex(0)
+		self.__tabs_list_browser.setCurrentRow(0)
+		self.__stacked_layout.setCurrentIndex(0)
+
+		self.translateUi()
 
 
 	##### Public #####
 
 	def saveSettings(self) :
-		settings = Settings.settings()
-		settings.setValue("settings_window/size", Qt.QVariant(self.size()))
+		self.__settings.setValue(Qt.QString("%1/size").arg(self.objectName()), Qt.QVariant(self.size()))
 
 	def loadSettings(self) :
-		settings = Settings.settings()
-		self.resize(settings.value("settings_window/size", Qt.QVariant(Qt.QSize(600, 450))).toSize())
+		self.resize(self.__settings.value(Qt.QString("%1/size").arg(self.objectName()), Qt.QVariant(Qt.QSize(600, 450))).toSize())
 
 
 	##### Private #####
 
+	def translateUi(self) :
+		self.setWindowTitle(tr("Settings"))
+
+		for count in xrange(self.__tabs_list_browser.count()) :
+			item = self.__tabs_list_browser.item(count)
+			item.setText(tr(item.data(Qt.Qt.UserRole).toString()))
+		self.resizeTabsBrowser()
+
+		self.__ok_button.setText(tr("&OK"))
+		self.__apply_button.setText(tr("&Apply"))
+		self.__cancel_button.setText(tr("&Cancel"))
+
+	###
+
 	def addSettingsTab(self, tab) :
 		requisites = tab.requisites()
 
-		self._tabs_list_browser.addItem(Qt.QListWidgetItem(requisites["icon"], requisites["title"], self._tabs_list_browser))
+		item = Qt.QListWidgetItem(requisites["icon"], tr(requisites["title"]), self.__tabs_list_browser)
+		item.setData(Qt.Qt.UserRole, Qt.QVariant(requisites["title"]))
+		self.__tabs_list_browser.addItem(item)
 
-		tab_groupbox = Qt.QGroupBox(requisites["title"], self)
-		tab_groupbox_layout = Qt.QVBoxLayout()
-		tab_groupbox.setLayout(tab_groupbox_layout)
-		tab_groupbox_layout.addWidget(tab)
-		self._stacked_layout.addWidget(tab_groupbox)
+		self.__stacked_layout.addWidget(tab)
 
 		self.connect(self, Qt.SIGNAL("loadSettings()"), tab.loadSettings)
 		self.connect(self, Qt.SIGNAL("saveSettings()"), tab.saveSettings)
 
-		###
+		self.resizeTabsBrowser()
 
+	def resizeTabsBrowser(self) :
 		max_size = Qt.QSize()
-		for count in xrange(self._tabs_list_browser.count()) :
-			item_size = Qt.QStyledItemDelegate().sizeHint(self._tabs_list_browser.viewOptions(),
-				self._tabs_list_browser.indexFromItem(self._tabs_list_browser.item(count)))
+		for count in xrange(self.__tabs_list_browser.count()) :
+			item_size = Qt.QStyledItemDelegate().sizeHint(self.__tabs_list_browser.viewOptions(), # FIXME: Infinity zooming
+				self.__tabs_list_browser.indexFromItem(self.__tabs_list_browser.item(count)))
 
 			if item_size.width() > max_size.width() :
 				max_size.setWidth(item_size.width())
@@ -149,12 +167,12 @@ class SettingsWindow(Qt.QDialog) :
 				max_size.setHeight(item_size.height())
 		max_size.setWidth(max_size.width() + 10)
 
- 		for count in xrange(self._tabs_list_browser.count()) :
-			self._tabs_list_browser.item(count).setSizeHint(max_size)
+ 		for count in xrange(self.__tabs_list_browser.count()) :
+			self.__tabs_list_browser.item(count).setSizeHint(max_size)
 
-		self._tabs_list_browser.setGridSize(max_size)
-		width = max_size.width() + self._tabs_list_browser.rect().width() - self._tabs_list_browser.contentsRect().width()
-		self._tabs_list_browser.setFixedWidth(width)
+		self.__tabs_list_browser.setGridSize(max_size)
+		width = max_size.width() + self.__tabs_list_browser.rect().width() - self.__tabs_list_browser.contentsRect().width()
+		self.__tabs_list_browser.setFixedWidth(width)
 
 	###
 
@@ -173,6 +191,12 @@ class SettingsWindow(Qt.QDialog) :
 
 
 	### Handlers ###
+
+	def changeEvent(self, event) :
+		if event.type() == Qt.QEvent.LanguageChange :
+			self.translateUi()
+		else :
+			Qt.QDialog.changeEvent(self, event)
 
 	def showEvent(self, event) :
 		self.loadSettingsSignal()

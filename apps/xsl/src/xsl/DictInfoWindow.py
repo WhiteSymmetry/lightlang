@@ -23,7 +23,7 @@
 import Qt
 import IconsLoader
 import TextBrowser
-import SlDictsInfoLoader
+import SlDictsInfo
 
 
 ##### Public classes #####
@@ -31,7 +31,6 @@ class DictInfoWindow(Qt.QDialog) :
 	def __init__(self, dict_name, parent = None) :
 		Qt.QDialog.__init__(self, parent)
 
-		self.setWindowTitle(tr("Dict Information"))
 		self.setWindowIcon(IconsLoader.icon("xsl"))
 
 		self.setMinimumSize(550, 400)
@@ -39,131 +38,143 @@ class DictInfoWindow(Qt.QDialog) :
 
 		#####
 
-		self._main_layout = Qt.QVBoxLayout()
-		self._main_layout.setContentsMargins(0, 0, 0, 0)
-		self._main_layout.setSpacing(0)
-		self.setLayout(self._main_layout)
+		self.__main_layout = Qt.QVBoxLayout()
+		self.__main_layout.setContentsMargins(0, 0, 0, 0)
+		self.__main_layout.setSpacing(0)
+		self.setLayout(self.__main_layout)
 
-		self._dict_info_browser_layout = Qt.QVBoxLayout()
-		self._dict_info_browser_layout.setContentsMargins(0, 0, 0, 0)
-		self._dict_info_browser_layout.setSpacing(0)
-		self._main_layout.addLayout(self._dict_info_browser_layout)
+		self.__dict_info_browser_layout = Qt.QVBoxLayout()
+		self.__dict_info_browser_layout.setContentsMargins(0, 0, 0, 0)
+		self.__dict_info_browser_layout.setSpacing(0)
+		self.__main_layout.addLayout(self.__dict_info_browser_layout)
 
-		self._control_buttons_layout = Qt.QHBoxLayout()
-		self._control_buttons_layout.setContentsMargins(6, 6, 6, 6)
-		self._control_buttons_layout.setSpacing(6)
-		self._main_layout.addLayout(self._control_buttons_layout)
-
-		#####
-
-		self._dict_name = Qt.QString(dict_name)
-
-		self._is_loaded_flag = False
+		self.__control_buttons_layout = Qt.QHBoxLayout()
+		self.__control_buttons_layout.setContentsMargins(6, 6, 6, 6)
+		self.__control_buttons_layout.setSpacing(6)
+		self.__main_layout.addLayout(self.__control_buttons_layout)
 
 		#####
 
-		self._dict_info_browser = TextBrowser.TextBrowser(self)
-		self._dict_info_browser_layout.addWidget(self._dict_info_browser)
+		self.__dict_name = Qt.QString(dict_name)
+		self.__info_loaded_flag = False
 
-		self._wait_picture_movie = IconsLoader.gifMovie("circular")
+		self.__sl_dicts_info = SlDictsInfo.SlDictsInfo(self)
+
+		#####
+
+		self.__dict_info_browser = TextBrowser.TextBrowser(self)
+		self.__dict_info_browser_layout.addWidget(self.__dict_info_browser)
+
+		self.__wait_picture_movie = IconsLoader.gifMovie("circular")
 		icon_width = icon_height = self.style().pixelMetric(Qt.QStyle.PM_SmallIconSize)
-		self._wait_picture_movie.setScaledSize(Qt.QSize(icon_width, icon_height))
-		self._wait_picture_movie.jumpToFrame(0)
-		self._wait_picture_movie_label = Qt.QLabel(self)
-		self._wait_picture_movie_label.setMovie(self._wait_picture_movie)
-		self._wait_picture_movie_label.hide()
-		self._control_buttons_layout.addWidget(self._wait_picture_movie_label)
+		self.__wait_picture_movie.setScaledSize(Qt.QSize(icon_width, icon_height))
+		self.__wait_picture_movie.jumpToFrame(0)
+		self.__wait_picture_movie_label = Qt.QLabel(self)
+		self.__wait_picture_movie_label.setMovie(self.__wait_picture_movie)
+		self.__wait_picture_movie_label.hide()
+		self.__control_buttons_layout.addWidget(self.__wait_picture_movie_label)
 
-		self._wait_message_label = Qt.QLabel(tr("Please wait..."), self)
-		self._wait_message_label.hide()
-		self._control_buttons_layout.addWidget(self._wait_message_label)
+		self.__wait_message_label = Qt.QLabel(self)
+		self.__wait_message_label.hide()
+		self.__control_buttons_layout.addWidget(self.__wait_message_label)
 
-		self._control_buttons_layout.addStretch()
+		self.__control_buttons_layout.addStretch()
 
-		self._update_info_button = Qt.QPushButton(IconsLoader.icon("view-refresh"), tr("&Update"), self)
-		self._control_buttons_layout.addWidget(self._update_info_button)
+		self.__update_info_button = Qt.QPushButton(self)
+		self.__update_info_button.setIcon(IconsLoader.icon("view-refresh"))
+		self.__control_buttons_layout.addWidget(self.__update_info_button)
 
-		self._ok_button = Qt.QPushButton(IconsLoader.icon("dialog-ok-apply"), tr("&OK"), self)
-		self._ok_button.setDefault(True)
-		self._control_buttons_layout.addWidget(self._ok_button)
+		self.__ok_button = Qt.QPushButton(self)
+		self.__ok_button.setIcon(IconsLoader.icon("dialog-ok-apply"))
+		self.__ok_button.setDefault(True)
+		self.__control_buttons_layout.addWidget(self.__ok_button)
 
 		#####
 
-		self.connect(self._update_info_button, Qt.SIGNAL("clicked()"), self.updateInfo)
-		self.connect(self._ok_button, Qt.SIGNAL("clicked()"), self.accept)
+		self.translateUi()
 
+		#####
 
-	### Public ###
-
-	def updateInfo(self) :
-		self.clearInfo()
-		self.loadInfo()
-
-	###
-
-	def dictInfo(self) :
-		return self._dict_info_browser.text()
+		self.connect(self.__update_info_button, Qt.SIGNAL("clicked()"), self.updateInfo)
+		self.connect(self.__ok_button, Qt.SIGNAL("clicked()"), self.accept)
 
 
 	### Private ###
 
-	def clearInfo(self) :
-		SlDictsInfoLoader.clearInfo(self._dict_name)
+	def translateUi(self) :
+		self.setWindowTitle(tr("Dict Information"))
 
-	def loadInfo(self) :
-		if self._dict_name.isEmpty() :
+		self.__wait_message_label.setText(tr("Please wait..."))
+		self.__update_info_button.setText(tr("&Update"))
+		self.__ok_button.setText(tr("&OK"))
+
+		if self.isVisible() :
+			self.updateInfo()
+		else :
+			self.__info_loaded_flag = False
+
+	###
+
+	def updateInfo(self) :
+		if self.__dict_name.isEmpty() :
 			return
 
-		self._update_info_button.blockSignals(True)
-		self._update_info_button.setEnabled(False)
+		self.__sl_dicts_info.clearInfo(self.__dict_name)
 
-		self._wait_picture_movie_label.show()
-		self._wait_picture_movie.start()
-		self._wait_message_label.show()
+		self.__update_info_button.blockSignals(True)
+		self.__update_info_button.setEnabled(False)
+
+		self.__wait_picture_movie_label.show()
+		self.__wait_picture_movie.start()
+		self.__wait_message_label.show()
 
 		###
 
 		dict_info = Qt.QString()
-		dict_info.append(self.tagInfo(tr("Caption"), SlDictsInfoLoader.CaptionTag)).append("<hr>")
-		dict_info.append(self.tagInfo(tr("Translate direction"), SlDictsInfoLoader.DirectionTag)).append("<hr>")
-		dict_info.append(self.tagInfo(tr("Dictionary group"), SlDictsInfoLoader.GroupTag)).append("<hr>")
-		dict_info.append(self.tagInfo(tr("Dictionary version"), SlDictsInfoLoader.VersionTag)).append("<hr>")
-		dict_info.append(self.tagInfo(tr("Count of words"), SlDictsInfoLoader.WordCountTag)).append("<hr>")
-		dict_info.append(self.tagInfo(tr("File size (KB)"), SlDictsInfoLoader.FileSizeTag)).append("<hr>")
-		dict_info.append(self.tagInfo(tr("Author"), SlDictsInfoLoader.AuthorTag)).append("<hr>")
-		dict_info.append(self.tagInfo(tr("Homepage"), SlDictsInfoLoader.UrlTag)).append("<hr>")
-		dict_info.append(self.tagInfo(tr("License"), SlDictsInfoLoader.LicenseTag)).append("<hr>")
-		dict_info.append(self.tagInfo(tr("Copyright"), SlDictsInfoLoader.CopyrightTag)).append("<hr>")
-		dict_info.append(self.tagInfo(tr("Description"), SlDictsInfoLoader.MiscTag))
-		self._dict_info_browser.setText(dict_info)
+		dict_info.append(self.tagInfo(tr("Caption"), SlDictsInfo.CaptionTag)).append("<hr>")
+		dict_info.append(self.tagInfo(tr("Translate direction"), SlDictsInfo.DirectionTag)).append("<hr>")
+		dict_info.append(self.tagInfo(tr("Dictionary group"), SlDictsInfo.GroupTag)).append("<hr>")
+		dict_info.append(self.tagInfo(tr("Dictionary version"), SlDictsInfo.VersionTag)).append("<hr>")
+		dict_info.append(self.tagInfo(tr("Count of words"), SlDictsInfo.WordCountTag)).append("<hr>")
+		dict_info.append(self.tagInfo(tr("File size (KB)"), SlDictsInfo.FileSizeTag)).append("<hr>")
+		dict_info.append(self.tagInfo(tr("Author"), SlDictsInfo.AuthorTag)).append("<hr>")
+		dict_info.append(self.tagInfo(tr("Homepage"), SlDictsInfo.UrlTag)).append("<hr>")
+		dict_info.append(self.tagInfo(tr("License"), SlDictsInfo.LicenseTag)).append("<hr>")
+		dict_info.append(self.tagInfo(tr("Copyright"), SlDictsInfo.CopyrightTag)).append("<hr>")
+		dict_info.append(self.tagInfo(tr("Description"), SlDictsInfo.MiscTag))
+		self.__dict_info_browser.setText(dict_info)
 
 		###
 
-		self._wait_picture_movie_label.hide()
-		self._wait_picture_movie.stop()
-		self._wait_picture_movie.jumpToFrame(0)
-		self._wait_message_label.hide()
+		self.__wait_picture_movie_label.hide()
+		self.__wait_picture_movie.stop()
+		self.__wait_picture_movie.jumpToFrame(0)
+		self.__wait_message_label.hide()
 
-		self._update_info_button.setEnabled(True)
-		self._update_info_button.blockSignals(False)
-
-		###
-
-		self._is_loaded_flag = True
+		self.__update_info_button.setEnabled(True)
+		self.__update_info_button.blockSignals(False)
 
 	###
 
 	def tagInfo(self, caption, tag) :
-		return Qt.QString("<font class=\"text_label_font\">%1</font>: %2").arg(caption, SlDictsInfoLoader.info(tag, self._dict_name))
+		return Qt.QString("<font class=\"text_label_font\">%1</font>: %2").arg(caption,
+			self.__sl_dicts_info.info(self.__dict_name, tag))
 
 
 	### Handlers ###
+
+	def changeEvent(self, event) :
+		if event.type() == Qt.QEvent.LanguageChange :
+			self.translateUi()
+		else :
+			Qt.QDialog.changeEvent(self, event)
 
 	def showEvent(self, event) :
 		Qt.QDialog.showEvent(self, event)
 		self.raise_()
 		self.activateWindow()
 
-		if not self._is_loaded_flag :
-			self.loadInfo()
+		if not self.__info_loaded_flag :
+			self.updateInfo()
+			self.__info_loaded_flag = True
 

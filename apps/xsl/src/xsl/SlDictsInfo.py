@@ -57,14 +57,12 @@ class SlDictsInfoMultiple(Qt.QObject) :
 
 		self.__info_cache_dict = {}
 
-		self.__langs_list = LangsList.LangsList()
-
 
 	### Public ###
 
-	def info(self, tag, dict_name) :
-		tag = str(tag)
+	def info(self, dict_name, tag) :
 		dict_name = str(dict_name)
+		tag = str(tag)
 
 		if not self.__info_cache_dict.has_key(dict_name) :
 			self.loadInfo(dict_name)
@@ -127,6 +125,7 @@ class SlDictsInfoMultiple(Qt.QObject) :
 
 		self.__info_cache_dict[dict_name][FileSizeTag] = Qt.QString().setNum(dict_file.size() / 1024)
 
+		lang_codes_dict = LangsList.langCodes()
 		direction_regexp = Qt.QRegExp("((..)-(..))")
 		if direction_regexp.exactMatch(self.__info_cache_dict[dict_name][DirectionTag]) :
 			icon_width = icon_height = Qt.QApplication.style().pixelMetric(Qt.QStyle.PM_SmallIconSize)
@@ -135,8 +134,8 @@ class SlDictsInfoMultiple(Qt.QObject) :
 					"&nbsp;&nbsp;&nbsp;%5 &#187; %6 (%7)").arg(icon_width).arg(icon_height)
 						.arg(IconsLoader.iconPath(Utils.joinPath("flags", direction_regexp.cap(2))))
 						.arg(IconsLoader.iconPath(Utils.joinPath("flags", direction_regexp.cap(3))))
-						.arg(self.__langs_list.langName(direction_regexp.cap(2)))
-						.arg(self.__langs_list.langName(direction_regexp.cap(3)))
+						.arg(LangsList.langName(direction_regexp.cap(2), lang_codes_dict))
+						.arg(LangsList.langName(direction_regexp.cap(3), lang_codes_dict))
 						.arg(direction_regexp.cap(1)) )
 
 		for tag_key in self.__info_cache_dict[dict_name].keys() :

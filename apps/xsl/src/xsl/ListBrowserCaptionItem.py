@@ -39,7 +39,7 @@ class ListBrowserCaptionItem(Qt.QListWidgetItem) :
 
 		#####
 
-		self.connect(self.__css_collection, Qt.SIGNAL("cssChanged()"), self.initDrawInstruments)
+		Qt.QObject.connect(self.__css_collection, Qt.SIGNAL("cssChanged()"), self.initDrawInstruments)
 
 
 	### Private ###

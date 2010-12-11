@@ -91,12 +91,12 @@ class DictInfoWindow(Qt.QDialog) :
 
 		#####
 
-		self.translateUi()
+		self.connect(self.__update_info_button, Qt.SIGNAL("clicked()"), self.updateInfo)
+		self.connect(self.__ok_button, Qt.SIGNAL("clicked()"), self.accept)
 
 		#####
 
-		self.connect(self.__update_info_button, Qt.SIGNAL("clicked()"), self.updateInfo)
-		self.connect(self.__ok_button, Qt.SIGNAL("clicked()"), self.accept)
+		self.translateUi()
 
 
 	### Private ###

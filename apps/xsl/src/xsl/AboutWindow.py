@@ -64,12 +64,11 @@ class AboutWindow(Qt.QDialog) :
 
 		#####
 
-		self.translateUi()
+		self.connect(self.__ok_button, Qt.SIGNAL("clicked()"), self.accept)
 
 		#####
 
-		self.connect(self.__ok_button, Qt.SIGNAL("clicked()"), self.accept)
-
+		self.translateUi()
 
 	### Private ###
 

@@ -143,7 +143,7 @@ class SlWordSearch(Qt.QObject) :
 
 		text = Qt.QString.fromLocal8Bit(str(self.__proc_output))
 		for replaces_list_item in (
-			("<font class=\"info_font\">This word is not found</font>", tr("<font class=\"info_font\">This word is not found</font>"))
+			("<font class=\"info_font\">This word is not found</font>", tr("<font class=\"info_font\">This word is not found</font>")),
 			("<font class=\"info_font\">No dict is connected</font>", tr("<font class=\"info_font\">No dict is connected</font>")) ) :
 
 			text.replace(replaces_list_item[0], replaces_list_item[1])

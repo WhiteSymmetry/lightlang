@@ -38,7 +38,7 @@ class GoogleTranslate(Qt.QObject) :
 		#####
 
 		self.__locale = Locale.Locale()
-		self.__settings = Settings.Settings()
+		self.__settings = Settings.Settings(self)
 
 		self.__http = Qt.QHttp(self)
 		self.__http_request_id = -1

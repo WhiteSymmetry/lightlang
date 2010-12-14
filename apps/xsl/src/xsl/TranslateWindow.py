@@ -61,7 +61,7 @@ class TranslateWindow(PopupWindow.PopupWindow) : # TODO: setObjectName("translat
 
 		#####
 
-		self.__settings = Settings.Settings()
+		self.__settings = Settings.Settings(self)
 
 		self.__css = Css.Css()
 

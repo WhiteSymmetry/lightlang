@@ -38,7 +38,7 @@ class MiscSettingsTab(Qt.QWidget) :
 
 		#####
 
-		self.__settings = Settings.Settings()
+		self.__settings = Settings.Settings(self)
 
 		#####
 

@@ -49,7 +49,7 @@ class HelpBrowserWindowMultiple(Qt.QDialog) : # TODO: setObjectName("help_browse
 
 		self.__index_file_url = Qt.QUrl()
 
-		self.__settings = Settings.Settings()
+		self.__settings = Settings.Settings(self)
 		self.__locale = Locale.Locale()
 
 		#####

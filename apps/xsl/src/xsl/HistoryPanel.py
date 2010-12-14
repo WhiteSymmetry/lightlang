@@ -44,7 +44,7 @@ class HistoryPanel(Qt.QDockWidget) : # TODO: setObjectName("history_panel")
 
 		#####
 
-		self.__settings = Settings.Settings()
+		self.__settings = Settings.Settings(self)
 
 		#####
 

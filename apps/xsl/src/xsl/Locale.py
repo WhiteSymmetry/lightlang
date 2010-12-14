@@ -38,7 +38,7 @@ class LocaleMultiple(Qt.QObject) :
 
 		#####
 
-		self.__settings = Settings.Settings()
+		self.__settings = Settings.Settings(self)
 
 		force_main_lang = self.__settings.value("application/locale/force_main_lang").toString()
 		self.__locale = ( Qt.QLocale() if force_main_lang.isEmpty() else Qt.QLocale(force_main_lang) )

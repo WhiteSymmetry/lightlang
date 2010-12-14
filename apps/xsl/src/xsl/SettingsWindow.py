@@ -57,7 +57,7 @@ class SettingsWindow(Qt.QDialog) : # TODO: setObjectName("settings_window")
 
 		#####
 
-		self.__settings = Settings.Settings()
+		self.__settings = Settings.Settings(self)
 
 		#####
 

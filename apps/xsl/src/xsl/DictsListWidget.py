@@ -21,7 +21,6 @@
 
 
 import Qt
-import Config
 import Const
 import DictsListWidgetItem
 
@@ -51,64 +50,63 @@ class DictsListWidget(Qt.QTableWidget) :
 
 		#####
 
-		self._item_code_regexp = Qt.QRegExp("\\{(\\d)\\}\\{(.+)\\}")
+		self.__start_drag_point = Qt.QPoint()
+		self.__pressed_drag_index = -1
+		self.__last_drag_move_y = -1
 
-		self._start_drag_point = Qt.QPoint()
-		self._pressed_drag_index = -1
-		self._last_drag_move_y = -1
-
-		self._scroll_timer = Qt.QTimer()
-		self._scroll_timer.setInterval(200)
+		self.__scroll_timer = Qt.QTimer()
+		self.__scroll_timer.setInterval(200)
 
 		#####
 
 		self.connect(self, Qt.SIGNAL("cellActivated(int, int)"), self.invertDictState)
 		self.connect(self, Qt.SIGNAL("currentCellChanged(int, int, int, int)"), self.currentRowChanged)
 
-		self.connect(self._scroll_timer, Qt.SIGNAL("timeout()"), self.dragMoveScroll)
+		self.connect(self.__scroll_timer, Qt.SIGNAL("timeout()"), self.dragMoveScroll)
 
 		self.connect(self.verticalHeader(), Qt.SIGNAL("sectionClicked(int)"), self.setCurrentRow)
 
 
 	### Public ###
 
-	def setList(self, list) :
+	def setItemsList(self, items_list) :
 		self.setRowCount(0)
 
-		for count in xrange(list.count()) :
+		item_code_regexp = Qt.QRegExp("\\{(\\d)\\}\\{(.+)\\}")
+		for items_list_item in items_list :
 			Qt.QCoreApplication.processEvents(Qt.QEventLoop.ExcludeUserInputEvents)
-			if not self._item_code_regexp.exactMatch(list[count]) :
+			if not item_code_regexp.exactMatch(items_list_item) :
 				continue
-			dict_state_flag = bool(self._item_code_regexp.cap(1).toInt()[0])
-			dict_name = self._item_code_regexp.cap(2)
+			dict_state_flag = bool(item_code_regexp.cap(1).toInt()[0])
+			dict_name = item_code_regexp.cap(2)
 			self.insertDictItem(DictsListWidgetItem.DictsListWidgetItem(dict_state_flag, dict_name))
 
-		if list.count() > 0 :
+		if items_list.count() > 0 :
 			self.setCurrentCell(0, 0)
 			self.currentRowChangedSignal(0)
 
 		self.dictsListChangedSignal()
 
-	def list(self) :
-		list = Qt.QStringList()
+	def itemsList(self) :
+		items_list = Qt.QStringList()
 
 		for count in xrange(self.rowCount()) :
 			Qt.QCoreApplication.processEvents(Qt.QEventLoop.ExcludeUserInputEvents)
-			list << Qt.QString("{%1}{%2}").arg(self.cellWidget(count, 0).dictState()).arg(self.cellWidget(count, 0).dictName())
+			items_list << Qt.QString("{%1}{%2}").arg(self.cellWidget(count, 0).dictState()).arg(self.cellWidget(count, 0).dictName())
 
-		return list
+		return items_list
 
 	###
 
 	def dictsList(self) :
-		list = Qt.QStringList()
+		dicts_list = Qt.QStringList()
 
 		for count in xrange(self.rowCount()) :
 			Qt.QCoreApplication.processEvents(Qt.QEventLoop.ExcludeUserInputEvents)
 			if self.cellWidget(count, 0).dictState() :
-				list << self.cellWidget(count, 0).dictName()
+				dicts_list << self.cellWidget(count, 0).dictName()
 
-		return list
+		return dicts_list
 
 	###
 
@@ -130,12 +128,7 @@ class DictsListWidget(Qt.QTableWidget) :
 
 	def setFilter(self, str) :
 		for count in xrange(self.rowCount()) :
-			item = self.cellWidget(count, 0)
-
-			dict_name = item.dictName()
-			dict_name.replace("_", " ")
-			dict_name.replace(".", " ")
-
+			dict_name = self.cellWidget(count, 0).dictName().replace(Qt.QRegExp("[\\._]"), " ")
 			if not dict_name.contains(str, Qt.Qt.CaseInsensitive) :
 				self.hideRow(count)
 			else :
@@ -163,11 +156,9 @@ class DictsListWidget(Qt.QTableWidget) :
 		dict_state = self.cellWidget(index, 0).dictState()
 		dict_name = self.cellWidget(index, 0).dictName()
 
-		item = DictsListWidgetItem.DictsListWidgetItem(dict_state, dict_name)
-
 		self.removeRow(index)
 
-		return item
+		return DictsListWidgetItem.DictsListWidgetItem(dict_state, dict_name)
 
 	###
 
@@ -199,9 +190,9 @@ class DictsListWidget(Qt.QTableWidget) :
 	###
 
 	def dragMoveScroll(self) :
-		if self._last_drag_move_y < self.height() / 10 :
+		if self.__last_drag_move_y < self.height() / 10 :
 			self.verticalScrollBar().setValue(self.verticalScrollBar().value() - 1)
-		elif self.height() - self._last_drag_move_y < self.height() / 10 :
+		elif self.height() - self.__last_drag_move_y < self.height() / 10 :
 			self.verticalScrollBar().setValue(self.verticalScrollBar().value() + 1)
 
 
@@ -235,23 +226,23 @@ class DictsListWidget(Qt.QTableWidget) :
 
 	def mousePressEvent(self, event) :
 		if event.button() == Qt.Qt.LeftButton and self.indexAt(event.pos()).row() > -1 :
-			self._start_drag_point = event.pos()
+			self.__start_drag_point = event.pos()
 		Qt.QTableWidget.mousePressEvent(self, event)
 
 	def mouseMoveEvent(self, event) :
 		if not ((event.buttons() & Qt.Qt.LeftButton) and self.indexAt(event.pos()).row() > -1) :
 			return
-		if (event.pos() - self._start_drag_point).manhattanLength() < Qt.QApplication.startDragDistance() :
+		if (event.pos() - self.__start_drag_point).manhattanLength() < Qt.QApplication.startDragDistance() :
 			return
 
-		self._pressed_drag_index = self.indexAt(event.pos()).row()
+		self.__pressed_drag_index = self.indexAt(event.pos()).row()
 
 		mime_data = Qt.QMimeData()
 		mime_data.setData("application/x-dictslistwidgetitem", Qt.QByteArray())
 
 		drag = Qt.QDrag(self)
 		drag.setMimeData(mime_data)
-		drag.setPixmap(Qt.QPixmap.grabWidget(self.cellWidget(self._pressed_drag_index, 0), 0, 0))
+		drag.setPixmap(Qt.QPixmap.grabWidget(self.cellWidget(self.__pressed_drag_index, 0), 0, 0))
 		drag.exec_(Qt.Qt.MoveAction)
 
 	def dragEnterEvent(self, event) :
@@ -275,19 +266,19 @@ class DictsListWidget(Qt.QTableWidget) :
 			event.ignore()
 
 		if event.pos().y() < self.height() / 10 or self.height() - event.pos().y() < self.height() / 10 :
-			self._last_drag_move_y = event.pos().y()
-			if not self._scroll_timer.isActive() :
-				self._scroll_timer.start()
+			self.__last_drag_move_y = event.pos().y()
+			if not self.__scroll_timer.isActive() :
+				self.__scroll_timer.start()
 		else :
-			if self._scroll_timer.isActive() :
-				self._scroll_timer.stop()
+			if self.__scroll_timer.isActive() :
+				self.__scroll_timer.stop()
 
 	def dropEvent(self, event) :
 		if event.mimeData().hasFormat("application/x-dictslistwidgetitem") :
 			current_drop_index = self.indexAt(event.pos()).row()
 
-			if self._pressed_drag_index != current_drop_index :
-				self.insertDictItem(self.takeDictItem(self._pressed_drag_index), current_drop_index)
+			if self.__pressed_drag_index != current_drop_index :
+				self.insertDictItem(self.takeDictItem(self.__pressed_drag_index), current_drop_index)
 				self.setCurrentCell(current_drop_index, 0)
 
 			if event.source() == self :
@@ -298,6 +289,6 @@ class DictsListWidget(Qt.QTableWidget) :
 		else :
 			event.ignore()
 
-		if self._scroll_timer.isActive() :
-			self._scroll_timer.stop()
+		if self.__scroll_timer.isActive() :
+			self.__scroll_timer.stop()
 

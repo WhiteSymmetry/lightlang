@@ -72,6 +72,9 @@ class MouseSelector(Qt.QObject) :
 	def setModifier(self, modifier) :
 		self.__modifier = modifier
 
+	def modifier(self) :
+		return self.__modifier
+
 
 	### Private ###
 

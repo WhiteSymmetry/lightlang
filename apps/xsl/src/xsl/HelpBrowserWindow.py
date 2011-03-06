@@ -151,12 +151,13 @@ class HelpBrowserWindowMultiple(Qt.QDialog) : # TODO: setObjectName("help_browse
 	### Public ###
 
 	def saveSettings(self) :
-		settings.setValue(Qt.QString("%1/size").arg(self.objectName()), Qt.QVariant(self.size()))
-		settings.setValue(Qt.QString("%1/url").arg(self.objectName()), Qt.QVariant(self.__text_browser.source()))
+		self.__settings.setValue(Qt.QString("%1/size").arg(self.objectName()), Qt.QVariant(self.size()))
+		self.__settings.setValue(Qt.QString("%1/url").arg(self.objectName()), Qt.QVariant(self.__text_browser.source()))
 
 	def loadSettings(self) :
 		self.resize(self.__settings.value(Qt.QString("%1/size").arg(self.objectName()), Qt.QVariant(Qt.QSize(800, 600))).toSize())
-		self.__text_browser.setSource(self.__settings.value(Qt.QString("%1/url").arg(self.objectName()), Qt.QVariant(self.__index_file_url)).toUrl())
+		self.__text_browser.setSource(self.__settings.value(Qt.QString("%1/url").arg(self.objectName()),
+			Qt.QVariant(self.__index_file_url)).toUrl())
 
 	###
 

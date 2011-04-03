@@ -33,9 +33,15 @@ class Spy(Qt.QObject) :
 		#####
 
 		self.__settings = Settings.Settings()
+		self.__show_translate_window_flag = self.__settings.value("application/spy/show_translate_window_flag", Qt.QVariant(True)).toBool()
+		self.__ignore_own_windows_flag = self.__settings.value("application/spy/ignore_own_windows_flag", Qt.QVariant(True)).toBool()
+
 		self.__mouse_selector = MouseSelector.MouseSelector(self)
+		self.__mouse_selector.setModifier(self.__settings.value("application/spy/keyboard_modifier", Qt.QVariant(-1)).toInt()[0])
 
 		#####
+
+		self.connect(self.__settings, Qt.SIGNAL("settingsChanged(const QString &)"), self.applySettingsSpy)
 
 		self.connect(self.__mouse_selector, Qt.SIGNAL("selectionChanged(const QString &)"), self.selectionChangedSignal)
 		self.connect(self.__mouse_selector, Qt.SIGNAL("selectionChanged(const QString &)"), self.showTranslateWindow)
@@ -56,12 +62,21 @@ class Spy(Qt.QObject) :
 	### Private ###
 
 	def showTranslateWindow(self) :
-		if self.__settings.value("application/spy/show_translate_window_flag", Qt.QVariant(True)).toBool() :
-			if self.__settings.value("application/spy/auto_detect_window_flag", Qt.QVariant(True)).toBool() :
+		if self.__show_translate_window_flag :
+			if self.__ignore_own_windows_flag :
 				if Qt.QApplication.activeWindow() == None :
 					self.showTranslateWindowRequestSignal()
 			else :
 				self.showTranslateWindowRequestSignal()
+
+	def applySettingsSpy(self, key) :
+		if key == "application/spy/show_translate_window_flag" :
+			self.__show_translate_window_flag = self.__settings.value("application/spy/show_translate_window_flag").toBool()
+		elif key == "application/spy/ignore_own_windows_flag" :
+			self.__ignore_own_windows_flag = self.__settings.value("application/spy/ignore_own_windows_flag").toBool()
+		elif key == "application/spy/keyboard_modifier" :
+			self.__mouse_selector.setModifier(self.__settings.value("application/spy/keyboard_modifier").toInt()[0])
+
 	### Signals ###
 
 	def selectionChangedSignal(self, text) :

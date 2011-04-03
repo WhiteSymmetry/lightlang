@@ -79,9 +79,8 @@ class MouseSelector(Qt.QObject) :
 	### Private ###
 
 	def checkSelection(self) :
-		if sys.modules.has_key("X11Inputs") :
-			if self.__x11_inputs.checkMouseButtons() or self.__x11_inputs.checkModifier(self.__modifier) :
-				return
+		if sys.modules.has_key("X11Inputs") and self.__x11_inputs.checkMouseButtons() :
+			return
 
 		word = self.__clipboard.text(Qt.QClipboard.Selection)
 		word = word.simplified().toLower()
@@ -91,6 +90,9 @@ class MouseSelector(Qt.QObject) :
 		if word == self.__old_selection : # FIXME (Issue 78)
 			return
 		self.__old_selection = word
+
+		if sys.modules.has_key("X11Inputs") and not self.__x11_inputs.checkModifier(self.__modifier) :
+			return
 
 		self.selectionChangedSignal(word)
 

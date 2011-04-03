@@ -25,6 +25,7 @@ import Settings
 import IconsLoader
 import MiscSettingsTab
 import NetworkSettingsTab
+import SpySettingsTab
 import CssSettingsTab
 
 
@@ -98,6 +99,7 @@ class SettingsWindow(Qt.QDialog) :
 
 		self.addSettingsTab(MiscSettingsTab.MiscSettingsTab(self))
 		self.addSettingsTab(NetworkSettingsTab.NetworkSettingsTab(self))
+		self.addSettingsTab(SpySettingsTab.SpySettingsTab(self))
 		self.addSettingsTab(CssSettingsTab.CssSettingsTab(self))
 
 		#####

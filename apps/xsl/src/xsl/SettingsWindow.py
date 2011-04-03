@@ -29,7 +29,7 @@ import CssSettingsTab
 
 
 ##### Public classes #####
-class SettingsWindow(Qt.QDialog) : # TODO: setObjectName("settings_window")
+class SettingsWindow(Qt.QDialog) :
 	def __init__(self, parent = None) :
 		Qt.QDialog.__init__(self, parent)
 

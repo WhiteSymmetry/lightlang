@@ -27,12 +27,11 @@ import LineEdit
 
 
 ##### Public classes #####
-class HistoryPanel(Qt.QDockWidget) : # TODO: setObjectName("history_panel")
+class HistoryPanel(Qt.QDockWidget) :
 	def __init__(self, parent = None) :
 		Qt.QDockWidget.__init__(self, parent)
 
 		self.setAllowedAreas(Qt.Qt.AllDockWidgetAreas)
-
 
 		#####
 

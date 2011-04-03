@@ -32,7 +32,7 @@ import TransparentFrame
 
 
 ##### Private classes #####
-class HelpBrowserWindowMultiple(Qt.QDialog) : # TODO: setObjectName("help_browser_window")
+class HelpBrowserWindowMultiple(Qt.QDialog) :
 	def __init__(self, parent = None) :
 		Qt.QDialog.__init__(self, parent)
 

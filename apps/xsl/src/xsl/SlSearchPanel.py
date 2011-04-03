@@ -28,7 +28,7 @@ import SlListBrowser
 
 
 ##### Public classes #####
-class SlSearchPanel(Qt.QDockWidget) : # TODO: setObjectName("sl_search_panel")
+class SlSearchPanel(Qt.QDockWidget) :
 	def __init__(self, parent = None) :
 		Qt.QDockWidget.__init__(self, parent)
 

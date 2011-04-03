@@ -31,7 +31,7 @@ import TextEdit
 
 
 ##### Public classes #####
-class GoogleTranslatePanel(Qt.QDockWidget) : # TODO: setObjectName("google_translate_panel")
+class GoogleTranslatePanel(Qt.QDockWidget) :
 	def __init__(self, parent = None) :
 		Qt.QDockWidget.__init__(self, parent)
 

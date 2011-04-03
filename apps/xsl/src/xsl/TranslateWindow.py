@@ -31,7 +31,7 @@ import TranslateBrowser
 
 
 ##### Public classes #####
-class TranslateWindow(PopupWindow.PopupWindow) : # TODO: setObjectName("translate_window")
+class TranslateWindow(PopupWindow.PopupWindow) :
 	def __init__(self, parent = None) :
 		PopupWindow.PopupWindow.__init__(self, parent)
 

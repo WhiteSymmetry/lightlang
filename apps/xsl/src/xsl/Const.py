@@ -32,10 +32,10 @@ MyName = Qt.QString("XSL")
 Version = Qt.QString("6.6")
 
 DeveloperMail = Qt.QString("mdevaev@gmail.com")
-OffersMail = Qt.QString("developers@lightlang.org.ru")
-BugtrackMail = Qt.QString("bugtrack@lightlang.org.ru")
-UserCountMail = Qt.QString("usercount@lightlang.org.ru")
-HomePageAddress = Qt.QString("http://lightlang.org.ru")
+OffersMail = DeveloperMail
+BugtrackMail = DeveloperMail
+UserCountMail = DeveloperMail
+HomePageAddress = Qt.QString("http://code.google.com/p/lightlang")
 
 
 #PrefixDirPath = Qt.QString("@prefix@")

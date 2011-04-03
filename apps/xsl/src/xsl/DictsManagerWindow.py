@@ -29,7 +29,7 @@ import DictsListWidget
 
 
 ##### Public classes #####
-class DictsManagerWindow(Qt.QDialog) : # setObjectName("dicts_manager_window")
+class DictsManagerWindow(Qt.QDialog) :
 	def __init__(self, parent = None) :
 		Qt.QDialog.__init__(self, parent)
 

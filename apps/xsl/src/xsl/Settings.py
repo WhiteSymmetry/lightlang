@@ -57,6 +57,7 @@ class SettingsMultiple(Qt.QSettings) :
 	def setValue(self, key, value) :
 		if not self.contains(key) or self.value(key) != Qt.QVariant(value) :
 			Qt.QSettings.setValue(self, key, value)
+			self.sync() # FIXME: Bug with C++ destructor in QSettings()
 			self.settingsChangedSignal(key)
 
 

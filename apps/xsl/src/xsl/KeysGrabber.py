@@ -73,7 +73,7 @@ class KeysGrabberMultiple(Qt.QThread) :
 		self.__is_stopped_flag = False
 		self.start()
 
-		return identifier
+		return Qt.QString(identifier)
 
 
 	### Private ###
@@ -101,7 +101,7 @@ class KeysGrabberMultiple(Qt.QThread) :
 	### Signals ###
 
 	def keyPressedSignal(self, identifier) :
-		self.emit(Qt.QString("keyPressed(const QString &)"), identifier)
+		self.emit(Qt.SIGNAL("keyPressed(const QString &)"), identifier)
 
 
 ##### Public classes #####

@@ -25,42 +25,52 @@ import os
 
 import Qt
 import Const
-import Utils
-import Settings
-import Logger
-
-
-##### Private constants #####
-LockFilePostfix = ".lock"
 
 
 ##### Public methods #####
-def test() :
-	lock_file_path = Utils.joinPath(Settings.Settings.dirPath(), Qt.QString(Const.MyName).toLower()+LockFilePostfix)
-	lock_file = Qt.QFile(lock_file_path)
-	lock_file_stream = Qt.QTextStream(lock_file)
-
-	if not lock_file.exists() :
-		if not lock_file.open(Qt.QIODevice.WriteOnly|Qt.QIODevice.Truncate) :
-			Logger.critical(Qt.QString("Cannot create lock file \"%1\"").arg(lock_file_path))
-			return
-		lock_file.close()
-
-	if not lock_file.open(Qt.QIODevice.ReadOnly) :
-		Logger.critical(Qt.QString("Cannot open lock file \"%1\"").arg(lock_file_path))
+def test(without_options_list = []) :
+	proc_name = os.path.basename(sys.argv[0])
+	try :
+		uid = os.getuid()
+		pid = os.getpid()
+	except :
 		return
 
-	old_pid = Qt.QString(lock_file_stream.readLine())
-	if old_pid.length() and Qt.QDir(Utils.joinPath("/proc", old_pid)).exists() and not Qt.QApplication.instance().isSessionRestored() :
-		Qt.QMessageBox.warning(None, Const.MyName, tr("Oops, %1 process is already running, kill old process and try again.\n"
-			"If not, remove lock file \"%2\"").arg(Const.MyName).arg(lock_file_path))
-		lock_file.close()
+	proc_pids_list = []
+	for proc_list_item in os.listdir("/proc") :
+		try :
+			proc_pid = int(proc_list_item)
+		except :
+			continue
+		if proc_pid == pid :
+			continue
+
+		cmdline_file_path = os.path.join("/proc", proc_list_item, "cmdline")
+		try :
+			if os.stat(cmdline_file_path).st_uid != uid :
+				continue
+		except :
+			continue
+
+		try :
+			cmdline_file = open(cmdline_file_path)
+			cmdline_list = cmdline_file.read().split("\0")
+		except : pass
+		try :
+			cmdline_file.close()
+		except : pass
+
+		if len(cmdline_list) >= 2 and "python" in cmdline_list[0] and os.path.basename(cmdline_list[1]) == proc_name :
+			ignore_flag = False
+			for without_options_list_item in without_options_list :
+				if without_options_list_item in cmdline_list :
+					ignore_flag = True
+					break
+			if not ignore_flag :
+				proc_pids_list.append(proc_pid)
+
+	if len(proc_pids_list) != 0 and not Qt.QApplication.instance().isSessionRestored() :
+		Qt.QMessageBox.warning(None, Const.MyName, tr("Oops, %1 process is already running, "
+			"kill old process and try again.\n").arg(Const.MyName))
 		sys.exit(1)
-		return
-
-	lock_file.close()
-
-	lock_file.open(Qt.QIODevice.WriteOnly|Qt.QIODevice.Truncate)
-	lock_file_stream << os.getpid() << "\n";
-	lock_file.close()
 

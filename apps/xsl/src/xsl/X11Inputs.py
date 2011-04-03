@@ -57,7 +57,7 @@ class X11Inputs(Qt.QObject) :
 
 	def checkModifier(self, modifier) :
 		if modifier == NoModifier :
-			return True
+			return False
 		else :
 			keymap = self.__display.query_keymap()
 			keycode = self.__display.keysym_to_keycode(modifier)

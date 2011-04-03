@@ -40,9 +40,8 @@ def help() :
 
 ##### Main #####
 if __name__ == "__main__" :
-	enable_psyco_flag = False
 	xsl_libs_path = os.path.join("@libdir@", "xsl/xsl")
-
+	enable_psyco_flag = False
 
 	try :
 		(opts_list, args_list) = getopt.getopt(sys.argv[1:], "hs:", ( "help", "no-splash", "no-tray-icon",
@@ -57,19 +56,22 @@ if __name__ == "__main__" :
 				xsl_libs_path = args_list_item
 
 			elif opts_list_item in ("--enable-psyco",) :
-				try :
-					import psyco
-					psyco.full()
-					print >> sys.stderr, "Experemintal Psyco environment is enabled"
-				except :
-					print >> sys.stderr, "Ignored enabling Psyco:\n %s" % (traceback.format_exc())
+				enable_psyco_flag = True
 
 			elif opts_list_item in ("-s", "--session",) :
 				print >> sys.stderr, "Accepted X11 session: %s" % (args_list_item)
-	except Exception, err1 :
-		print "Bad command line options: %s" % (str(err1))
+	except Exception, err :
+		print "Bad command line options: %s" % (str(err))
 
 	#####
+
+	if enable_psyco_flag :
+		try :
+			import psyco
+			psyco.full()
+			print >> sys.stderr, "Experemintal Psyco environment is enabled"
+		except :
+			print >> sys.stderr, "Ignored enabling Psyco:\n%s" % (traceback.format_exc())
 
 	sys.path.append(xsl_libs_path)
 	import Main

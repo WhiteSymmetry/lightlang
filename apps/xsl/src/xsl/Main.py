@@ -21,24 +21,13 @@
 
 
 import sys
-import __builtin__
 
 import Qt
-import Config
-import Const
-import Utils
 import Settings
 import IconsLoader
-import Locale
 import StartupLock
-import Css
 import MainApplication
-import TrayIcon
 import MainWindow
-
-
-##### Public objects #####
-MainObject = None
 
 
 ##### Public classes #####
@@ -46,69 +35,31 @@ class Main(Qt.QObject) :
 	def __init__(self, parent = None) :
 		Qt.QObject.__init__(self, parent)
 
-		#####
-
-		__builtin__.__dict__["tr"] = ( lambda text : Qt.QApplication.translate("@default", text) )
-
 
 	### Public ###
 
 	def run(self) :
-		self._app = MainApplication.MainApplication(sys.argv)
-		show_tray_icon_flag = Settings.settings().value("application/misc/show_tray_icon_flag", Qt.QVariant(True)).toBool()
-		show_splash_flag = Settings.settings().value("application/misc/show_splash_flag", Qt.QVariant(True)).toBool()
-
-		tr_file_path = Utils.joinPath(Const.TrDir, Locale.mainLang()+Const.TrPostfix)
-		if Qt.QFile.exists(tr_file_path) :
-			self._translator = Qt.QTranslator()
-			self._translator.load(tr_file_path)
-			self._app.installTranslator(self._translator)
-
-		qt_tr_file_path = Utils.joinPath(Config.QtTrDir, "qt_"+Locale.mainLang()+Const.TrPostfix)
-		if Qt.QFile.exists(qt_tr_file_path) :
-			self._qt_translator = Qt.QTranslator()
-			self._qt_translator.load(qt_tr_file_path)
-			self._app.installTranslator(self._qt_translator)
-
-		self._app.setStyleSheet(Css.css())
+		self.__app = MainApplication.MainApplication(sys.argv)
 
 		StartupLock.test()
 
-		#####
+		show_splash_flag = Settings.Settings().value("application/misc/show_splash_flag", Qt.QVariant(True)).toBool()
 
 		if show_splash_flag :
-			self._splash_pixmap = IconsLoader.pixmap("xsl_splash")
-			self._splash = Qt.QSplashScreen(self._splash_pixmap)
-			if not self._app.isSessionRestored() :
-				self._splash.show()
+			splash_pixmap = IconsLoader.pixmap("xsl_splash")
+			splash = Qt.QSplashScreen(splash_pixmap)
+			if not self.__app.isSessionRestored() :
+				splash.show()
 
-		self._app.processEvents()
+		self.__app.processEvents()
 
-		self._main_window = MainWindow.MainWindow()
-		self._tray_icon = TrayIcon.TrayIcon()
-
-		#####
-
-		Qt.QObject.connect(self._app, Qt.SIGNAL("focusChanged(QWidget *, QWidget*)"), self._main_window.focusChanged)
-		Qt.QObject.connect(self._app, Qt.SIGNAL("saveSettingsRequest()"), self._main_window.exit)
-
-		Qt.QObject.connect(self._tray_icon, Qt.SIGNAL("visibleChangeRequest()"), self._main_window.visibleChange)
-
-		#####
-
-		self._app.setQuitOnLastWindowClosed(not show_tray_icon_flag)
-		self._tray_icon.setVisible(show_tray_icon_flag)
-		self._main_window.load()
+		self.__main_window = MainWindow.MainWindow()
+		self.connect(self.__app, Qt.SIGNAL("focusChanged(QWidget *, QWidget*)"), self.__main_window.focusChanged)
+		self.connect(self.__app, Qt.SIGNAL("saveSettingsRequest()"), self.__main_window.exit)
+		self.__main_window.load()
 
 		if show_splash_flag :
-			self._splash.finish(self._main_window)
+			splash.finish(self.__main_window)
 
-		#####
-
-		global MainObject
-		MainObject = self
-
-		#####
-
-		self._app.exec_()
+		self.__app.exec_()
 

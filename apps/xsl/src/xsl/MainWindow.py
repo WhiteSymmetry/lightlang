@@ -228,7 +228,7 @@ class MainWindow(Qt.QMainWindow) :
 		self.__sl_search_panel.setFocus()
 		self.__sl_search_panel.raise_()
 
-		self.__tray_icon.setVisible(self.__settings.value("application/misc/show_tray_icon_flag").toBool())
+		self.__tray_icon.setVisible(self.__settings.value("application/misc/show_tray_icon_flag", Qt.QVariant(True)).toBool())
 
 		self.translateUi()
 
@@ -257,7 +257,7 @@ class MainWindow(Qt.QMainWindow) :
 	###
 
 	def focusChanged(self) :
-		new_flags_list = [ item.hasInternalFocus() for item in self.__panels_list ]
+		new_flags_list = [ item["panel"].hasInternalFocus() for item in self.__panels_list ]
 		if True in new_flags_list :
 			for count in xrange(len(new_flags_list)) :
 				self.__panels_list[count]["focus_flag"] = new_flags_list[count]
@@ -479,7 +479,7 @@ class MainWindow(Qt.QMainWindow) :
 			Qt.QMainWindow.changeEvent(self, event)
 
 	def closeEvent(self, event) :
-		if not self.__settings.value("application/misc/show_tray_icon_flag").toBool() :
+		if not self.__settings.value("application/misc/show_tray_icon_flag", Qt.QVariant(True)).toBool() :
 			self.exit()
 		else :
 			Qt.QMainWindow.closeEvent(self, event)

@@ -160,6 +160,7 @@ class GoogleTranslatePanel(Qt.QDockWidget) :
 			for count in xrange(combobox.count()) :
 				if combobox.itemData(count).toString() == lang and not combobox.itemText(count).isEmpty() :
 					combobox.setCurrentIndex(count)
+					break
 
 	###
 

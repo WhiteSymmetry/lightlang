@@ -478,8 +478,8 @@ class MainWindow(Qt.QMainWindow) :
 		if self.checkBusyStreams() :
 			return
 
-		for panels_list_item in self._panels_list :
-			panels_list_item.clear()
+		for panels_list_item in self.__panels_list :
+			panels_list_item["panel"].clear()
 
 		self.__tabbed_translate_browser.clearAll()
 

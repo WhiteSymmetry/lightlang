@@ -463,12 +463,14 @@ class MainWindow(Qt.QMainWindow) :
 		self.__stop_spy_action.setEnabled(True)
 		self.__tray_icon.setIcon(IconsLoader.icon("xsl+spy_22"))
 		self.__tray_icon.setToolTip(tr("%1 - graphical interface for SL\nSpy is running").arg(Const.MyName))
+		self.__status_bar.showMessage(tr("Spy is running"))
 
 	def stopSpy(self) :
 		self.__start_spy_action.setEnabled(True)
 		self.__stop_spy_action.setEnabled(False)
 		self.__tray_icon.setIcon(IconsLoader.icon("xsl_22"))
 		self.__tray_icon.setToolTip(tr("%1 - graphical interface for SL\nSpy is stopped").arg(Const.MyName))
+		self.__status_bar.showMessage(tr("Spy is stopped"))
 
 	###
 

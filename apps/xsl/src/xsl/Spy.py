@@ -65,10 +65,8 @@ class Spy(Qt.QObject) :
 	### Signals ###
 
 	def selectionChangedSignal(self, text) :
-		print "selectionChanged()"
 		self.emit(Qt.SIGNAL("selectionChanged(const QString &)"), text)
 
 	def showTranslateWindowRequestSignal(self) :
-		print "showTranslateWindowRequest()"
 		self.emit(Qt.SIGNAL("showTranslateWindowRequest()"))
 

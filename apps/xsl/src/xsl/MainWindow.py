@@ -31,10 +31,12 @@ import SlSearchPanel
 import GoogleTranslatePanel
 import HistoryPanel
 import TabbedTranslateBrowser
+import TranslateWindow
 import StatusBar
 import DictsManagerWindow
 import SettingsWindow
 import Spy
+import RadioButtonsMenu
 import InternetLinksMenu
 import HelpBrowserWindow
 import AboutWindow
@@ -72,6 +74,7 @@ class MainWindow(Qt.QMainWindow) :
 
 		self.__source_objects_list = []
 		self.__panels_list = []
+		self.__spy_methods_dict = {}
 
 		###
 
@@ -82,6 +85,9 @@ class MainWindow(Qt.QMainWindow) :
 
 		self.__tabbed_translate_browser = TabbedTranslateBrowser.TabbedTranslateBrowser(self)
 		self.__main_layout.addWidget(self.__tabbed_translate_browser)
+
+		self.__translate_window = TranslateWindow.TranslateWindow(self)
+		self.__translate_window.setObjectName("translate_window")
 
 		self.__dicts_manager_window = DictsManagerWindow.DictsManagerWindow(self)
 		self.__dicts_manager_window.setObjectName("dicts_manager_window")
@@ -138,6 +144,9 @@ class MainWindow(Qt.QMainWindow) :
 			tr("Start Spy"), self.startSpy)
 		self.__stop_spy_action = self.__spy_menu.addAction(IconsLoader.icon("media-playback-stop"),
 			tr("Stop Spy"), self.stopSpy)
+		self.__spy_menu.addSeparator()
+		self.__spy_methods_menu = RadioButtonsMenu.RadioButtonsMenu(tr("Translate methods"), self.__spy_menu)
+		self.__spy_methods_action = self.__spy_menu.addMenu(self.__spy_methods_menu)
 		self.__stop_spy_action.setEnabled(False)
 
 		###
@@ -206,8 +215,22 @@ class MainWindow(Qt.QMainWindow) :
 		self.connect(self.__tabbed_translate_browser, Qt.SIGNAL("cFindRequest(const QString &)"), self.__sl_search_panel.show)
 		self.connect(self.__tabbed_translate_browser, Qt.SIGNAL("statusChanged(const QString &)"), self.__status_bar.showStatusMessage)
 
+		self.connect(self.__translate_window, Qt.SIGNAL("newTabRequest()"), self.addTab)
+		self.connect(self.__translate_window, Qt.SIGNAL("uFindRequest(const QString &)"), self.__sl_search_panel.setWord)
+		self.connect(self.__translate_window, Qt.SIGNAL("uFindRequest(const QString &)"), self.__sl_search_panel.uFind)
+		self.connect(self.__translate_window, Qt.SIGNAL("uFindRequest(const QString &)"), self.__sl_search_panel.show)
+		self.connect(self.__translate_window, Qt.SIGNAL("uFindRequest(const QString &)"), self.showUp)
+		self.connect(self.__translate_window, Qt.SIGNAL("cFindRequest(const QString &)"), self.__sl_search_panel.setWord)
+		self.connect(self.__translate_window, Qt.SIGNAL("cFindRequest(const QString &)"), self.__sl_search_panel.cFind)
+		self.connect(self.__translate_window, Qt.SIGNAL("cFindRequest(const QString &)"), self.__sl_search_panel.show)
+		self.connect(self.__translate_window, Qt.SIGNAL("cFindRequest(const QString &)"), self.showUp)
+
 		self.connect(self.__dicts_manager_window, Qt.SIGNAL("dictsListChanged(const QStringList &)"), self.__sl_search_panel.setDictsList)
 		self.connect(self.__dicts_manager_window, Qt.SIGNAL("dictsListChanged(const QStringList &)"), lambda : self.__sl_search_panel.lFind())
+
+		self.connect(self.__spy, Qt.SIGNAL("selectionChanged(const QString &)"), self.spySelectionChanged)
+		self.connect(self.__spy, Qt.SIGNAL("showTranslateWindowRequest()"), self.__translate_window.show)
+		self.connect(self.__spy, Qt.SIGNAL("showTranslateWindowRequest()"), self.__translate_window.setFocus)
 
 		self.connect(self.__tray_icon, Qt.SIGNAL("activated(QSystemTrayIcon::ActivationReason)"), self.controlAct)
 
@@ -221,6 +244,7 @@ class MainWindow(Qt.QMainWindow) :
 		for panels_list_item in self.__panels_list :
 			panels_list_item["panel"].saveSettings()
 
+		self.__translate_window.saveSettings()
 		self.__dicts_manager_window.saveSettings()
 		self.__settings_window.saveSettings()
 		self.__help_browser_window.saveSettings()
@@ -231,6 +255,7 @@ class MainWindow(Qt.QMainWindow) :
 		for panels_list_item in self.__panels_list :
 			panels_list_item["panel"].loadSettings()
 
+		self.__translate_window.loadSettings()
 		self.__dicts_manager_window.loadSettings()
 		self.__settings_window.loadSettings()
 		self.__help_browser_window.loadSettings()
@@ -306,6 +331,9 @@ class MainWindow(Qt.QMainWindow) :
 		self.__spy_menu.setTitle(tr("Sp&y"))
 		self.__start_spy_action.setText(tr("Start Spy"))
 		self.__stop_spy_action.setText(tr("Stop Spy"))
+		self.__spy_methods_action.setText(tr("Translate methods"))
+		for spy_methods_dict_key in self.__spy_methods_dict :
+			spy_methods_dict_key.setText(tr(self.__spy_methods_dict[spy_methods_dict_key]["title"]))
 
 		self.__view_menu.setTitle(tr("&View"))
 		self.__zoom_in_action.setText(tr("Zoom in"))
@@ -325,12 +353,12 @@ class MainWindow(Qt.QMainWindow) :
 		if self.__spy.isRunning() :
 			self.__tray_icon.setToolTip(tr("%1 - graphical interface for SL\nSpy is stopped").arg(Const.MyName))
 		else :
-			self.setToolTip(tr("%1 - graphical interface for SL\nSpy is running").arg(Const.MyName))
+			self.__tray_icon.setToolTip(tr("%1 - graphical interface for SL\nSpy is running").arg(Const.MyName))
 
 	###
 
 	def addPanel(self, panel) :
-		requisites = panel.requisites()
+		requisites = dict(panel.requisites())
 		self.__panels_list.append({ "panel" : panel, "title" : requisites["title"], "focus_flag" : False,
 			"action" : self.__panels_menu.addAction(requisites["icon"], tr(requisites["title"]), panel.show, requisites["hotkey"]) })
 
@@ -339,7 +367,7 @@ class MainWindow(Qt.QMainWindow) :
 			self.tabifyDockWidget(self.__panels_list[-2]["panel"], self.__panels_list[-1]["panel"])
 
 	def addSourceObject(self, source_object) :
-		self.__source_objects_list.append({ "object" : source_object, "index" : -1 })
+		self.__source_objects_list.append({ "object" : source_object, "index" : -1, "spy_method_actions" : {} })
 
 		index = len(self.__source_objects_list) - 1
 
@@ -352,6 +380,12 @@ class MainWindow(Qt.QMainWindow) :
 		self.connect(source_object, Qt.SIGNAL("textChanged(const QString &)"), ( lambda text, n = index : self.setTabText(n, text) ))
 		self.connect(source_object, Qt.SIGNAL("newTabRequest()"), self.addTab)
 		self.connect(source_object, Qt.SIGNAL("statusChanged(const QString &)"), self.__status_bar.showStatusMessage)
+
+		for translate_methods_list_item in source_object.translateMethods() :
+			action = self.__spy_methods_menu.addRadioButton(translate_methods_list_item["title"],
+				translate_methods_list_item["object_name"]+"__"+translate_methods_list_item["method_name"])
+			self.__spy_methods_dict[action] = dict(translate_methods_list_item)
+			self.__spy_methods_dict[action]["source_object"] = source_object
 
 	###
 
@@ -459,6 +493,7 @@ class MainWindow(Qt.QMainWindow) :
 	###
 
 	def startSpy(self) :
+		self.__spy.start()
 		self.__start_spy_action.setEnabled(False)
 		self.__stop_spy_action.setEnabled(True)
 		self.__tray_icon.setIcon(IconsLoader.icon("xsl+spy_22"))
@@ -466,11 +501,17 @@ class MainWindow(Qt.QMainWindow) :
 		self.__status_bar.showMessage(tr("Spy is running"))
 
 	def stopSpy(self) :
+		self.__spy.stop()
 		self.__start_spy_action.setEnabled(True)
 		self.__stop_spy_action.setEnabled(False)
 		self.__tray_icon.setIcon(IconsLoader.icon("xsl_22"))
 		self.__tray_icon.setToolTip(tr("%1 - graphical interface for SL\nSpy is stopped").arg(Const.MyName))
 		self.__status_bar.showMessage(tr("Spy is stopped"))
+
+	def spySelectionChanged(self, text) :
+		action = self.__spy_methods_menu.currentAction()
+		self.__spy_methods_dict[action]["method"](text)
+		self.__spy_methods_dict[action]["source_object"].show()
 
 	###
 
@@ -503,12 +544,22 @@ class MainWindow(Qt.QMainWindow) :
 		self.__settings.setValue(Qt.QString("%1/is_visible_flag").arg(self.objectName()), Qt.QVariant(self.isVisible()))
 		self.__settings.setValue(Qt.QString("%1/state").arg(self.objectName()), Qt.QVariant(self.saveState()))
 
+		self.__settings.setValue(Qt.QString("%1/spy_method_index").arg(self.objectName()), Qt.QVariant(self.__spy_methods_menu.currentIndex()))
+		self.__settings.setValue(Qt.QString("%1/spy_status").arg(self.objectName()), Qt.QVariant(self.__spy.isRunning()))
+
 	def loadSettings(self) :
 		self.resize(self.__settings.value(Qt.QString("%1/size").arg(self.objectName()), Qt.QVariant(Qt.QSize(800, 500))).toSize())
 		self.move(self.__settings.value(Qt.QString("%1/position").arg(self.objectName())).toPoint())
 		self.setVisible(self.__settings.value(Qt.QString("%1/is_visible_flag").arg(self.objectName()), Qt.QVariant(True)).toBool())
 		self.restoreState(self.__settings.value(Qt.QString("%1/state").arg(self.objectName())).toByteArray())
 
+		spy_method_index = self.__settings.value(Qt.QString("%1/spy_method_index").arg(self.objectName()), Qt.QVariant(-1)).toInt()[0]
+		if spy_method_index > 0 :
+			self.__spy_methods_menu.setCurrentIndex(spy_method_index)
+		elif self.__spy_methods_menu.count() > 0 :
+			self.__spy_methods_menu.setCurrentIndex(0)
+		if self.__settings.value(Qt.QString("%1/spy_status").arg(self.objectName())).toBool() :
+			self.startSpy()
 
 	### Handlers ###
 

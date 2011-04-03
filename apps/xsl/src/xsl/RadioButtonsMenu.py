@@ -40,14 +40,24 @@ class RadioButtonsMenu(Qt.QMenu) :
 
 	### Public ###
 
-	def index(self) :
+	def currentAction(self) :
+		for actions_list_item in self.__actions_list :
+			if actions_list_item.isChecked() :
+				return actions_list_item
+		return None
+
+	def currentIndex(self) :
 		for count in xrange(len(self.__actions_list)) :
 			if self.__actions_list[count].isChecked() :
 				return count
+		return -1
 
-	def setIndex(self, index) :
+	def setCurrentIndex(self, index) :
 		self.__actions_list[index].setChecked(True)
 		self.dataChangedSignal(self.__actions_list[index])
+
+	def count(self) :
+		return len(self.__actions_list)
 
 	###
 

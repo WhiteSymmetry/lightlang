@@ -33,11 +33,12 @@ def test(without_options_list = []) :
 	try :
 		uid = os.getuid()
 		pid = os.getpid()
+		proc_list = os.listdir("/proc")
 	except :
 		return
 
 	proc_pids_list = []
-	for proc_list_item in os.listdir("/proc") :
+	for proc_list_item in proc_list :
 		try :
 			proc_pid = int(proc_list_item)
 		except :

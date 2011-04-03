@@ -47,7 +47,7 @@ class MouseSelector(Qt.QObject) :
 
 		if sys.modules.has_key("X11Inputs") :
 			self.__x11_inputs = X11Inputs.X11Inputs()
-			self.__modifier = KeyboardModifiersTest.NoModifier
+			self.__modifier = X11Inputs.NoModifier
 
 		#####
 
@@ -79,7 +79,7 @@ class MouseSelector(Qt.QObject) :
 	### Private ###
 
 	def checkSelection(self) :
-		if self.__dict__.has_key("__x11_inputs") :
+		if sys.modules.has_key("X11Inputs") :
 			if self.__x11_inputs.checkMouseButtons() or self.__x11_inputs.checkModifier(self.__modifier) :
 				return
 

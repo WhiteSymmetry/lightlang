@@ -377,7 +377,9 @@ class MainWindow(Qt.QMainWindow) :
 		self.connect(source_object, Qt.SIGNAL("processFinished()"), self.__status_bar.stopWaitMovie)
 		self.connect(source_object, Qt.SIGNAL("clearRequest()"), ( lambda n = index : self.clearTab(n) ))
 		self.connect(source_object, Qt.SIGNAL("wordChanged(const QString &)"), ( lambda word, n = index : self.setTabCaption(n, word) ))
+		self.connect(source_object, Qt.SIGNAL("wordChanged(const QString &)"), self.__translate_window.setCaption)
 		self.connect(source_object, Qt.SIGNAL("textChanged(const QString &)"), ( lambda text, n = index : self.setTabText(n, text) ))
+		self.connect(source_object, Qt.SIGNAL("textChanged(const QString &)"), self.__translate_window.setText)
 		self.connect(source_object, Qt.SIGNAL("newTabRequest()"), self.addTab)
 		self.connect(source_object, Qt.SIGNAL("statusChanged(const QString &)"), self.__status_bar.showStatusMessage)
 

@@ -25,7 +25,7 @@ import traceback
 import inspect
 
 import Qt
-#import Settings
+import Settings
 
 
 ##### Public constants #####
@@ -58,10 +58,11 @@ def log(message_type, message) :
 		log(WarningMessage, Qt.QString("Message type %1 not in valid range, caller: {mod}").arg(str(message_type)))
 		return
 
+	if not Settings.Settings().value("application/logger/debug_mode_flag", Qt.QVariant(False)).toBool() and message_type == DebugMessage :
+		return
+
 	message = Qt.QString(message)
 
-	# TODO: settings support
-	#if Settings.settings().value("application/logger/debug_mode_flag", Qt.QVariant(False)).toBool() :
 	if message.contains(ModuleCallerNameTag) :
 		try :
 			message.replace(ModuleCallerNameTag, inspect.getmodule(inspect.currentframe().f_back.f_back).__name__)

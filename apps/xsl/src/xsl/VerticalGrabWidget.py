@@ -24,7 +24,7 @@ import Qt
 
 
 ##### Public classes #####
-class HorizontalGrabWidget(Qt.QWidget) :
+class VerticalGrabWidget(Qt.QWidget) :
 	def __init__(self, parent = None) :
 		Qt.QWidget.__init__(self, parent)
 

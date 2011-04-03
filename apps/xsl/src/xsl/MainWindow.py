@@ -34,6 +34,7 @@ import TabbedTranslateBrowser
 import StatusBar
 import DictsManagerWindow
 import SettingsWindow
+import Spy
 import InternetLinksMenu
 import HelpBrowserWindow
 import AboutWindow
@@ -93,6 +94,8 @@ class MainWindow(Qt.QMainWindow) :
 
 		self.__about_window = AboutWindow.AboutWindow(self)
 
+		self.__spy = Spy.Spy(self)
+
 		self.__tray_icon = Qt.QSystemTrayIcon(self)
 		self.__tray_icon.setIcon(IconsLoader.icon("xsl_22"))
 
@@ -127,6 +130,15 @@ class MainWindow(Qt.QMainWindow) :
 		###
 
 		self.__panels_menu = self.menuBar().addMenu(tr("Pane&ls"))
+
+		###
+
+		self.__spy_menu = self.menuBar().addMenu(tr("Sp&y"))
+		self.__start_spy_action = self.__spy_menu.addAction(IconsLoader.icon("media-playback-start"),
+			tr("Start Spy"), self.startSpy)
+		self.__stop_spy_action = self.__spy_menu.addAction(IconsLoader.icon("media-playback-stop"),
+			tr("Stop Spy"), self.stopSpy)
+		self.__stop_spy_action.setEnabled(False)
 
 		###
 
@@ -291,6 +303,10 @@ class MainWindow(Qt.QMainWindow) :
 		for panels_list_item in self.__panels_list :
 			panels_list_item["action"].setText(tr(panels_list_item["title"]))
 
+		self.__spy_menu.setTitle(tr("Sp&y"))
+		self.__start_spy_action.setText(tr("Start Spy"))
+		self.__stop_spy_action.setText(tr("Stop Spy"))
+
 		self.__view_menu.setTitle(tr("&View"))
 		self.__zoom_in_action.setText(tr("Zoom in"))
 		self.__zoom_out_action.setText(tr("Zoom out"))
@@ -305,6 +321,11 @@ class MainWindow(Qt.QMainWindow) :
 		self.__links_action.setText(tr("Internet links"))
 		self.__about_action.setText(tr("About %1").arg(Const.MyName))
 		self.__about_qt_action.setText(tr("About Qt4"))
+
+		if self.__spy.isRunning() :
+			self.__tray_icon.setToolTip(tr("%1 - graphical interface for SL\nSpy is stopped").arg(Const.MyName))
+		else :
+			self.setToolTip(tr("%1 - graphical interface for SL\nSpy is running").arg(Const.MyName))
 
 	###
 
@@ -437,6 +458,20 @@ class MainWindow(Qt.QMainWindow) :
 
 	###
 
+	def startSpy(self) :
+		self.__start_spy_action.setEnabled(False)
+		self.__stop_spy_action.setEnabled(True)
+		self.__tray_icon.setIcon(IconsLoader.icon("xsl+spy_22"))
+		self.__tray_icon.setToolTip(tr("%1 - graphical interface for SL\nSpy is running").arg(Const.MyName))
+
+	def stopSpy(self) :
+		self.__start_spy_action.setEnabled(True)
+		self.__stop_spy_action.setEnabled(False)
+		self.__tray_icon.setIcon(IconsLoader.icon("xsl_22"))
+		self.__tray_icon.setToolTip(tr("%1 - graphical interface for SL\nSpy is stopped").arg(Const.MyName))
+
+	###
+
 	def applySettingsTrayIcon(self, key) :
 		if key == "application/misc/show_tray_icon_flag" :
 			self.__tray_icon.setVisible(self.__settings.value("application/misc/show_tray_icon_flag").toBool())
@@ -450,6 +485,9 @@ class MainWindow(Qt.QMainWindow) :
 			self.visibleChange()
 		elif reason == Qt.QSystemTrayIcon.Context :
 			menu = EntitledMenu.EntitledMenu(IconsLoader.icon("xsl"), Const.Package+" "+Const.MyName)
+			menu.addAction(self.__start_spy_action)
+			menu.addAction(self.__stop_spy_action)
+			menu.addSeparator()
 			menu.addAction(tr("Dictionary window")+( "\tWin+L" if sys.modules.has_key("KeysGrabber") else "" ), self.visibleChange)
 			menu.addSeparator()
 			menu.addAction(self.__exit_action)

@@ -23,7 +23,6 @@
 import Qt
 import Const
 import Utils
-import Logger
 
 
 ##### Private constants #####
@@ -33,15 +32,7 @@ SettingsPostfix = ".conf"
 ##### Private classes #####
 class SettingsMultiple(Qt.QSettings) :
 	def __init__(self, parent = None) :
-		settings_dir_path = self.dirPath()
-		settings_file_path = Utils.joinPath(settings_dir_path, Const.MyName.toLower()+SettingsPostfix)
-
-		if not Qt.QDir(settings_dir_path).exists() :
-			Logger.debug(Qt.QString("Directory \"%1\" does not exists, trying to create").arg(settings_dir_path))
-
-			if not Qt.QDir.home().mkdir(Utils.baseName(settings_dir_path)) :
-				Logger.critical(Qt.QString("Cannot create config directory \"%1\"").arg(settings_dir_path))
-
+		settings_file_path = Utils.joinPath(self.dirPath(), Const.MyName.toLower()+SettingsPostfix)
 		Qt.QSettings.__init__(self, settings_file_path, Qt.QSettings.IniFormat, parent)
 
 

@@ -33,7 +33,7 @@ XSL_PYC = $(XSL_SRC:.py=.pyc)
 XSL_PROG = xsl
 XSL_PROG_ALIAS = lightlang
 XSL_MAIN = $(XSL_SRC_DIR)/xsl.py
-XSL_CONFIG = $(XSL_SRC_DIR)/Config.py
+XSL_CONST = $(XSL_SRC_DIR)/Const.py
 XSL_APP_LIBS_DIR = $(XSL_SRC_DIR)
 
 INS_XSL_PROG_DIR = @bindir@
@@ -111,7 +111,7 @@ uninstall :
 	done
 
 clean :
-	$(RM) -f $(XSL_PROG) $(XSL_MAIN) $(XSL_PYC) $(XSL_CONFIG)
+	$(RM) -f $(XSL_PROG) $(XSL_MAIN) $(XSL_PYC) $(XSL_CONST)
 
 
 _update_ts :

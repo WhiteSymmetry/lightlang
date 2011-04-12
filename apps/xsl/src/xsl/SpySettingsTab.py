@@ -49,10 +49,10 @@ class SpySettingsTab(Qt.QWidget) :
 		#####
 
 		self.__show_translate_window_checkbox = Qt.QCheckBox(self)
-		self.__main_layout.addWidget(self.__show_translate_window_checkbox, 0, 0)
+		self.__main_layout.addWidget(self.__show_translate_window_checkbox, 0, 0, 1, 2)
 
 		self.__ignore_own_windows_checkbox = Qt.QCheckBox(self)
-		self.__main_layout.addWidget(self.__ignore_own_windows_checkbox, 1, 0)
+		self.__main_layout.addWidget(self.__ignore_own_windows_checkbox, 1, 0, 1, 2)
 
 		self.__keyboard_modifiers_label = Qt.QLabel(self)
 		self.__main_layout.addWidget(self.__keyboard_modifiers_label, 2, 0)

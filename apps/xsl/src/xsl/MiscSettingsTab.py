@@ -43,13 +43,13 @@ class MiscSettingsTab(Qt.QWidget) :
 		#####
 
 		self.__show_tray_icon_checkbox = Qt.QCheckBox(self)
-		self.__main_layout.addWidget(self.__show_tray_icon_checkbox, 0, 0)
+		self.__main_layout.addWidget(self.__show_tray_icon_checkbox, 0, 0, 1, 2)
 
 		self.__show_splash_checkbox = Qt.QCheckBox(self)
-		self.__main_layout.addWidget(self.__show_splash_checkbox, 1, 0)
+		self.__main_layout.addWidget(self.__show_splash_checkbox, 1, 0, 1, 2)
 
 		self.__debug_mode_checkbox = Qt.QCheckBox(self)
-		self.__main_layout.addWidget(self.__debug_mode_checkbox, 2, 0)
+		self.__main_layout.addWidget(self.__debug_mode_checkbox, 2, 0, 1, 2)
 
 		self.__main_layout.setRowStretch(3, 1)
 

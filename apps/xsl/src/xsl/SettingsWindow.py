@@ -60,9 +60,12 @@ class SettingsWindow(Qt.QDialog) :
 
 		self.__settings = Settings.Settings(self)
 
+		self.__tab_items_dict = {}
+
 		#####
 
 		self.__tabs_list_browser = Qt.QListWidget(self)
+		self.__tabs_list_browser.setAlternatingRowColors(True)
 		self.__tabs_list_browser.setViewMode(Qt.QListWidget.IconMode)
 		self.__tabs_list_browser.setIconSize(Qt.QSize(48, 48))
 		self.__tabs_list_browser.setHorizontalScrollBarPolicy(Qt.Qt.ScrollBarAlwaysOff)
@@ -134,7 +137,7 @@ class SettingsWindow(Qt.QDialog) :
 
 		for count in xrange(self.__tabs_list_browser.count()) :
 			item = self.__tabs_list_browser.item(count)
-			item.setText(tr(item.data(Qt.Qt.UserRole).toString()))
+			item.setText(tr(self.__tab_items_dict[item]["title"]))
 		self.resizeTabsBrowser()
 
 		self.__ok_button.setText(tr("&OK"))
@@ -147,27 +150,30 @@ class SettingsWindow(Qt.QDialog) :
 		requisites = tab.requisites()
 
 		item = Qt.QListWidgetItem(requisites["icon"], tr(requisites["title"]), self.__tabs_list_browser)
-		item.setData(Qt.Qt.UserRole, Qt.QVariant(requisites["title"]))
 		self.__tabs_list_browser.addItem(item)
+		self.__tab_items_dict[item] = { "title" : requisites["title"], "size_hint" : None }
 
 		self.__stacked_layout.addWidget(tab)
 
 		self.connect(self, Qt.SIGNAL("loadSettings()"), tab.loadSettings)
 		self.connect(self, Qt.SIGNAL("saveSettings()"), tab.saveSettings)
 
-		self.resizeTabsBrowser()
-
 	def resizeTabsBrowser(self) :
 		max_size = Qt.QSize()
 		for count in xrange(self.__tabs_list_browser.count()) :
-			item_size = Qt.QStyledItemDelegate().sizeHint(self.__tabs_list_browser.viewOptions(), # FIXME: Infinity zooming
-				self.__tabs_list_browser.indexFromItem(self.__tabs_list_browser.item(count)))
+			item = self.__tabs_list_browser.item(count)
+			if self.__tab_items_dict[item]["size_hint"] == None :
+				item_size = Qt.QStyledItemDelegate().sizeHint(self.__tabs_list_browser.viewOptions(),
+					self.__tabs_list_browser.indexFromItem(item))
+				self.__tab_items_dict[item]["size_hint"] = item_size
+			else :
+				item_size = self.__tab_items_dict[item]["size_hint"]
 
 			if item_size.width() > max_size.width() :
 				max_size.setWidth(item_size.width())
 			if item_size.height() > max_size.height() :
 				max_size.setHeight(item_size.height())
-		max_size.setWidth(max_size.width() + 10)
+		max_size.setWidth(max_size.width() + 40)
 
  		for count in xrange(self.__tabs_list_browser.count()) :
 			self.__tabs_list_browser.item(count).setSizeHint(max_size)

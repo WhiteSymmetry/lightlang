@@ -11,20 +11,20 @@ Name:		lightlang
 Version:	0.8.6
 Release:	%{build_release}
 Summary:	LightLang - universal powerful system of electronic dictionaries for Linux
-Group:		Applications/Office
+Group:	Applications/Office
 License:	GPL
 URL:		http://code.google.com/p/lightlang
 Source0:	%{name}-%{version}.tar.bz2
 BuildRoot:	%(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 BuildRequires:	PyQt4 >= 4.7, python-xlib >= 0.15, autoconf
-Requires:	PyQt4 >= 4.7, python-xlib >= 0.15, mplayer
+Requires:	PyQt4 >= 4.7, python-xlib >= 0.15, sox
 %description
 %{summary}
 
 
 %package devel
 Summary:	Devel package for LightLang
-Group:		Applications/Office
+Group:	Applications/Office
 Requires:	%{name} = %{version}
 Requires:	pkgconfig
 %description devel
@@ -40,8 +40,7 @@ Requires:	pkgconfig
 
 
 %build
-%configure \
-	--with-audio-player=mplayer
+%configure
 make %{?_smp_mflags}
 
 
@@ -86,6 +85,9 @@ rm -rf ${RPM_BUILD_ROOT}
 
 
 %changelog
+* Wed Apr 13 2011 Devaev Maxim <mdevaev@gmail.com> 0.8.6-20110413svn
+- Using sox (play) instead mplayer by default
+
 * Fri Jul 09 2010 Devaev Maxim <mdevaev@gmail.com> 0.8.6-20100709svn
 - Syntax fixes
 

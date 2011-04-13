@@ -164,7 +164,7 @@ class HelpBrowserWindowMultiple(Qt.QDialog) :
 	@Qt.pyqtSignature("QUrl")
 	def showInternalHelp(self, url) :
 		relative_file_path = url.toString().remove("xslhelp://")
-		absolute_file_path = Utils.joinPath(HtmlDocsDirPath, self.__locale.htmlDocsLang(), relative_file_path)
+		absolute_file_path = Utils.joinPath(Const.HtmlDocsDirPath, self.__locale.htmlDocsLang(), relative_file_path)
 		self.__text_browser.setSource(Qt.QUrl(absolute_file_path))
 		self.show()
 

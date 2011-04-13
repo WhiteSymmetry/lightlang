@@ -71,7 +71,7 @@ def test(without_options_list = []) :
 				proc_pids_list.append(proc_pid)
 
 	if len(proc_pids_list) != 0 and not Qt.QApplication.instance().isSessionRestored() :
-		Qt.QMessageBox.warning(None, Const.MyName, tr("Oops, %1 process is already running, "
-			"kill old process and try again.\n").arg(Const.MyName))
+		Qt.QMessageBox.warning(None, Const.MyName, tr("Oops, %1 process is already running,"
+			" kill old process and try again.").arg(Const.MyName))
 		sys.exit(1)
 

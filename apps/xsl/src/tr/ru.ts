@@ -78,11 +78,6 @@
         <translation>Поиск:</translation>
     </message>
     <message>
-        <location filename="GoogleTranslate.py" line="78"/>
-        <source>Google Translate</source>
-        <translation>Переводчик Google</translation>
-    </message>
-    <message>
         <location filename="LangsList.py" line="54"/>
         <source>English</source>
         <translation>Английский</translation>
@@ -243,11 +238,6 @@ Press &quot;Yes&quot; to ignore</source>
         <location filename="HelpBrowserWindow.py" line="190"/>
         <source>%1 Manual - %2</source>
         <translation>Руководство %1 - %2</translation>
-    </message>
-    <message>
-        <location filename="HistoryPanel.py" line="135"/>
-        <source>Search history</source>
-        <translation>История поиска</translation>
     </message>
     <message>
         <location filename="HistoryPanel.py" line="136"/>
@@ -988,11 +978,6 @@ Press &quot;Yes&quot; to ignore</source>
         <location filename="NetworkSettingsTab.py" line="96"/>
         <source>Network</source>
         <translation>Сеть</translation>
-    </message>
-    <message>
-        <location filename="SlSearchPanel.py" line="125"/>
-        <source>SL Search</source>
-        <translation>Поиск в SL</translation>
     </message>
     <message>
         <location filename="SlSearchPanel.py" line="133"/>

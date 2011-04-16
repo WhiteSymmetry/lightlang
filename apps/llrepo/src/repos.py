@@ -2,11 +2,11 @@
 
 repos = [
 	{
-		"server" : "ftp.etc.edu.ru",
+		"server" : "ftp.etersoft.ru",
 		"port"   : 0,
 		"user"   : "",
 		"passwd" : "",
-		"root"   : "pub/soft/for_linux/lightlang"
+		"root"   : "pub/people/mdevaev/llrepo"
 	}#,
 	#{
 	#	"server" : "ftp.server",

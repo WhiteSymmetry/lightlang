@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.0" language="ru_RU">
+<!DOCTYPE TS><TS version="1.1" language="ru_RU">
 <context>
     <name>@default</name>
     <message>
@@ -241,11 +240,6 @@ Press &quot;Yes&quot; to ignore</source>
 Проигнорируйте и нажмите &quot;Yes&quot;</translation>
     </message>
     <message>
-        <location filename="HelpBrowserWindow.py" line="47"/>
-        <source>%1 Manual</source>
-        <translation type="obsolete">Руководство %1</translation>
-    </message>
-    <message>
         <location filename="HelpBrowserWindow.py" line="190"/>
         <source>%1 Manual - %2</source>
         <translation>Руководство %1 - %2</translation>
@@ -259,16 +253,6 @@ Press &quot;Yes&quot; to ignore</source>
         <location filename="HistoryPanel.py" line="136"/>
         <source>Clear history</source>
         <translation>Очистить историю</translation>
-    </message>
-    <message>
-        <location filename="IfaMenu.py" line="134"/>
-        <source>IFA</source>
-        <translation type="obsolete">IFA</translation>
-    </message>
-    <message>
-        <location filename="IfaMenu.py" line="134"/>
-        <source>This applications is already running</source>
-        <translation type="obsolete">Это приложение уже было запущено</translation>
     </message>
     <message>
         <location filename="InternetLinksMenu.py" line="43"/>
@@ -430,16 +414,6 @@ Package version: %2</source>
         <translation>Управление словарями</translation>
     </message>
     <message>
-        <location filename="MainWindow.py" line="142"/>
-        <source>Web translate</source>
-        <translation type="obsolete">Перевод в Интернете</translation>
-    </message>
-    <message>
-        <location filename="MainWindow.py" line="145"/>
-        <source>Applications</source>
-        <translation type="obsolete">Приложения</translation>
-    </message>
-    <message>
         <location filename="MainWindow.py" line="347"/>
         <source>&amp;Help</source>
         <translation>По&amp;мощь</translation>
@@ -498,16 +472,6 @@ Package version: %2</source>
         <location filename="MainWindow.py" line="333"/>
         <source>Stop Spy</source>
         <translation>Остановить Spy-сервис</translation>
-    </message>
-    <message>
-        <location filename="SpyMenu.py" line="57"/>
-        <source>Show popup window</source>
-        <translation type="obsolete">Показывать всплывающее окно</translation>
-    </message>
-    <message>
-        <location filename="SpyMenu.py" line="60"/>
-        <source>Auto-detect window</source>
-        <translation type="obsolete">Автоидентификация окна</translation>
     </message>
     <message>
         <location filename="MainWindow.py" line="503"/>
@@ -643,11 +607,6 @@ Package version: %2</source>
         <location filename="MainWindow.py" line="341"/>
         <source>Zoom normal</source>
         <translation>Нормальный размер</translation>
-    </message>
-    <message>
-        <location filename="SpyMenu.py" line="86"/>
-        <source>Keyboard modifiers</source>
-        <translation type="obsolete">Клавиши-модификаторы</translation>
     </message>
     <message>
         <location filename="MainWindow.py" line="536"/>
@@ -804,31 +763,9 @@ Spy-сервис работает</translation>
         <translation>&lt;font class=&quot;word_header_font&quot;&gt;Перевод сайта &quot;%1&quot; открыт в вашем браузере&lt;/font&gt;&lt;hr&gt;&lt;br&gt;&lt;a href=&quot;%2&quot;&gt;%2&lt;/a&gt;</translation>
     </message>
     <message>
-        <location filename="StartupLock.py" line="55"/>
-        <source>Oops, %1 process is already running, kill old process and try again.
-If not, remove lock file &quot;%2&quot;</source>
-        <translation type="obsolete">Опаньки, а %1-то уже был запущен, убейте старый процесс и попробуйте снова.
-Если же это досадная ошибка, просто удалите файл-предохранитель &quot;%2&quot;</translation>
-    </message>
-    <message>
         <location filename="GoogleTranslate.py" line="185"/>
         <source>&lt;font class=&quot;word_header_font&quot;&gt;Translated: %1 &amp;#187; %2&lt;/font&gt;&lt;hr&gt;%3</source>
         <translation>&lt;font class=&quot;word_header_font&quot;&gt;Текст переведен: %1 &amp;#187; %2&lt;/font&gt;&lt;hr&gt;%3</translation>
-    </message>
-    <message>
-        <location filename="MainWindow.py" line="115"/>
-        <source>&amp;Panels</source>
-        <translation type="obsolete">Пане&amp;ли</translation>
-    </message>
-    <message>
-        <location filename="SlSearchPanel.py" line="133"/>
-        <source>SL usually search</source>
-        <translation type="obsolete">Обычный поиск в SL</translation>
-    </message>
-    <message>
-        <location filename="SlSearchPanel.py" line="139"/>
-        <source>SL expanded search</source>
-        <translation type="obsolete">Расширенный поиск в SL</translation>
     </message>
     <message>
         <location filename="MainWindow.py" line="334"/>
@@ -851,16 +788,6 @@ If not, remove lock file &quot;%2&quot;</source>
         <translation>&lt;h3&gt;%1 - графический интерфейс для SL&lt;/h3&gt;Все программы пакета &lt;strong&gt;%2&lt;/strong&gt; распространяются по лицензии&lt;br&gt;&lt;strong&gt;GPLv2&lt;/strong&gt;. Подробнее смотрите в разделе &lt;em&gt;Лицензионное соглашение&lt;/em&gt;&lt;br&gt; руководства &lt;strong&gt;%2&lt;/strong&gt;.&lt;br&gt;&lt;br&gt;Автор пакета &lt;strong&gt;%2&lt;/strong&gt;:&lt;br&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&lt;em&gt;Деваев Максим&lt;/em&gt;&lt;br&gt;Спасибо:&lt;br&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&lt;em&gt;Бабуриной Елизавете&lt;/em&gt;&lt;br&gt;Помогали:&lt;br&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&lt;em&gt;Владимир Фомкин&lt;/em&gt;&lt;br&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&lt;em&gt;Тихонов Сергей&lt;/em&gt;&lt;br&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&lt;em&gt;Ренат Насыров&lt;/em&gt;&lt;br&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&lt;em&gt;Доу Винх&lt;/em&gt;&lt;br&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&lt;em&gt;Алексей Юм&lt;/em&gt;&lt;br&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&lt;em&gt;Ольга Полякова&lt;/em&gt;&lt;br&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&lt;em&gt;Виталий Липатов&lt;/em&gt;&lt;br&gt;Переводчики:&lt;br&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&lt;em&gt;Кирилл Небогин&lt;/em&gt;&lt;br&gt;&lt;br&gt;&lt;em&gt;Copyright &amp;copy; 2007-2016 Devaev Maxim (&lt;a href=&quot;mailto:%3?subject=%2&quot;&gt;%3&lt;/a&gt;)&lt;/em&gt;</translation>
     </message>
     <message>
-        <location filename="CssSettingsTab.py" line="41"/>
-        <source>With &lt;a href=&quot;http://wikipedia.org/wiki/CSS&quot;&gt;CSS&lt;/a&gt; you can customize the appearance of any element of XSL.&lt;br&gt;Use &lt;a href=&quot;http://doc.qt.nokia.com/stylesheet.html&quot;&gt;Qt&lt;/a&gt; CSS and built-in classes &lt;a href=&quot;xslhelp://common_style_sheets.html&quot;&gt;SL/XSL&lt;/a&gt; to override the properties of the elements.&lt;br&gt;Edit user CSS in an &lt;a href=&quot;file://%1&quot;&gt;external editor&lt;/a&gt;. The new settings will be applied the next run.</source>
-        <translation type="obsolete">С помощью &lt;a href=&quot;http://wikipedia.org/wiki/CSS&quot;&gt;CSS&lt;/a&gt; вы можете настроить внешний вид любого элемента XSL.&lt;br&gt; Используйте &lt;a href=&quot;http://doc.qt.nokia.com/stylesheet.html&quot;&gt;Qt&lt;/a&gt; CSS и встроенные классы  &lt;a href=&quot;xslhelp://common_style_sheets.html&quot;&gt;SL/XSL&lt;/a&gt; для переопределения&lt;br&gt;свойств элементов.&lt;br&gt;&lt;br&gt;Редактировать пользовательский CSS во &lt;a href=&quot;file://%1&quot;&gt;внешнем редакторе&lt;/a&gt;. Новые&lt;br&gt;параметры будут применены при следующем запуске.</translation>
-    </message>
-    <message>
-        <location filename="CssSettingsTab.py" line="56"/>
-        <source>Style Sheets</source>
-        <translation type="obsolete">Стили</translation>
-    </message>
-    <message>
         <location filename="DictsManagerWindow.py" line="205"/>
         <source>&lt;a href=&quot;xslhelp://llrepo_usage.html&quot;&gt;How to install a new dictionary?&lt;/a&gt;</source>
         <translation>&lt;a href=&quot;xslhelp://llrepo_usage.html&quot;&gt;Как установить новый словарь?&lt;/a&gt;</translation>
@@ -881,29 +808,9 @@ If not, remove lock file &quot;%2&quot;</source>
         <translation>Настройки</translation>
     </message>
     <message>
-        <location filename="MiscSettingsTab.py" line="39"/>
-        <source>Show tray icon (on next start)</source>
-        <translation type="obsolete">Показывать иконку в трее (при следующем запуске)</translation>
-    </message>
-    <message>
-        <location filename="MiscSettingsTab.py" line="42"/>
-        <source>Show splash screen</source>
-        <translation type="obsolete">Показывать заставку при запуске</translation>
-    </message>
-    <message>
-        <location filename="MiscSettingsTab.py" line="45"/>
-        <source>Force locale (on next start, for example, &quot;ru_RU&quot;):</source>
-        <translation type="obsolete">Использовать локаль (например, &quot;ru_RU&quot;):</translation>
-    </message>
-    <message>
         <location filename="MiscSettingsTab.py" line="106"/>
         <source>Debug mode (write info to stderr)</source>
         <translation>Отладочный режим (вывод информации в stderr)</translation>
-    </message>
-    <message>
-        <location filename="MiscSettingsTab.py" line="62"/>
-        <source>Misc</source>
-        <translation type="obsolete">Разное</translation>
     </message>
     <message>
         <location filename="NetworkSettingsTab.py" line="119"/>
@@ -934,11 +841,6 @@ If not, remove lock file &quot;%2&quot;</source>
         <location filename="NetworkSettingsTab.py" line="124"/>
         <source>Password:</source>
         <translation>Пароль:</translation>
-    </message>
-    <message>
-        <location filename="NetworkSettingsTab.py" line="88"/>
-        <source>Network</source>
-        <translation type="obsolete">Сеть</translation>
     </message>
     <message>
         <location filename="SettingsWindow.py" line="144"/>
@@ -1059,18 +961,9 @@ Press &quot;Yes&quot; to ignore</source>
     </message>
     <message>
         <location filename="StartupLock.py" line="74"/>
-        <source>Oops, %1 process is already running, kill old process and try again.
-</source>
-        <translation type="obsolete">Опаньки, а %1-то уже был запущен, убейте старый процесс и попробуйте снова.</translation>
-    </message>
-    <message>
-        <location filename="StartupLock.py" line="74"/>
         <source>Oops, %1 process is already running, kill old process and try again.</source>
         <translation>Опаньки, а у вас уже запущен %1, убейте старый процесс и попробуйте снова.</translation>
     </message>
-</context>
-<context>
-    <name>Qt</name>
     <message>
         <location filename="CssSettingsTab.py" line="64"/>
         <source>Style Sheets</source>

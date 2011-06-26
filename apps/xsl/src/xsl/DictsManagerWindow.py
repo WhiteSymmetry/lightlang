@@ -233,7 +233,8 @@ class DictsManagerWindow(Qt.QDialog) :
 
 		item_code_regexp = Qt.QRegExp("\\{(\\d)\\}\\{(.+)\\}")
 
-		for count in xrange(local_items_list.count()) :
+		count = 0
+		while count < local_items_list.count() :
 			Qt.QCoreApplication.processEvents(Qt.QEventLoop.ExcludeUserInputEvents)
 
 			if not item_code_regexp.exactMatch(local_items_list[count]) :
@@ -243,6 +244,8 @@ class DictsManagerWindow(Qt.QDialog) :
 			if not all_dicts_dir_entry_list.contains(item_code_regexp.cap(2)) :
 				local_items_list.removeAt(count)
 				continue
+
+			count += 1
 
 		###
 

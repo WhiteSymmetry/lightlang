@@ -8,7 +8,7 @@ arch=('i686' 'x86_64')
 url="http://code.google.com/p/lightlang"
 license="GPL"
 depends=('qt' 'pyqt' 'python2-pyqt' 'python-xlib' 'sox')
-makedepends=('git')
+makedepends=('git' 'autoconf')
 provides=('lightlang')
 replaces=('lightlang-svn')
 source=()
@@ -36,7 +36,11 @@ build() {
     rm -rf $_gitname-build
     cp -r $_gitname $_gitname-build
     cd $_gitname-build
-    
+
+    sed -i -e 's/python -c/python2 -c/g' configure.in
+    sed -i -e 's/AC_X_PATH_PROG(PYTHON_PROG, python,/AC_X_PATH_PROG(PYTHON_PROG, python2,/g' configure.in
+    sed -i -e 's/"python"/"python2"/g' apps/xsl/src/xsl/StartupLock.py
+    autoconf
     ./configure || return 1
     make || return 1
     make DESTDIR=$pkgdir install

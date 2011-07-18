@@ -77,7 +77,7 @@ int connect_dict(const char *dict_name)
 	sprintf(dest_dict_path, "%s/%s", settings.user_dicts_dir, dict_name);
 
 	if ( !access(src_dict_path, F_OK) ) {
-		if ( !symlink(src_dict_path, dest_dict_path) ) {
+		if ( symlink(src_dict_path, dest_dict_path) != 0 ) {
 			fprintf(stderr, "Cannot connect \"%s\": %s\n", dict_name, strerror(errno));
 			free(src_dict_path);
 			free(dest_dict_path);

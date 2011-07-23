@@ -32,7 +32,7 @@ build() {
 
     msg "Git clone done or server timeout"
     msg "Starting make..."
-    
+
     rm -rf $_gitname-build
     cp -r $_gitname $_gitname-build
     cd $_gitname-build

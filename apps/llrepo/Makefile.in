@@ -22,6 +22,7 @@ LLREPO_SRC = $(shell ls $(LLREPO_SRC_DIR)/*.py)
 LLREPO_PYC = $(LLREPO_SRC:.py=.pyc)
 LLREPO_PROG = llrepo
 LLREPO_MAIN = $(LLREPO_SRC_DIR)/llrepo.py
+LLREPO_CONST = $(LLREPO_SRC_DIR)/const.py
 LLREPO_LIBS_DIR = $(LLREPO_SRC_DIR)
 
 INS_LLREPO_PROG_DIR = @bindir@
@@ -36,7 +37,7 @@ INS_LLREPO_LIBS_DIR = @libdir@/llrepo
 	$(PYTHON) -c 'import sys, py_compile; py_compile.compile(sys.argv[1])' $<
 
 
-all : $(LLREPO_MAIN) $(LLREPO_PYC)
+all : $(LLREPO_CONST) $(LLREPO_MAIN) $(LLREPO_PYC)
 	$(CP) -f $(LLREPO_MAIN) $(LLREPO_PROG)
 	$(CHMOD) +x $(LLREPO_PROG)
 
@@ -51,7 +52,7 @@ uninstall :
 	$(RM) -rf $(DESTDIR)$(INS_LLREPO_LIBS_DIR)
 
 clean :
-	$(RM) -f $(LLREPO_PROG) $(LLREPO_MAIN) $(LLREPO_PYC)
+	$(RM) -f $(LLREPO_PROG) $(LLREPO_CONST) $(LLREPO_MAIN) $(LLREPO_PYC)
 
 
 .PHONY : all install uninstall clean

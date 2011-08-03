@@ -25,7 +25,6 @@ all :
 	@echo " Building LightLang..."
 	@echo "+---------------------------------------------------------------------+"
 	$(MAKE) -C $(APPS_DIR)
-	$(MAKE) -C $(RESOURCES_DIR)
 	@echo "+---------------------------------------------------------------------+"
 	@echo " OK. Type \"make install\" to install."
 	@echo "+---------------------------------------------------------------------+"
@@ -60,12 +59,10 @@ uninstall :
 
 clean :
 	$(MAKE) -C $(APPS_DIR) clean
-	$(MAKE) -C $(RESOURCES_DIR) clean
 	$(MAKE) -C $(PKG_DIR) clean
 	$(FIND) . -name *\~ -exec $(RM) -f '{}' \;
 	$(FIND) . -name Makefile -exec $(RM) -f '{}' \;
 	$(RM) -f config.log config.status
-	$(RM) -f download.py
 
 _release :
 	make -C apps/xsl -f Makefile.in TR_LANG=ru _create_qm

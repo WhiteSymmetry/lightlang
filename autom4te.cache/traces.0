@@ -154,7 +154,7 @@ m4trace:configure.in:36: -2- AC_SUBST_TRACE([DEFAULT_CONFIG])
 m4trace:configure.in:36: -2- m4_pattern_allow([^DEFAULT_CONFIG$])
 m4trace:configure.in:34: -1- _m4_warn([obsolete], [The macro `AC_HELP_STRING' is obsolete.
 You should run autoupdate.], [../../lib/autoconf/general.m4:209: AC_HELP_STRING is expanded from...
-../../lib/autoconf/general.m4:1473: AC_ARG_WITH is expanded from...
+../../lib/autoconf/general.m4:1482: AC_ARG_WITH is expanded from...
 configure.in:34: the top level])
 m4trace:configure.in:38: -1- AC_SUBST([DEFAULT_AUDIO_PLAYER], [play])
 m4trace:configure.in:38: -1- AC_SUBST_TRACE([DEFAULT_AUDIO_PLAYER])
@@ -194,7 +194,7 @@ m4trace:configure.in:55: -2- AC_SUBST_TRACE([AUDIO_PLAYER])
 m4trace:configure.in:55: -2- m4_pattern_allow([^AUDIO_PLAYER$])
 m4trace:configure.in:53: -1- _m4_warn([obsolete], [The macro `AC_HELP_STRING' is obsolete.
 You should run autoupdate.], [../../lib/autoconf/general.m4:209: AC_HELP_STRING is expanded from...
-../../lib/autoconf/general.m4:1473: AC_ARG_WITH is expanded from...
+../../lib/autoconf/general.m4:1482: AC_ARG_WITH is expanded from...
 configure.in:53: the top level])
 m4trace:configure.in:59: -2- AC_SUBST([GUI_FLAG], [$withval])
 m4trace:configure.in:59: -2- AC_SUBST_TRACE([GUI_FLAG])
@@ -204,7 +204,7 @@ m4trace:configure.in:59: -2- AC_SUBST_TRACE([GUI_FLAG])
 m4trace:configure.in:59: -2- m4_pattern_allow([^GUI_FLAG$])
 m4trace:configure.in:57: -1- _m4_warn([obsolete], [The macro `AC_HELP_STRING' is obsolete.
 You should run autoupdate.], [../../lib/autoconf/general.m4:209: AC_HELP_STRING is expanded from...
-../../lib/autoconf/general.m4:1473: AC_ARG_WITH is expanded from...
+../../lib/autoconf/general.m4:1482: AC_ARG_WITH is expanded from...
 configure.in:57: the top level])
 m4trace:configure.in:63: -2- AC_SUBST([PYTHON_XLIB_FLAG], [$withval])
 m4trace:configure.in:63: -2- AC_SUBST_TRACE([PYTHON_XLIB_FLAG])
@@ -214,7 +214,7 @@ m4trace:configure.in:63: -2- AC_SUBST_TRACE([PYTHON_XLIB_FLAG])
 m4trace:configure.in:63: -2- m4_pattern_allow([^PYTHON_XLIB_FLAG$])
 m4trace:configure.in:61: -1- _m4_warn([obsolete], [The macro `AC_HELP_STRING' is obsolete.
 You should run autoupdate.], [../../lib/autoconf/general.m4:209: AC_HELP_STRING is expanded from...
-../../lib/autoconf/general.m4:1473: AC_ARG_WITH is expanded from...
+../../lib/autoconf/general.m4:1482: AC_ARG_WITH is expanded from...
 configure.in:61: the top level])
 m4trace:configure.in:68: -1- AC_SUBST([CC])
 m4trace:configure.in:68: -1- AC_SUBST_TRACE([CC])
@@ -393,8 +393,7 @@ pkg/Makefile
 docs/Makefile docs/html/Makefile docs/html/en/Makefile docs/html/ru/Makefile
 docs/text/Makefile docs/text/en/Makefile docs/text/ru/Makefile
 docs/man/Makefile docs/man/en/Makefile docs/man/ru/Makefile
-download.py
-apps/sl/src/config.h apps/xsl/src/xsl/Const.py apps/xsl/src/xsl/xsl.py apps/llrepo/src/llrepo.py
+apps/sl/src/config.h apps/xsl/src/xsl/Const.py apps/xsl/src/xsl/xsl.py apps/llrepo/src/const.py apps/llrepo/src/llrepo.py
 pkg/pkg/lightlang.pc])
 m4trace:configure.in:159: -1- _m4_warn([obsolete], [AC_OUTPUT should be used without arguments.
 You should run autoupdate.], [])

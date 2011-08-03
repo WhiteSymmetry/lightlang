@@ -14,9 +14,6 @@ SOUNDS_RESOURCES_DIR = sounds
 
 ##### Targets #####
 
-all :
-	$(MAKE) -C $(DICTS_RESOURCES_DIR)
-
 install :
 	$(MAKE) -C $(DICTS_RESOURCES_DIR) install
 	$(MAKE) -C $(SOUNDS_RESOURCES_DIR) install

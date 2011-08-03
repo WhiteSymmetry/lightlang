@@ -1,8 +1,8 @@
 # Repositories list
 
-repos = [
+ReposList = [
 	{
-		"server" : "ftp.etersoft.ru",
+		"host" : "ftp.etersoft.ru",
 		"port"   : 0,
 		"user"   : "",
 		"passwd" : "",

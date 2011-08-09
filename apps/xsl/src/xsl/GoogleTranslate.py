@@ -47,7 +47,6 @@ class GoogleTranslate(Qt.QObject) :
 		self.__http_output = Qt.QByteArray()
 
 		self.__timer = Qt.QTimer(self)
-		self.__timer.setInterval(30000)
 
 		self.__sl = Qt.QString()
 		self.__tl = Qt.QString()
@@ -123,6 +122,7 @@ class GoogleTranslate(Qt.QObject) :
 		self.__http.setHost("ajax.googleapis.com")
 		self.__http_request_id = self.__http.request(http_request_header, text)
 
+		self.__timer.setInterval(self.__settings.value("application/network/timeout").toInt()[0] * 1000)
 		self.__timer.start()
 
 	def abort(self) :

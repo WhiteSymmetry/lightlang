@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS><TS version="1.1" language="ru_RU">
+<!DOCTYPE TS>
+<TS version="2.0" language="ru_RU">
 <context>
     <name>@default</name>
     <message>
@@ -728,7 +729,7 @@ Spy-сервис работает</translation>
         <translation>&lt;font class=&quot;info_font&quot;&gt;Нет подключенных словарей&lt;/font&gt;</translation>
     </message>
     <message>
-        <location filename="GoogleTranslate.py" line="79"/>
+        <location filename="GoogleTranslate.py" line="78"/>
         <source>&lt;font class=&quot;info_font&quot;&gt;Please wait...&lt;/font&gt;</source>
         <translation></translation>
     </message>
@@ -748,7 +749,7 @@ Spy-сервис работает</translation>
         <translation>&lt;font class=&quot;info_font&quot;&gt;Пусто&lt;/font&gt;</translation>
     </message>
     <message>
-        <location filename="GoogleTranslate.py" line="92"/>
+        <location filename="GoogleTranslate.py" line="91"/>
         <source>&lt;font class=&quot;word_header_font&quot;&gt;Link of site &quot;%1&quot; translation was opened in your browser&lt;/font&gt;&lt;hr&gt;&lt;br&gt;&lt;a href=&quot;%2&quot;&gt;%2&lt;/a&gt;</source>
         <translation>&lt;font class=&quot;word_header_font&quot;&gt;Перевод сайта &quot;%1&quot; открыт в вашем браузере&lt;/font&gt;&lt;hr&gt;&lt;br&gt;&lt;a href=&quot;%2&quot;&gt;%2&lt;/a&gt;</translation>
     </message>
@@ -803,32 +804,32 @@ Spy-сервис работает</translation>
         <translation>Отладочный режим (вывод информации в stderr)</translation>
     </message>
     <message>
-        <location filename="NetworkSettingsTab.py" line="119"/>
+        <location filename="NetworkSettingsTab.py" line="135"/>
         <source>Use proxy server for internet connections</source>
         <translation>Использовать прокси для интернет-соединений</translation>
     </message>
     <message>
-        <location filename="NetworkSettingsTab.py" line="120"/>
+        <location filename="NetworkSettingsTab.py" line="136"/>
         <source>Proxy settings</source>
         <translation>Настройки прокси</translation>
     </message>
     <message>
-        <location filename="NetworkSettingsTab.py" line="121"/>
+        <location filename="NetworkSettingsTab.py" line="137"/>
         <source>Proxy server:</source>
         <translation>Прокси-сервер:</translation>
     </message>
     <message>
-        <location filename="NetworkSettingsTab.py" line="122"/>
+        <location filename="NetworkSettingsTab.py" line="138"/>
         <source>Proxy port:</source>
         <translation>Порт прокси:</translation>
     </message>
     <message>
-        <location filename="NetworkSettingsTab.py" line="123"/>
+        <location filename="NetworkSettingsTab.py" line="139"/>
         <source>Username:</source>
         <translation>Имя пользователя:</translation>
     </message>
     <message>
-        <location filename="NetworkSettingsTab.py" line="124"/>
+        <location filename="NetworkSettingsTab.py" line="140"/>
         <source>Password:</source>
         <translation>Пароль:</translation>
     </message>
@@ -975,9 +976,19 @@ Press &quot;Yes&quot; to ignore</source>
         <translation>Разное</translation>
     </message>
     <message>
-        <location filename="NetworkSettingsTab.py" line="96"/>
+        <location filename="NetworkSettingsTab.py" line="110"/>
         <source>Network</source>
         <translation>Сеть</translation>
+    </message>
+    <message>
+        <location filename="NetworkSettingsTab.py" line="141"/>
+        <source>Connection timeout:</source>
+        <translation>Таймаут соединений:</translation>
+    </message>
+    <message>
+        <location filename="SlSearchPanel.py" line="125"/>
+        <source>SL Search</source>
+        <translation>Поиск в SL</translation>
     </message>
     <message>
         <location filename="SlSearchPanel.py" line="133"/>

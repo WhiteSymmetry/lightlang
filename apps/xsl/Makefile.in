@@ -113,7 +113,7 @@ _update_ts_noobsolete :
 	pylupdate4 -verbose -noobsolete src/xsl/*.py -ts src/tr/$(TR_LANG).ts
 
 _create_qm :
-	lrelease-qt4 -verbose src/tr/$(TR_LANG).ts -qm src/tr/$(TR_LANG).qm
+	lrelease -verbose src/tr/$(TR_LANG).ts -qm src/tr/$(TR_LANG).qm
 
 
 .PHONY : all install uninstall clean _update_ts _update_ts_noobsolete _create_qm

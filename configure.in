@@ -18,12 +18,12 @@ dnl ##### Functions ######
 
 AC_DEFUN(AC_PYTHON_COMMAND, [
  	AC_MSG_CHECKING([python "$1"])
-	python -c "$1"
+	$PYTHON_BIN -c "$1"
 	if [[ "$?" != "0" ]]; then AC_MSG_NOTICE([$2]); AC_MSG_ERROR([python command error], 1)
 	else AC_MSG_RESULT(ok); fi
 ])
 
-AC_DEFUN(AC_X_PATH_PROG, [
+AC_DEFUN(AC_X_PATH_BIN, [
 	AC_PATH_PROG([$1], [$2], [$3], [$4])
 	if [[ "$$1" = "no" ]]; then AC_MSG_ERROR([[$2] is not found], 1); fi
 ])
@@ -49,6 +49,10 @@ else
 	AC_SUBST(DEFAULT_GUI_FLAG, yes)
 	AC_SUBST(DEFAULT_PYTHON_XLIB_FLAG, yes)
 fi
+
+AC_ARG_WITH(python, [AC_HELP_STRING([--with-python],
+	[set python interpreter, default: python])],
+	AC_SUBST(PYTHON_BIN, [$withval]), AC_SUBST(PYTHON_BIN, python))
 
 AC_ARG_WITH(audio_player, [AC_HELP_STRING([--with-audio-player],
 	[set audio player, default: play, but must be changed by default configuration])],
@@ -90,37 +94,34 @@ AC_CHECK_HEADER(fcntl.h)
 AC_CHECK_HEADER(locale.h)
 AC_CHECK_HEADER(langinfo.h)
 
-AC_X_PATH_PROG(SH_PROG, sh, sh, [$PATH])
-AC_X_PATH_PROG(CC_PROG, [$CC], [$CC], [$PATH])
-AC_X_PATH_PROG(MKDIR_PROG, mkdir, mkdir, [$PATH])
-AC_X_PATH_PROG(CP_PROG, cp, cp, [$PATH])
-AC_X_PATH_PROG(LN_PROG, ln, ln, [$PATH])
-AC_X_PATH_PROG(MV_PROG, mv, mv, [$PATH])
-AC_X_PATH_PROG(RM_PROG, rm, rm, [$PATH])
-AC_X_PATH_PROG(CAT_PROG, cat, cat, [$PATH])
-AC_X_PATH_PROG(LS_PROG, ls, ls, [$PATH])
-AC_X_PATH_PROG(CD_PROG, cd, cd, [$PATH])
-AC_X_PATH_PROG(CHMOD_PROG, chmod, chmod, [$PATH])
-AC_X_PATH_PROG(TEST_PROG, test, test, [$PATH])
-AC_X_PATH_PROG(FIND_PROG, find, no, [$PATH])
-AC_X_PATH_PROG(TAR_PROG, tar, no, [$PATH])
-AC_X_PATH_PROG(BZIP2_PROG, bzip2, no, [$PATH])
-AC_X_PATH_PROG(SED_PROG, sed, no, [$PATH])
-AC_X_PATH_PROG(MKTEMP_PROG, mktemp, no, [$PATH])
-AC_X_PATH_PROG(PYTHON_PROG, python, no, [$PATH])
-AC_X_PATH_PROG(AUDIO_PLAYER_PROG, [$AUDIO_PLAYER], no, [$PATH])
+AC_X_PATH_BIN(SH_BIN, sh, sh, [$PATH])
+AC_X_PATH_BIN(CC_BIN, [$CC], [$CC], [$PATH])
+AC_X_PATH_BIN(MKDIR_BIN, mkdir, mkdir, [$PATH])
+AC_X_PATH_BIN(CP_BIN, cp, cp, [$PATH])
+AC_X_PATH_BIN(LN_BIN, ln, ln, [$PATH])
+AC_X_PATH_BIN(MV_BIN, mv, mv, [$PATH])
+AC_X_PATH_BIN(RM_BIN, rm, rm, [$PATH])
+AC_X_PATH_BIN(LS_BIN, ls, ls, [$PATH])
+AC_X_PATH_BIN(CD_BIN, cd, cd, [$PATH])
+AC_X_PATH_BIN(CHMOD_BIN, chmod, chmod, [$PATH])
+AC_X_PATH_BIN(TEST_BIN, test, test, [$PATH])
+AC_X_PATH_BIN(FIND_BIN, find, no, [$PATH])
+AC_X_PATH_BIN(PYTHON_BIN, $PYTHON_BIN, no, [$PATH])
+AC_X_PATH_BIN(AUDIO_PLAYER_BIN, [$AUDIO_PLAYER], no, [$PATH])
 
 AC_PYTHON_COMMAND([import sys])
 AC_PYTHON_COMMAND([import os])
+AC_PYTHON_COMMAND([import errno])
 AC_PYTHON_COMMAND([import getopt])
+AC_PYTHON_COMMAND([import argparse])
 AC_PYTHON_COMMAND([import traceback])
 AC_PYTHON_COMMAND([import inspect])
 AC_PYTHON_COMMAND([import json])
 AC_PYTHON_COMMAND([import ftplib])
-AC_PYTHON_COMMAND([import tempfile])
 AC_PYTHON_COMMAND([import struct])
 AC_PYTHON_COMMAND([import fcntl])
 AC_PYTHON_COMMAND([import termios])
+AC_PYTHON_COMMAND([import shutil])
 
 if [[ "$GUI_FLAG" = "yes" ]]; then
 	if [[ "$PYTHON_XLIB_FLAG" = "yes" ]]; then
@@ -172,6 +173,7 @@ dnl ##### Information #####
 echo "+---------------------------------------------------------------------+"
 echo "  Default config      :" $DEFAULT_CONFIG
 echo "  Audio player        :" $AUDIO_PLAYER
+echo "  Python              :" $PYTHON_BIN
 echo "  prefix              :" $prefix
 echo "  exec_prefix         :" $exec_prefix
 echo "  bindir              :" $bindir
@@ -188,10 +190,10 @@ echo "  GUI support         :" $GUI_FLAG
 if [[ "$GUI_FLAG" = "yes" ]]; then
 	echo "+---------------------------------------------------------------------+"
 	if [[ "$PYTHON_XLIB_FLAG" = "yes" ]]; then
-		echo "  python-xlib version :" `python -c "import Xlib; print Xlib.__version_string__"`
+		echo "  python-xlib version :" `$PYTHON_BIN -c "import Xlib; print Xlib.__version_string__"`
 	fi
-	echo "  Qt4 version         :" `python -c "from PyQt4 import Qt; print Qt.QT_VERSION_STR"`
-	echo "  PyQt4 version       :" `python -c "from PyQt4 import Qt; print Qt.PYQT_VERSION_STR"`
+	echo "  Qt4 version         :" `$PYTHON_BIN -c "from PyQt4 import Qt; print Qt.QT_VERSION_STR"`
+	echo "  PyQt4 version       :" `$PYTHON_BIN -c "from PyQt4 import Qt; print Qt.PYQT_VERSION_STR"`
 fi
 echo "+---------------------------------------------------------------------+"
 echo "  OK. Type \"make\" to compile the package."

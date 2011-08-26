@@ -94,7 +94,7 @@ int find_sound(const char *word)
 	for (word_token_wc = wcstok(word_wc_ptr, L" -./\\()", &word_token_wc_state); word_token_wc;
 		word_token_wc = wcstok(NULL, L" -./\\()", &word_token_wc_state)) {
 
-		play_command_len = ( (strlen(AUDIO_PLAYER_PROG) + strlen(ALL_SOUNDS_DIR) + strlen(AUDIO_POSTFIX)) * sizeof(char) +
+		play_command_len = ( (strlen(AUDIO_PLAYER_BIN) + strlen(ALL_SOUNDS_DIR) + strlen(AUDIO_POSTFIX)) * sizeof(char) +
 			(wcslen(lang_wc_ptr) + wcslen(word_token_wc)) * sizeof(wchar_t) + 32 );
 
 		if ( (play_command = (char *) malloc(play_command_len)) == NULL ) {
@@ -102,7 +102,7 @@ int find_sound(const char *word)
 			continue;
 		}
 
-		sprintf(play_command, "%s %s/%ls/%lc/%ls%s", AUDIO_PLAYER_PROG, ALL_SOUNDS_DIR, lang_wc_ptr,
+		sprintf(play_command, "%s %s/%ls/%lc/%ls%s", AUDIO_PLAYER_BIN, ALL_SOUNDS_DIR, lang_wc_ptr,
 			word_token_wc[0], word_token_wc, AUDIO_POSTFIX);
 
 		system(play_command);

@@ -28,7 +28,7 @@
 # define DATA_ROOT_DIR "@datarootdir@"
 # define CFLAGS "@CFLAGS@"
 
-# define AUDIO_PLAYER_PROG "@AUDIO_PLAYER_PROG@"
+# define AUDIO_PLAYER_BIN "@AUDIO_PLAYER_BIN@"
 
 
 #endif // CONFIG_H

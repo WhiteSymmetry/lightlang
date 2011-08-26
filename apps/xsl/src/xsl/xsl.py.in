@@ -1,4 +1,4 @@
-#!@PYTHON_PROG@
+#!@PYTHON_BIN@
 # -*- coding: utf8 -*-
 #
 # XSL - graphical interface for SL

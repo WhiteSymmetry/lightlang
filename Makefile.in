@@ -8,9 +8,9 @@
 #####
 
 
-RM = @RM_PROG@
-FIND = @FIND_PROG@
-XARGS = @XARGS_PROG@
+RM = @RM_BIN@
+FIND = @FIND_BIN@
+XARGS = @XARGS_BIN@
 
 APPS_DIR = apps
 RESOURCES_DIR = resources

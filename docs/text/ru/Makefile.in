@@ -8,8 +8,8 @@
 #####
 
 
-MKDIR = @MKDIR_PROG@
-CP = @CP_PROG@
+MKDIR = @MKDIR_BIN@
+CP = @CP_BIN@
 
 RU_TEXT_DOC_DIR = text
 

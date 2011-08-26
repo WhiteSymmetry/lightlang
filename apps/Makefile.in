@@ -8,7 +8,7 @@
 #####
 
 
-TEST = @TEST_PROG@
+TEST = @TEST_BIN@
 
 GUI_FLAG = @GUI_FLAG@
 

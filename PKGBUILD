@@ -37,11 +37,8 @@ build() {
 	cp -r $_gitname $_gitname-build
 	cd $_gitname-build
 
-	sed -i -e 's/python -c/python2 -c/g' configure.in
-	sed -i -e 's/AC_X_PATH_PROG(PYTHON_PROG, python,/AC_X_PATH_PROG(PYTHON_PROG, python2,/g' configure.in
-	sed -i -e 's/"python"/"python2"/g' apps/xsl/src/xsl/StartupLock.py
 	autoconf
-	./configure || return 1
+	./configure --with-python=python2 || return 1
 	make || return 1
 	make DESTDIR=$pkgdir install
 }

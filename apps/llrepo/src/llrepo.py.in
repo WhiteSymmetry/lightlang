@@ -1,4 +1,4 @@
-#!@PYTHON_PROG@
+#!@PYTHON_BIN@
 #
 # LLRepo - LightLang repository manager
 # Copyright (C) 2007-2016 Devaev Maxim

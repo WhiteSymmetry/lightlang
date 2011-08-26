@@ -8,9 +8,9 @@
 #####
 
 
-MKDIR = @MKDIR_PROG@
-CP = @CP_PROG@
-RM = @RM_PROG@
+MKDIR = @MKDIR_BIN@
+CP = @CP_BIN@
+RM = @RM_BIN@
 
 EN_HTML_DOC_DIR = html
 

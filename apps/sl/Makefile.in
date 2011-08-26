@@ -8,20 +8,20 @@
 #####
 
 
-CC = @CC_PROG@
+CC = @CC_BIN@
 CFLAGS = @CFLAGS@
-MKDIR = @MKDIR_PROG@
+MKDIR = @MKDIR_BIN@
 INS = @INSTALL@
-RM = @RM_PROG@
-CHMOD = @CHMOD_PROG@
+RM = @RM_BIN@
+CHMOD = @CHMOD_BIN@
 
 SL_SRC_DIR = src
 SL_SRC = $(shell ls $(SL_SRC_DIR)/*.c)
 SL_OBJ = $(SL_SRC:.c=.o)
 SL_CONFIG = $(SL_SRC_DIR)/config.h
-SL_PROG = sl
+SL_BIN = sl
 
-INS_SL_PROG_DIR = @bindir@
+INS_SL_BIN_DIR = @bindir@
 INS_SL_SHARES_DIR = @datarootdir@/sl
 INS_SL_DICTS_DIR = $(INS_SL_SHARES_DIR)/dicts
 INS_SL_SOUNDS_DIR = $(INS_SL_SHARES_DIR)/sounds
@@ -36,24 +36,24 @@ INS_SL_SOUNDS_DIR = $(INS_SL_SHARES_DIR)/sounds
 
 
 all : $(SL_OBJ)
-	$(CC) $(LDFLAGS) -o $(SL_PROG) $(SL_OBJ)
+	$(CC) $(LDFLAGS) -o $(SL_BIN) $(SL_OBJ)
 
 install :
-	$(MKDIR) -p $(DESTDIR)$(INS_SL_PROG_DIR)
+	$(MKDIR) -p $(DESTDIR)$(INS_SL_BIN_DIR)
 	$(MKDIR) -p $(DESTDIR)$(INS_SL_DICTS_DIR)
 	$(MKDIR) -p $(DESTDIR)$(INS_SL_SOUNDS_DIR)
 	-$(CHMOD) 777 $(DESTDIR)$(INS_SL_DICTS_DIR)
 	-$(CHMOD) +t $(DESTDIR)$(INS_SL_DICTS_DIR)
 	-$(CHMOD) 777 $(DESTDIR)$(INS_SL_SOUNDS_DIR)
 	-$(CHMOD) +t $(DESTDIR)$(INS_SL_SOUNDS_DIR)
-	$(INS) $(SL_PROG) $(DESTDIR)$(INS_SL_PROG_DIR)
+	$(INS) $(SL_BIN) $(DESTDIR)$(INS_SL_BIN_DIR)
 
 uninstall :
-	$(RM) -f $(DESTDIR)$(INS_SL_PROG_DIR)/$(SL_PROG)
+	$(RM) -f $(DESTDIR)$(INS_SL_BIN_DIR)/$(SL_BIN)
 	$(RM) -rf $(DESTDIR)$(INS_SL_SHARES_DIR)
 
 clean :
-	$(RM) -f $(SL_PROG) $(SL_OBJ) $(SL_CONFIG)
+	$(RM) -f $(SL_BIN) $(SL_OBJ) $(SL_CONFIG)
 
 
 .PHONY : all install uninstall clean

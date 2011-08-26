@@ -38,6 +38,9 @@ UserCountMail = DeveloperMail
 HomePageAddress = Qt.QString("http://code.google.com/p/lightlang")
 
 
+PythonBin = Qt.QString("@PYTHON_BIN@")
+
+
 #PrefixDirPath = Qt.QString("@prefix@")
 #ExecPrefixDirPath = Qt.QString("@exec_prefix@")
 BinsDirPath = Qt.QString("@bindir@")

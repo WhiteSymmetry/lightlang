@@ -8,16 +8,16 @@
 #####
 
 
-MKDIR = @MKDIR_PROG@
+MKDIR = @MKDIR_BIN@
 INS = @INSTALL@
-CP = @CP_PROG@
-LN = @LN_PROG@
-RM = @RM_PROG@
-CHMOD = @CHMOD_PROG@
-CD = @CD_PROG@
-LS = @LS_PROG@
-SED = @SED_PROG@
-PYTHON = @PYTHON_PROG@
+CP = @CP_BIN@
+LN = @LN_BIN@
+RM = @RM_BIN@
+CHMOD = @CHMOD_BIN@
+CD = @CD_BIN@
+LS = @LS_BIN@
+SED = @SED_BIN@
+PYTHON = @PYTHON_BIN@
 
 XSL_COMMON_SRC_DIR = src
 XSL_SRC_DIR = $(XSL_COMMON_SRC_DIR)/xsl
@@ -28,14 +28,14 @@ XSL_PICTURES_DIR = $(XSL_COMMON_SRC_DIR)/pictures
 XSL_DESKTOP_DIR = $(XSL_COMMON_SRC_DIR)/desktop
 XSL_SRC = $(shell ls $(XSL_SRC_DIR)/*.py)
 XSL_PYC = $(XSL_SRC:.py=.pyc)
-XSL_PROG = xsl
-XSL_PROG_ALIAS = lightlang
+XSL_BIN = xsl
+XSL_BIN_ALIAS = lightlang
 XSL_MAIN = $(XSL_SRC_DIR)/xsl.py
 XSL_CONST = $(XSL_SRC_DIR)/Const.py
 XSL_APP_LIBS_DIR = $(XSL_SRC_DIR)
 
-INS_XSL_PROG_DIR = @bindir@
-INS_XSL_PROG_ALIAS_DIR = $(INS_XSL_PROG_DIR)
+INS_XSL_BIN_DIR = @bindir@
+INS_XSL_BIN_ALIAS_DIR = $(INS_XSL_BIN_DIR)
 INS_XSL_LIBS_DIR = @libdir@/xsl
 INS_XSL_APP_LIBS_DIR = $(INS_XSL_LIBS_DIR)/xsl
 INS_XSL_SHARES_DIR = @datarootdir@/xsl
@@ -56,15 +56,15 @@ INS_XSL_DESKTOP_ICONS_DIR = @datarootdir@/icons/hicolor
 
 
 all : $(XSL_MAIN) $(XSL_PYC)
-	$(CP) -f $(XSL_MAIN) $(XSL_PROG)
-	$(CHMOD) +x $(XSL_PROG)
+	$(CP) -f $(XSL_MAIN) $(XSL_BIN)
+	$(CHMOD) +x $(XSL_BIN)
 
 install :
 	$(RM) -rf $(DESTDIR)$(INS_XSL_LIBS_DIR)
 	$(RM) -rf $(DESTDIR)$(INS_XSL_ICONS_DIR)
 	$(RM) -rf $(DESTDIR)$(INS_XSL_PICTURES_DIR)
-	$(MKDIR) -p $(DESTDIR)$(INS_XSL_PROG_DIR)
-	$(MKDIR) -p $(DESTDIR)$(INS_XSL_PROG_ALIAS_DIR)
+	$(MKDIR) -p $(DESTDIR)$(INS_XSL_BIN_DIR)
+	$(MKDIR) -p $(DESTDIR)$(INS_XSL_BIN_ALIAS_DIR)
 	$(MKDIR) -p $(DESTDIR)$(INS_XSL_LIBS_DIR)
 	$(MKDIR) -p $(DESTDIR)$(INS_XSL_APP_LIBS_DIR)
 	$(MKDIR) -p $(DESTDIR)$(INS_XSL_SHARES_DIR)
@@ -77,8 +77,8 @@ install :
 	$(CD) $(XSL_ICONS_DIR) && for res in `ls xsl_*.png | $(SED) -e 's/xsl_\(.*\).png/\1/g'`; do \
 		$(MKDIR) -p $(DESTDIR)$(INS_XSL_DESKTOP_ICONS_DIR)/$$res\x$$res/apps; \
 	done
-	$(INS) $(XSL_PROG) $(DESTDIR)$(INS_XSL_PROG_DIR)
-	-$(LN) -s $(INS_XSL_PROG_DIR)/$(XSL_PROG) $(DESTDIR)$(INS_XSL_PROG_ALIAS_DIR)/$(XSL_PROG_ALIAS)
+	$(INS) $(XSL_BIN) $(DESTDIR)$(INS_XSL_BIN_DIR)
+	-$(LN) -s $(INS_XSL_BIN_DIR)/$(XSL_BIN) $(DESTDIR)$(INS_XSL_BIN_ALIAS_DIR)/$(XSL_BIN_ALIAS)
 	$(CP) -f $(XSL_APP_LIBS_DIR)/*.py* $(DESTDIR)$(INS_XSL_APP_LIBS_DIR)
 	-$(CP) -f $(XSL_TR_DIR)/*.ts $(XSL_TR_DIR)/*.qm $(DESTDIR)$(INS_XSL_TR_DIR)
 	$(CP) -f $(XSL_ICONS_DIR)/*.png $(DESTDIR)$(INS_XSL_ICONS_DIR)
@@ -91,8 +91,8 @@ install :
 	done
 
 uninstall :
-	$(RM) -f $(DESTDIR)$(INS_XSL_PROG_DIR)/$(XSL_PROG)
-	$(RM) -f $(DESTDIR)$(INS_XSL_PROG_ALIAS_DIR)/$(XSL_PROG_ALIAS)
+	$(RM) -f $(DESTDIR)$(INS_XSL_BIN_DIR)/$(XSL_BIN)
+	$(RM) -f $(DESTDIR)$(INS_XSL_BIN_ALIAS_DIR)/$(XSL_BIN_ALIAS)
 	$(RM) -rf $(DESTDIR)$(INS_XSL_LIBS_DIR)
 	$(RM) -rf $(DESTDIR)$(INS_XSL_SHARES_DIR)
 	$(CD) $(XSL_DESKTOP_DIR) && for desktop in `ls *.desktop`; do \
@@ -103,7 +103,7 @@ uninstall :
 	done
 
 clean :
-	$(RM) -f $(XSL_PROG) $(XSL_MAIN) $(XSL_PYC) $(XSL_CONST)
+	$(RM) -f $(XSL_BIN) $(XSL_MAIN) $(XSL_PYC) $(XSL_CONST)
 
 
 _update_ts :

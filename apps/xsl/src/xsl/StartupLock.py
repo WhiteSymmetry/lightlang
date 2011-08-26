@@ -25,6 +25,7 @@ import os
 
 import Qt
 import Const
+import Utils
 
 
 ##### Public methods #####
@@ -36,6 +37,8 @@ def test(without_options_list = []) :
 		proc_list = os.listdir("/proc")
 	except :
 		return
+
+	python = str(Utils.baseName(Const.PythonBin))
 
 	proc_pids_list = []
 	for proc_list_item in proc_list :
@@ -61,7 +64,7 @@ def test(without_options_list = []) :
 			cmdline_file.close()
 		except : pass
 
-		if len(cmdline_list) >= 2 and "python" in cmdline_list[0] and os.path.basename(cmdline_list[1]) == proc_name :
+		if len(cmdline_list) >= 2 and python in cmdline_list[0] and os.path.basename(cmdline_list[1]) == proc_name :
 			ignore_flag = False
 			for without_options_list_item in without_options_list :
 				if without_options_list_item in cmdline_list :

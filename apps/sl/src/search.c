@@ -139,7 +139,7 @@ static int find_word_unified(const char *word, const regimen_t regimen, const ch
 	}
 
 	if ( regimen == usually_regimen || regimen == first_concurrence_regimen || list_regimen ) {
-		index_pos = get_linear_index_pos(word_wc[0], dict_fp);
+		index_pos = linear_index_pos(word_wc[0], dict_fp);
 		if ( index_pos == 0 ) {
 			return 0;
 		}
@@ -156,7 +156,7 @@ static int find_word_unified(const char *word, const regimen_t regimen, const ch
 		if ( str[0] == '#' || str[0] == '\n' )
 			continue;
 
-		if ( (str_wc[0] = get_first_lower_wc(str)) == L'\0' )
+		if ( (str_wc[0] = first_lower_wc(str)) == L'\0' )
 			continue;
 
 		if ( regimen == usually_regimen || regimen == first_concurrence_regimen || list_regimen ) {

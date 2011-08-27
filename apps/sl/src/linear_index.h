@@ -29,7 +29,7 @@
 # define NO_INDEX_BLOCK "[noindex]"
 
 
-long get_linear_index_pos(const wchar_t ch_wc, FILE *dict_fp);
+long linear_index_pos(const wchar_t ch_wc, FILE *dict_fp);
 
 int build_linear_index(const char *dict_path);
 

@@ -36,7 +36,7 @@
 #include "linear_index.h"
 
 
-long get_linear_index_pos(const wchar_t ch_wc, FILE *dict_fp)
+long linear_index_pos(const wchar_t ch_wc, FILE *dict_fp)
 {
 	char *str = NULL;
 	size_t str_len = 0;
@@ -113,8 +113,8 @@ int build_linear_index(const char *dict_path)
 			continue;
 
 
-		if ( towlower(str_ch_wc) != get_first_lower_wc(str) ) {
-			str_ch_wc = get_first_lower_wc(str);
+		if ( towlower(str_ch_wc) != first_lower_wc(str) ) {
+			str_ch_wc = first_lower_wc(str);
 			printf("%lc %ld\n", str_ch_wc, index_pos);
 		}
 	}

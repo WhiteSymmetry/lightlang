@@ -46,7 +46,7 @@ void tolower_str_wc(wchar_t *str_wc)
 		*str_wc = towlower(*str_wc);
 }
 
-wchar_t get_first_lower_wc(const char *str)
+wchar_t first_lower_wc(const char *str)
 {
 	wchar_t str_ch_wc = L'\0';
 

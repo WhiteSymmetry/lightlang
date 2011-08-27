@@ -25,6 +25,7 @@
 
 
 #define _GNU_SOURCE
+#define _SVID_SOURCE
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -127,7 +128,7 @@ int print_dicts_list(void)
 	extern settings_t settings;
 
 
-	printf("Established dicts:\n");
+	printf("All dicts:\n");
 	if ( print_dir(ALL_DICTS_DIR) != 0 )
 		return -1;
 
@@ -141,52 +142,57 @@ int print_dicts_list(void)
 
 static int print_dir(const char *dicts_dir)
 {
-	DIR *dicts_dp;
-	struct dirent *dicts_dp_ent;
+	struct dirent **ents_list;
 	struct stat dict_st;
 
 	char *dict_path;
 	size_t dict_path_len;
 
-	int count = 0;
+	int max;
+	int count;
 
 
-	if ( (dicts_dp = opendir(dicts_dir)) == NULL ) {
+	if ( (max = scandir(dicts_dir, &ents_list, NULL, alphasort)) < 0 ) {
 		fprintf(stderr, "Cannot open dict folder \"%s\": %s\n", dicts_dir, strerror(errno));
 		return -1;
 	}
 
-	while ( (dicts_dp_ent = readdir(dicts_dp)) != NULL ) {
-		if ( dicts_dp_ent->d_name[0] == '.' )
-			continue;
-
-		dict_path_len = (strlen(dicts_dir) + strlen(dicts_dp_ent->d_name) + 16) * sizeof(char);
-
-		if ( (dict_path = (char *) malloc(dict_path_len)) == NULL ) {
-			fprintf(stderr, "Cannot allocate memory (%s:%d): %s\n", __FILE__, __LINE__, strerror(errno));
+	for ( count = 0; count < max; ++count ) {
+		if ( ents_list[count]->d_name[0] == '.' ) {
+			free(ents_list[count]);
 			continue;
 		}
 
-		sprintf(dict_path, "%s/%s", dicts_dir, dicts_dp_ent->d_name);
+		dict_path_len = (strlen(dicts_dir) + strlen(ents_list[count]->d_name) + 16) * sizeof(char);
+
+		if ( (dict_path = (char *) malloc(dict_path_len)) == NULL ) {
+			fprintf(stderr, "Cannot allocate memory (%s:%d): %s\n", __FILE__, __LINE__, strerror(errno));
+			free(ents_list[count]);
+			continue;
+		}
+
+		sprintf(dict_path, "%s/%s", dicts_dir, ents_list[count]->d_name);
 
 		if ( lstat(dict_path, &dict_st) != 0 ) {
-			fprintf(stderr, "Cannot get information about dict \"%s\": %s\n", dicts_dp_ent->d_name, strerror(errno));
+			fprintf(stderr, "Cannot get information about dict \"%s\": %s\n", ents_list[count]->d_name, strerror(errno));
 			free(dict_path);
+			free(ents_list[count]);
 			continue;
 		}
 
 		free(dict_path);
 
 		dict_st.st_mode &= S_IFMT;
-		if ( (dict_st.st_mode & S_IFLNK) != S_IFLNK && (dict_st.st_mode & S_IFREG) != S_IFREG )
+		if ( (dict_st.st_mode & S_IFLNK) != S_IFLNK && (dict_st.st_mode & S_IFREG) != S_IFREG ) {
+			free(ents_list[count]);
 			continue;
+		}
 
-		++count;
-		printf(" (%d)\t%s\n", count, dicts_dp_ent->d_name);
+		printf(" - %s\n", ents_list[count]->d_name);
+		free(ents_list[count]);
 	}
 
-	if ( closedir(dicts_dp) != 0 )
-		fprintf(stderr, "Cannot close dict folder \"%s\": %s\n", dicts_dir, strerror(errno));
+	free(ents_list);
 
 	return 0;
 }

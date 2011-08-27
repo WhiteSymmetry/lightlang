@@ -28,7 +28,7 @@
 void delete_newline(char *str);
 void tolower_str_wc(wchar_t *str_wc);
 
-wchar_t get_first_lower_wc(const char *str);
+wchar_t first_lower_wc(const char *str);
 wchar_t *strncpy_lower_wc(wchar_t *str_wc, const char *str, size_t count);
 wchar_t *strncpy_lower_filter_wc(wchar_t *str_wc, const char *str, size_t count);
 

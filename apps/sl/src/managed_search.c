@@ -19,6 +19,7 @@
 
 
 #define _GNU_SOURCE
+#define _SVID_SOURCE
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -39,14 +40,14 @@
 #include "manager.h"
 
 
-static FILE *get_next_dict_fp_from_user_dicts_dir(char **dict_name);
-static FILE *get_next_dict_fp_from_list(char **dict_name, const char *dicts_list);
+static FILE *next_dict_from_dir(char *dict_name);
+static FILE *next_dict_from_list(char *dict_name, const char *dicts_list);
 
 
 int managed_find_word(const char *word, const regimen_t regimen, const char *dicts_list)
 {
 	FILE *dict_fp;
-	char *dict_name;
+	char dict_name[PATH_MAX];
 
 	int retcode = 0;
 
@@ -60,9 +61,9 @@ int managed_find_word(const char *word, const regimen_t regimen, const char *dic
 
 	while ( true ) {
 		if ( dicts_list == NULL )
-			dict_fp = get_next_dict_fp_from_user_dicts_dir(&dict_name);
+			dict_fp = next_dict_from_dir(dict_name);
 		else
-			dict_fp = get_next_dict_fp_from_list(&dict_name, dicts_list);
+			dict_fp = next_dict_from_list(dict_name, dicts_list);
 
 		if ( dict_fp == NULL )
 			break;
@@ -83,9 +84,9 @@ int managed_find_word(const char *word, const regimen_t regimen, const char *dic
 	if ( no_translate_flag && regimen == usually_regimen && !no_dicts_flag ) {
 		while ( true ) {
 			if ( dicts_list == NULL )
-				dict_fp = get_next_dict_fp_from_user_dicts_dir(&dict_name);
+				dict_fp = next_dict_from_dir(dict_name);
 			else
-				dict_fp = get_next_dict_fp_from_list(&dict_name, dicts_list);
+				dict_fp = next_dict_from_list(dict_name, dicts_list);
 
 			if ( dict_fp == NULL )
 				break;
@@ -127,59 +128,68 @@ int managed_find_word(const char *word, const regimen_t regimen, const char *dic
 }
 
 
-static FILE *get_next_dict_fp_from_user_dicts_dir(char **dict_name)
+static FILE *next_dict_from_dir(char *dict_name)
 {
 	FILE *dict_fp;
 	char dict_path[strlen(ALL_DICTS_DIR) + PATH_MAX + 16];
 	struct stat dict_st;
 
-	static DIR *dicts_dp = NULL;
-	static struct dirent *dicts_dp_ent;
+	static int count = 0;
+	static int max = -1;
+	static struct dirent **ents_list;
 
 	extern settings_t settings;
 
 
-	if ( dicts_dp == NULL ) {
-		if ( (dicts_dp = opendir(settings.user_dicts_dir)) == NULL ) {
+	if ( max < 0 ) {
+		if ( ( max = scandir(settings.user_dicts_dir, &ents_list, NULL, alphasort) ) < 0 ) {
 			fprintf(stderr, "Cannot open dict folder \"%s\": %s\n", settings.user_dicts_dir, strerror(errno));
 			return NULL;
 		}
 	}
 
-	while ( (dicts_dp_ent = readdir(dicts_dp)) != NULL ) {
-		if ( dicts_dp_ent->d_name[0] == '.' )
+	for (; count < max; ++count ) {
+		if ( ents_list[count]->d_name[0] == '.' ) {
+			free(ents_list[count]);
 			continue;
+		}
 
-		sprintf(dict_path, "%s/%s", settings.user_dicts_dir, dicts_dp_ent->d_name);
+		sprintf(dict_path, "%s/%s", settings.user_dicts_dir, ents_list[count]->d_name);
 
 		if ( lstat(dict_path, &dict_st) != 0 ) {
-			fprintf(stderr, "Cannot get information about file \"%s\": %s\n", dicts_dp_ent->d_name, strerror(errno));
+			fprintf(stderr, "Cannot get information about file \"%s\": %s\n", ents_list[count]->d_name, strerror(errno));
+			free(ents_list[count]);
 			continue;
 		}
 
 		dict_st.st_mode &= S_IFMT;
-		if ( (dict_st.st_mode & S_IFLNK) != S_IFLNK && (dict_st.st_mode & S_IFREG) != S_IFREG )
-			continue;
-
-		if ( (dict_fp = fopen(dict_path, "r")) == NULL ) {
-			fprintf(stderr, "Cannot open dict file \"%s\": %s\n", dicts_dp_ent->d_name, strerror(errno));
+		if ( (dict_st.st_mode & S_IFLNK) != S_IFLNK && (dict_st.st_mode & S_IFREG) != S_IFREG ) {
+			free(ents_list[count]);
 			continue;
 		}
 
-		(*dict_name) = dicts_dp_ent->d_name;
+		if ( (dict_fp = fopen(dict_path, "r")) == NULL ) {
+			fprintf(stderr, "Cannot open dict file \"%s\": %s\n", ents_list[count]->d_name, strerror(errno));
+			free(ents_list[count]);
+			continue;
+		}
+
+		strncpy(dict_name, ents_list[count]->d_name, PATH_MAX  - 1);
+
+		free(ents_list[count]);
+		++count;
 
 		return dict_fp;
 	}
 
-	if ( closedir(dicts_dp) == -1 )
-		fprintf(stderr, "Cannot close dict folder \"%s\": %s\n", settings.user_dicts_dir, strerror(errno));
-	else
-		dicts_dp = NULL;
+	free(ents_list);
+	max = -1;
+	count = 0;
 
 	return NULL;
 }
 
-static FILE *get_next_dict_fp_from_list(char **dict_name, const char *dicts_list)
+static FILE *next_dict_from_list(char *dict_name, const char *dicts_list)
 {
 	FILE *dict_fp;
 	char dict_path[strlen(ALL_DICTS_DIR) + PATH_MAX + 16];
@@ -209,7 +219,7 @@ static FILE *get_next_dict_fp_from_list(char **dict_name, const char *dicts_list
 			continue;
 		}
 
-		*dict_name = dicts_list_item;
+		strncpy(dict_name, dicts_list_item, PATH_MAX  - 1);
 
 		return dict_fp;
 	}

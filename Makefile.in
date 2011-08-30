@@ -62,7 +62,7 @@ clean :
 	$(MAKE) -C $(PKG_DIR) clean
 	$(FIND) . -name *\~ -exec $(RM) -f '{}' \;
 	$(FIND) . -name Makefile -exec $(RM) -f '{}' \;
-	$(RM) -f config.log config.status
+	$(RM) -rf config.log config.status pkg-root.arch
 
 _release :
 	make -C apps/xsl -f Makefile.in TR_LANG=ru _create_qm

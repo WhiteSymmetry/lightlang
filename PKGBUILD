@@ -1,7 +1,7 @@
 # Contributor : eduard_pustobaev <eduard_pustobaev@mail.ru>
 
 pkgname=lightlang-git
-pkgver=20110723
+pkgver=20110830
 pkgrel=1
 pkgdesc="LightLang - system of electronic dictionaries for Linux."
 arch=('i686' 'x86_64')

@@ -32,6 +32,8 @@ import repos
 def fetchResources(types_list = ["dicts", "sounds"]) :
 	resources_dict = dict(map(( lambda item : (item, {}) ), types_list))
 
+	cli.printLine()
+
 	for repos_list_item in repos.ReposList :
 		host = repos_list_item["host"]
 		port = repos_list_item["port"]
@@ -94,7 +96,7 @@ def installResource(resource_name, resource_type, resources_dict) :
 		try :
 			server = ftp.connectServer(resource["host"], resource["port"], resource["user"], resource["passwd"], True)
 			ftp.downloadFile(server, resource["file_path"], local_file_path)
-			cli.printLine("--- file \"%s\" :: download complete" % (local_file_path), short_flag=True)
+			cli.printLine("--- file \"%s\" :: download completed" % (local_file_path), short_flag=True)
 		except Exception, err :
 			cli.printLine("--- file \"%s\" :: download error: %s" % (local_file_path, str(err)))
 			continue
@@ -142,8 +144,8 @@ def installResource(resource_name, resource_type, resources_dict) :
 			os.remove(local_file_path)
 		except : pass
 
-		cli.printLine("--- resource \"%s\" :: installation complete" % (resource_name))
+		cli.printLine("--- resource \"%s\" :: installation completed" % (resource_name))
 		return
 
-	cli.printLine("--- resource \"%s\" :: installation failure :-(" % (resource_name))
+	cli.printLine("--- resource \"%s\" :: installation failure" % (resource_name))
 

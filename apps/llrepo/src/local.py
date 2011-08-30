@@ -28,7 +28,7 @@ import cli
 
 #####
 def fetchResources(types_list = ["dicts", "sounds"]) :
-	cli.printLine("Processing local repository for %s..." % (str(types_list)))
+	cli.printLine("\nProcessing local repository for %s..." % (str(types_list)))
 
 	resources_dict = dict(map(( lambda item : (item, {}) ), types_list))
 
@@ -69,7 +69,7 @@ def fetchResources(types_list = ["dicts", "sounds"]) :
 	return resources_dict
 
 def removeResource(resource_name, resource_type) :
-	cli.printLine("--- resource \"%s\" :: begining remove..." % (resource_name), short_flag=True)
+	cli.printLine("--- resource \"%s\" :: begin to remove..." % (resource_name), short_flag=True)
 
 	file_path = os.path.join(const.SL_SHARES_DIR, resource_type, resource_name)
 	try :
@@ -78,9 +78,9 @@ def removeResource(resource_name, resource_type) :
 		elif resource_type == "sounds" :
 			shutil.rmtree(file_path)
 	except Exception, err :
-		cli.printLine("--- resource \"%s\" :: removing failure: %s" % (resource_name, str(err)), short_flag=( err.errno == errno.ENOENT ))
+		cli.printLine("--- resource \"%s\" :: removal failure: %s" % (resource_name, str(err)), short_flag=( err.errno == errno.ENOENT ))
 		if err.errno != errno.ENOENT :
 			raise
 
-	cli.printLine("--- resource \"%s\" :: removing complete" % (resource_name))
+	cli.printLine("--- resource \"%s\" :: removal completed" % (resource_name))
 

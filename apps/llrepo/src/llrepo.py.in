@@ -68,6 +68,72 @@ def remoteList(resource_type) :
 
 
 ###
+def installResources(names_list, resource_type) :
+	names_list = list(set(names_list))
+
+	local_resources_dict = local.fetchResources([resource_type])
+	remote_resources_dict = remote.fetchResources([resource_type])
+
+	print "Analysis of the request..."
+
+	count = 0
+	size = 0
+	while count < len(names_list) :
+		if ( names_list[count] in local_resources_dict[resource_type] or
+			not names_list[count] in remote_resources_dict[resource_type] ) :
+			names_list.pop(count)
+			continue
+		size += remote_resources_dict[resource_type][names_list[count]][0]["file_size"]
+		count += 1
+	if count == 0 :
+		print "No appropriate resources\n"
+		return
+
+	print "OK, %d resources to install (%s to download)" % (count, cli.formatSize(size))
+	print "Continue? [y/n]:",
+	answer = raw_input()
+	print
+	if not answer.lower().startswith("y") :
+		return
+
+	for names_list_item in names_list :
+		remote.installResource(names_list_item, resource_type, remote_resources_dict)
+
+	print
+
+def removeResources(names_list, resource_type) :
+	names_list = list(set(names_list))
+
+	resources_dict = local.fetchResources([resource_type])
+
+	print "Analysis of the request..."
+
+	count = 0
+	size = 0
+	while count < len(names_list) :
+		if not names_list[count] in resources_dict[resource_type] :
+			names_list.pop(count)
+			continue
+		size += resources_dict[resource_type][names_list[count]]["file_size"]
+		count += 1
+	if count == 0 :
+		print "No appropriate resources\n"
+		return
+
+	print "OK, %d resources to remove (%s)" % (count, cli.formatSize(size))
+	print "Continue? [y/n]:",
+	answer = raw_input()
+	print
+	if not answer.lower().startswith("y") :
+		return
+
+	for names_list_item in names_list :
+		local.removeResource(names_list_item, resource_type)
+
+	print
+
+
+###
 def help() :
 	version()
 	print ( "\n\t%(llrepo)s locallist <dicts|sounds>\n"
@@ -111,4 +177,16 @@ if __name__ == "__main__" :
 			remoteList("dicts")
 		elif options.object in ("sound", "sounds") :
 			remoteList("sounds")
+
+	elif options.action == "install" :
+		if options.object in ("dict", "dicts") :
+			installResources(sys.argv[4:], "dicts")
+		elif options.object in ("sound", "sounds") :
+			installResources(sys.argv[4:], "sounds")
+
+	elif options.action == "remove" :
+		if options.object in ("dict", "dicts") :
+			removeResources(sys.argv[4:], "dicts")
+		elif options.object in ("sound", "sounds") :
+			removeResources(sys.argv[4:], "sounds")
 

@@ -45,7 +45,7 @@ def langName(short_name, lang_codes_dict = None) :
 	if lang_codes_dict.has_key(short_name) :
 		return Qt.QString(lang_codes_dict[short_name])
 	else :
-		Qt.QString(short_name)
+		return Qt.QString(short_name)
 
 def langCodes() :
 	return {

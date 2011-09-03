@@ -41,6 +41,12 @@ class HistoryPanel(Qt.QDockWidget) :
 		self.__main_layout = Qt.QVBoxLayout()
 		self.__main_widget.setLayout(self.__main_layout)
 
+		self.__history_browser_layout = Qt.QVBoxLayout()
+		self.__main_layout.addLayout(self.__history_browser_layout)
+
+		self.__control_buttons_layout = Qt.QHBoxLayout()
+		self.__main_layout.addLayout(self.__control_buttons_layout)
+
 		#####
 
 		self.__settings = Settings.Settings(self)
@@ -48,23 +54,29 @@ class HistoryPanel(Qt.QDockWidget) :
 		#####
 
 		self.__line_edit = LineEdit.LineEdit(self)
-		self.__main_layout.addWidget(self.__line_edit)
+		self.__history_browser_layout.addWidget(self.__line_edit)
 
 		self.__history_browser = Qt.QListWidget(self)
-		self.__main_layout.addWidget(self.__history_browser)
+		self.__history_browser_layout.addWidget(self.__history_browser)
 
 		self.__clear_history_button = Qt.QPushButton(self)
 		self.__clear_history_button.setEnabled(False)
-		self.__main_layout.addWidget(self.__clear_history_button)
+		self.__control_buttons_layout.addWidget(self.__clear_history_button)
+
+		self.__export_list_button = Qt.QToolButton(self)
+		self.__export_list_button.setIcon(IconsLoader.icon("document-save-as"))
+		self.__export_list_button.setIconSize(Qt.QSize(16, 16))
+		self.__control_buttons_layout.addWidget(self.__export_list_button)
 
 		#####
 
 		self.connect(self, Qt.SIGNAL("visibilityChanged(bool)"), self.activateDockWidget)
 
 		self.connect(self.__line_edit, Qt.SIGNAL("textChanged(const QString &)"), self.setFilter)
-
 		self.connect(self.__history_browser, Qt.SIGNAL("itemActivated(QListWidgetItem *)"), self.wordChangedSignal)
+
 		self.connect(self.__clear_history_button, Qt.SIGNAL("clicked()"), self.clearHistory)
+		self.connect(self.__export_list_button, Qt.SIGNAL("clicked()"), self.exportWordsList)
 
 		#####
 
@@ -165,11 +177,33 @@ class HistoryPanel(Qt.QDockWidget) :
 			self.__line_edit.setFocus(Qt.Qt.OtherFocusReason)
 			self.__line_edit.selectAll()
 
+	###
+
+	def exportWordsList(self) :
+		file_path = Qt.QFileDialog.getSaveFileName(self, tr("Export words history"), Qt.QDir.homePath())
+		if file_path.simplified().isEmpty() :
+			return
+
+		history_file = Qt.QFile(file_path)
+		if not history_file.open(Qt.QIODevice.WriteOnly|Qt.QIODevice.Text) :
+			Qt.QMessageBox.warning(self, Const.MyName, tr("This file cannot by open for saving"))
+			return
+
+		file_stream = Qt.QTextStream(history_file)
+		file_stream << self.historyList().join("\n")
+
+		history_file.close()
+
+		self.statusChangedSignal(tr("Saved"))
+
 
 	### Signals ###
 
 	def wordChangedSignal(self, item) :
 		self.emit(Qt.SIGNAL("wordChanged(const QString &)"), item.text())
+
+	def statusChangedSignal(self, status) :
+		self.emit(Qt.SIGNAL("statusChanged(const QString &)"), status)
 
 
 	### Handlers ###

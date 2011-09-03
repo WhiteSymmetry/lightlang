@@ -206,6 +206,7 @@ class MainWindow(Qt.QMainWindow) :
 
 		self.connect(self.__history_panel, Qt.SIGNAL("wordChanged(const QString &)"), self.__sl_search_panel.setWord)
 		self.connect(self.__history_panel, Qt.SIGNAL("wordChanged(const QString &)"), self.__sl_search_panel.show)
+		self.connect(self.__history_panel, Qt.SIGNAL("statusChanged(const QString &)"), self.__status_bar.showStatusMessage)
 
 		self.connect(self.__tabbed_translate_browser, Qt.SIGNAL("uFindRequest(const QString &)"), self.__sl_search_panel.setWord)
 		self.connect(self.__tabbed_translate_browser, Qt.SIGNAL("uFindRequest(const QString &)"), self.__sl_search_panel.uFind)
@@ -455,7 +456,7 @@ class MainWindow(Qt.QMainWindow) :
 
 		page_file.close()
 
-		self._status_bar.showStatusMessage(tr("Saved"))
+		self.__status_bar.showStatusMessage(tr("Saved"))
 
 	def printCurrentPage(self) :
 		if self.checkBusyStreams() :

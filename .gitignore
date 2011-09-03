@@ -1,4 +1,7 @@
-pkg-root.arch
+/pkg-root.arch
+/config.log
+/config.status
+Makefile
 *.pyc
 *.o
 

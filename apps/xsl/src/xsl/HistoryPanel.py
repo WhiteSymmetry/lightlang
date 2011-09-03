@@ -146,6 +146,7 @@ class HistoryPanel(Qt.QDockWidget) :
 	def translateUi(self) :
 		self.setWindowTitle(tr("Search history"))
 		self.__clear_history_button.setText(tr("Clear history"))
+		self.__export_list_button.setToolTip(tr("Export list to file"))
 
 	###
 

@@ -91,6 +91,7 @@ class NetworkSettingsTab(Qt.QWidget) :
 
 		self.__timeout_spin_box = Qt.QSpinBox(self)
 		self.__timeout_spin_box.setRange(1, 300)
+		self.__timeout_spin_box.setSuffix(tr(" sec"))
 		self.__timeout_layout.addWidget(self.__timeout_spin_box)
 
 		#####

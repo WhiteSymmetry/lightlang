@@ -180,13 +180,13 @@ if __name__ == "__main__" :
 
 	elif options.action == "install" :
 		if options.object in ("dict", "dicts") :
-			installResources(sys.argv[4:], "dicts")
+			installResources(sys.argv[3:], "dicts")
 		elif options.object in ("sound", "sounds") :
-			installResources(sys.argv[4:], "sounds")
+			installResources(sys.argv[3:], "sounds")
 
 	elif options.action == "remove" :
 		if options.object in ("dict", "dicts") :
-			removeResources(sys.argv[4:], "dicts")
+			removeResources(sys.argv[3:], "dicts")
 		elif options.object in ("sound", "sounds") :
-			removeResources(sys.argv[4:], "sounds")
+			removeResources(sys.argv[3:], "sounds")
 

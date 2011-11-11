@@ -165,14 +165,14 @@ class HelpBrowserWindowMultiple(Qt.QDialog) :
 	def showInternalHelp(self, url) :
 		relative_file_path = url.toString().remove("xslhelp://")
 		absolute_file_path = Utils.joinPath(Const.HtmlDocsDirPath, self.__locale.htmlDocsLang(), relative_file_path)
-		self.__text_browser.setSource(Qt.QUrl(absolute_file_path))
+		self.__text_browser.setSource(Qt.QUrl.fromLocalFile(absolute_file_path))
 		self.show()
 
 
 	### Private ###
 
 	def translateUi(self) :
-		self.__index_file_url = Qt.QUrl(Utils.joinPath(Const.HtmlDocsDirPath, self.__locale.htmlDocsLang(), "index.html"))
+		self.__index_file_url = Qt.QUrl.fromLocalFile(Utils.joinPath(Const.HtmlDocsDirPath, self.__locale.htmlDocsLang(), "index.html"))
 
 		self.__backward_button.setToolTip(tr("Backspace"))
 		self.__show_text_search_frame_button.setToolTip(tr("Ctrl+F, /"))

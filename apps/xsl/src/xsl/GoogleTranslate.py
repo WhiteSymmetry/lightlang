@@ -102,9 +102,9 @@ class GoogleTranslate(Qt.QObject) :
 		text = Qt.QString.fromLocal8Bit(str(Qt.QUrl.toPercentEncoding(text)))
 		text = Qt.QByteArray().append("q="+text)
 
-		http_request_header = Qt.QHttpRequestHeader("POST",
-			Qt.QString("/ajax/services/language/translate?v=1.0&type=html&langpair=%1%7C%2").arg(sl).arg(tl), 1, 1)
-		http_request_header.setValue("Host", "ajax.googleapis.com")
+		# http://translate.google.ru/translate_a/t?client=x&text={TEXT}&sl={LANG_FROM}&tl={LANG_TO}
+		http_request_header = Qt.QHttpRequestHeader("POST", Qt.QString("/translate_a/t?client=x&sl=%1&tl=%2").arg(sl).arg(tl), 1, 1)
+		http_request_header.setValue("Host", "translate.google.com")
 		http_request_header.setValue("User-Agent", "Mozilla/5.0")
 		http_request_header.setValue("Accept", "*/*")
 		http_request_header.setValue("Content-Type", "application/x-www-form-urlencoded")
@@ -119,7 +119,7 @@ class GoogleTranslate(Qt.QObject) :
 		else :
 			self.__http.setProxy(Qt.QString(), 0)
 
-		self.__http.setHost("ajax.googleapis.com")
+		self.__http.setHost("translate.google.com")
 		self.__http_request_id = self.__http.request(http_request_header, text)
 
 		self.__timer.setInterval(self.__settings.value("application/network/timeout").toInt()[0] * 1000)
@@ -137,20 +137,17 @@ class GoogleTranslate(Qt.QObject) :
 	### Private ###
 
 	def setStatus(self, state) :
-		if state == Qt.QHttp.Unconnected :
-			self.statusChangedSignal(Qt.QString())
-		elif state == Qt.QHttp.HostLookup :
-			self.statusChangedSignal(tr("Looking up host..."))
-		elif state == Qt.QHttp.Connecting :
-			self.statusChangedSignal(tr("Connecting..."))
-		elif state == Qt.QHttp.Sending :
-			self.statusChangedSignal(tr("Sending request..."))
-		elif state == Qt.QHttp.Reading :
-			self.statusChangedSignal(tr("Reading data..."))
-		elif state == Qt.QHttp.Connected :
-			self.statusChangedSignal(tr("Connected"))
-		elif state == Qt.QHttp.Closing :
-			self.statusChangedSignal(tr("Closing connection..."))
+		states_dict = {
+			Qt.QHttp.Unconnected : Qt.QString(),
+			Qt.QHttp.HostLookup : tr("Looking up host..."),
+			Qt.QHttp.Connecting : tr("Connecting..."),
+			Qt.QHttp.Sending : tr("Sending request..."),
+			Qt.QHttp.Reading : tr("Reading data..."),
+			Qt.QHttp.Connected : tr("Connected"),
+			Qt.QHttp.Closing : tr("Closing connection...")
+		}
+		if states_dict.has_key(state) :
+			self.statusChangedSignal(states_dict[state])
 
 	def setText(self) :
 		self.__http_output.append(self.__http.readAll())
@@ -168,37 +165,25 @@ class GoogleTranslate(Qt.QObject) :
 
 		text = Qt.QTextCodec.codecForName("UTF-8").toUnicode(self.__http_output.data())
 
-		###
-
 		try :
-			json_dict = json.loads(unicode(text).encode("utf-8"))
-			if json_dict.has_key("responseData") and json_dict.has_key("responseStatus") and json_dict.has_key("responseDetails") :
-				responce_data = json_dict["responseData"]
-				responce_status = json_dict["responseStatus"]
-				responce_details = json_dict["responseDetails"]
+			raw_dict = json.loads(unicode(text).encode("utf-8"))
+			if raw_dict.has_key("sentences") :
+				lang_codes_dict = LangsList.langCodes()
+				sl_name = LangsList.langName(raw_dict.get("src", self.__sl), lang_codes_dict)
+				tl_name = LangsList.langName(self.__tl, lang_codes_dict)
 
-				if responce_data != None :
-					lang_codes_dict = LangsList.langCodes()
-					sl_name = ( tr("%1 (guessed)").arg(LangsList.langName(responce_data["detectedSourceLanguage"], lang_codes_dict))
-						if responce_data.has_key("detectedSourceLanguage") else LangsList.langName(self.__sl, lang_codes_dict) )
-					tl_name = LangsList.langName(self.__tl, lang_codes_dict)
-					text = ( tr("<font class=\"word_header_font\">Translated: %1 &#187; %2</font><hr>%3")
-						.arg(sl_name).arg(tl_name).arg(Qt.QString(responce_data["translatedText"])) )
-				else :
-					text = ( tr("<font class=\"word_header_font\">Invalid server responce</font><hr>Code: %1<br>Message: %2")
-						.arg(responce_status).arg(responce_details) )
+				text = reduce(lambda a, b : a + b, map(lambda arg : arg["trans"], raw_dict["sentences"]))
+				text = tr("<font class=\"word_header_font\">Translated: %1 &#187; %2</font><hr>%3").arg(sl_name).arg(tl_name).arg(text)
 			else :
-				text = ( tr("<font class=\"word_header_font\">Invalid server responce</font><hr>Raw JSON: %1")
+				text = ( tr("<font class=\"word_header_font\">Invalid server response</font><hr>Raw JSON: %1")
 					.arg(Qt.QString(unicode(json_dict).encode("utf-8"))) )
 		except :
-			Qt.QMessageBox.warning(None, Const.MyName, tr("JSON parser exception (see logs for more information).\nPress \"Yes\" to ignore"))
+			text = ( tr("<font class=\"word_header_font\">Invalid server response</font><hr>Raw JSON: %1")
+				.arg(Qt.QString(unicode(json_dict).encode("utf-8"))) )
 			Logger.warning("JSON parser exception")
 			Logger.attachException(Logger.WarningMessage)
 
-		###
-
 		self.textChangedSignal(text)
-
 		self.processFinishedSignal()
 
 

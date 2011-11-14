@@ -190,6 +190,7 @@ class GoogleTranslatePanel(Qt.QDockWidget) :
 		###
 
 		lang_codes_dict = LangsList.langCodes()
+		langs_list = LangsList.langs()
 		main_lang = Locale.Locale().mainLang()
 
 		sl_lang = self.__sl_combobox.itemData(self.__sl_combobox.currentIndex()).toString()
@@ -204,9 +205,9 @@ class GoogleTranslatePanel(Qt.QDockWidget) :
 		self.__tl_combobox.insertSeparator(1)
 
 		for combobox in (self.__sl_combobox, self.__tl_combobox) :
-			for lang_codes_dict_key in lang_codes_dict.keys() :
-				combobox.addItem(IconsLoader.icon(Utils.joinPath("flags", lang_codes_dict_key)),
-					LangsList.langName(lang_codes_dict_key, lang_codes_dict), Qt.QVariant(lang_codes_dict_key))
+			for langs_list_item in langs_list :
+				combobox.addItem(IconsLoader.icon(Utils.joinPath("flags", langs_list_item["code"])),
+					langs_list_item["name"], Qt.QVariant(langs_list_item["code"]))
 
 		for (combobox, lang) in ((self.__sl_combobox, sl_lang), (self.__tl_combobox, tl_lang)) :
 			for count in xrange(combobox.count()) :

@@ -82,5 +82,5 @@ def removeResource(resource_name, resource_type) :
 		if err.errno != errno.ENOENT :
 			raise
 
-	cli.printLine("--- resource \"%s\" :: removal completed" % (resource_name))
+	cli.printLine("--- resource \"%s\" :: removal complete" % (resource_name))
 

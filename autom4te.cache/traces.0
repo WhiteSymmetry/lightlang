@@ -153,8 +153,8 @@ m4trace:configure.in:36: -2- AC_SUBST([DEFAULT_CONFIG], [normal])
 m4trace:configure.in:36: -2- AC_SUBST_TRACE([DEFAULT_CONFIG])
 m4trace:configure.in:36: -2- m4_pattern_allow([^DEFAULT_CONFIG$])
 m4trace:configure.in:34: -1- _m4_warn([obsolete], [The macro `AC_HELP_STRING' is obsolete.
-You should run autoupdate.], [../../lib/autoconf/general.m4:209: AC_HELP_STRING is expanded from...
-../../lib/autoconf/general.m4:1482: AC_ARG_WITH is expanded from...
+You should run autoupdate.], [../../lib/autoconf/general.m4:207: AC_HELP_STRING is expanded from...
+../../lib/autoconf/general.m4:1481: AC_ARG_WITH is expanded from...
 configure.in:34: the top level])
 m4trace:configure.in:38: -1- AC_SUBST([DEFAULT_AUDIO_PLAYER], [play])
 m4trace:configure.in:38: -1- AC_SUBST_TRACE([DEFAULT_AUDIO_PLAYER])
@@ -193,8 +193,8 @@ m4trace:configure.in:55: -2- AC_SUBST([PYTHON_BIN], [python])
 m4trace:configure.in:55: -2- AC_SUBST_TRACE([PYTHON_BIN])
 m4trace:configure.in:55: -2- m4_pattern_allow([^PYTHON_BIN$])
 m4trace:configure.in:53: -1- _m4_warn([obsolete], [The macro `AC_HELP_STRING' is obsolete.
-You should run autoupdate.], [../../lib/autoconf/general.m4:209: AC_HELP_STRING is expanded from...
-../../lib/autoconf/general.m4:1482: AC_ARG_WITH is expanded from...
+You should run autoupdate.], [../../lib/autoconf/general.m4:207: AC_HELP_STRING is expanded from...
+../../lib/autoconf/general.m4:1481: AC_ARG_WITH is expanded from...
 configure.in:53: the top level])
 m4trace:configure.in:59: -2- AC_SUBST([AUDIO_PLAYER], [$withval])
 m4trace:configure.in:59: -2- AC_SUBST_TRACE([AUDIO_PLAYER])
@@ -203,8 +203,8 @@ m4trace:configure.in:59: -2- AC_SUBST([AUDIO_PLAYER], [$DEFAULT_AUDIO_PLAYER])
 m4trace:configure.in:59: -2- AC_SUBST_TRACE([AUDIO_PLAYER])
 m4trace:configure.in:59: -2- m4_pattern_allow([^AUDIO_PLAYER$])
 m4trace:configure.in:57: -1- _m4_warn([obsolete], [The macro `AC_HELP_STRING' is obsolete.
-You should run autoupdate.], [../../lib/autoconf/general.m4:209: AC_HELP_STRING is expanded from...
-../../lib/autoconf/general.m4:1482: AC_ARG_WITH is expanded from...
+You should run autoupdate.], [../../lib/autoconf/general.m4:207: AC_HELP_STRING is expanded from...
+../../lib/autoconf/general.m4:1481: AC_ARG_WITH is expanded from...
 configure.in:57: the top level])
 m4trace:configure.in:63: -2- AC_SUBST([GUI_FLAG], [$withval])
 m4trace:configure.in:63: -2- AC_SUBST_TRACE([GUI_FLAG])
@@ -213,8 +213,8 @@ m4trace:configure.in:63: -2- AC_SUBST([GUI_FLAG], [$DEFAULT_GUI_FLAG])
 m4trace:configure.in:63: -2- AC_SUBST_TRACE([GUI_FLAG])
 m4trace:configure.in:63: -2- m4_pattern_allow([^GUI_FLAG$])
 m4trace:configure.in:61: -1- _m4_warn([obsolete], [The macro `AC_HELP_STRING' is obsolete.
-You should run autoupdate.], [../../lib/autoconf/general.m4:209: AC_HELP_STRING is expanded from...
-../../lib/autoconf/general.m4:1482: AC_ARG_WITH is expanded from...
+You should run autoupdate.], [../../lib/autoconf/general.m4:207: AC_HELP_STRING is expanded from...
+../../lib/autoconf/general.m4:1481: AC_ARG_WITH is expanded from...
 configure.in:61: the top level])
 m4trace:configure.in:67: -2- AC_SUBST([PYTHON_XLIB_FLAG], [$withval])
 m4trace:configure.in:67: -2- AC_SUBST_TRACE([PYTHON_XLIB_FLAG])
@@ -223,8 +223,8 @@ m4trace:configure.in:67: -2- AC_SUBST([PYTHON_XLIB_FLAG], [$DEFAULT_PYTHON_XLIB_
 m4trace:configure.in:67: -2- AC_SUBST_TRACE([PYTHON_XLIB_FLAG])
 m4trace:configure.in:67: -2- m4_pattern_allow([^PYTHON_XLIB_FLAG$])
 m4trace:configure.in:65: -1- _m4_warn([obsolete], [The macro `AC_HELP_STRING' is obsolete.
-You should run autoupdate.], [../../lib/autoconf/general.m4:209: AC_HELP_STRING is expanded from...
-../../lib/autoconf/general.m4:1482: AC_ARG_WITH is expanded from...
+You should run autoupdate.], [../../lib/autoconf/general.m4:207: AC_HELP_STRING is expanded from...
+../../lib/autoconf/general.m4:1481: AC_ARG_WITH is expanded from...
 configure.in:65: the top level])
 m4trace:configure.in:72: -1- AC_SUBST([CC])
 m4trace:configure.in:72: -1- AC_SUBST_TRACE([CC])
@@ -342,46 +342,49 @@ m4trace:configure.in:106: -1- m4_pattern_allow([^CHMOD_BIN$])
 m4trace:configure.in:107: -1- AC_SUBST([TEST_BIN])
 m4trace:configure.in:107: -1- AC_SUBST_TRACE([TEST_BIN])
 m4trace:configure.in:107: -1- m4_pattern_allow([^TEST_BIN$])
-m4trace:configure.in:108: -1- AC_SUBST([FIND_BIN])
-m4trace:configure.in:108: -1- AC_SUBST_TRACE([FIND_BIN])
-m4trace:configure.in:108: -1- m4_pattern_allow([^FIND_BIN$])
-m4trace:configure.in:109: -1- AC_SUBST([PYTHON_BIN])
-m4trace:configure.in:109: -1- AC_SUBST_TRACE([PYTHON_BIN])
-m4trace:configure.in:109: -1- m4_pattern_allow([^PYTHON_BIN$])
-m4trace:configure.in:110: -1- AC_SUBST([AUDIO_PLAYER_BIN])
-m4trace:configure.in:110: -1- AC_SUBST_TRACE([AUDIO_PLAYER_BIN])
-m4trace:configure.in:110: -1- m4_pattern_allow([^AUDIO_PLAYER_BIN$])
-m4trace:configure.in:141: -1- AC_SUBST([LIB@&t@OBJS], [$ac_libobjs])
-m4trace:configure.in:141: -1- AC_SUBST_TRACE([LIB@&t@OBJS])
-m4trace:configure.in:141: -1- m4_pattern_allow([^LIB@&t@OBJS$])
-m4trace:configure.in:141: -1- AC_SUBST([LTLIBOBJS], [$ac_ltlibobjs])
-m4trace:configure.in:141: -1- AC_SUBST_TRACE([LTLIBOBJS])
-m4trace:configure.in:141: -1- m4_pattern_allow([^LTLIBOBJS$])
-m4trace:configure.in:142: -1- AC_SUBST([prefix], [`eval echo \`echo $prefix\``])
-m4trace:configure.in:142: -1- AC_SUBST_TRACE([prefix])
-m4trace:configure.in:142: -1- m4_pattern_allow([^prefix$])
-m4trace:configure.in:143: -1- AC_SUBST([exec_prefix], [`eval echo \`echo $exec_prefix\``])
-m4trace:configure.in:143: -1- AC_SUBST_TRACE([exec_prefix])
-m4trace:configure.in:143: -1- m4_pattern_allow([^exec_prefix$])
-m4trace:configure.in:144: -1- AC_SUBST([bindir], [`eval echo \`echo $bindir\``])
-m4trace:configure.in:144: -1- AC_SUBST_TRACE([bindir])
-m4trace:configure.in:144: -1- m4_pattern_allow([^bindir$])
-m4trace:configure.in:145: -1- AC_SUBST([libdir], [`eval echo \`echo $libdir\``])
-m4trace:configure.in:145: -1- AC_SUBST_TRACE([libdir])
-m4trace:configure.in:145: -1- m4_pattern_allow([^libdir$])
-m4trace:configure.in:146: -1- AC_SUBST([datarootdir], [`eval echo \`echo $datarootdir\``])
-m4trace:configure.in:146: -1- AC_SUBST_TRACE([datarootdir])
-m4trace:configure.in:146: -1- m4_pattern_allow([^datarootdir$])
-m4trace:configure.in:147: -1- AC_SUBST([mandir], [`eval echo \`echo $mandir\``])
-m4trace:configure.in:147: -1- AC_SUBST_TRACE([mandir])
-m4trace:configure.in:147: -1- m4_pattern_allow([^mandir$])
-m4trace:configure.in:148: -1- AC_SUBST([docdir], [`eval echo \`echo $docdir\``])
-m4trace:configure.in:148: -1- AC_SUBST_TRACE([docdir])
-m4trace:configure.in:148: -1- m4_pattern_allow([^docdir$])
-m4trace:configure.in:154: -1- AC_SUBST([QT_TR_DIR], [`pkg-config Qt --variable=translationdir`])
-m4trace:configure.in:154: -1- AC_SUBST_TRACE([QT_TR_DIR])
-m4trace:configure.in:154: -1- m4_pattern_allow([^QT_TR_DIR$])
-m4trace:configure.in:160: -1- AC_CONFIG_FILES([Makefile
+m4trace:configure.in:108: -1- AC_SUBST([SED_BIN])
+m4trace:configure.in:108: -1- AC_SUBST_TRACE([SED_BIN])
+m4trace:configure.in:108: -1- m4_pattern_allow([^SED_BIN$])
+m4trace:configure.in:109: -1- AC_SUBST([FIND_BIN])
+m4trace:configure.in:109: -1- AC_SUBST_TRACE([FIND_BIN])
+m4trace:configure.in:109: -1- m4_pattern_allow([^FIND_BIN$])
+m4trace:configure.in:110: -1- AC_SUBST([PYTHON_BIN])
+m4trace:configure.in:110: -1- AC_SUBST_TRACE([PYTHON_BIN])
+m4trace:configure.in:110: -1- m4_pattern_allow([^PYTHON_BIN$])
+m4trace:configure.in:111: -1- AC_SUBST([AUDIO_PLAYER_BIN])
+m4trace:configure.in:111: -1- AC_SUBST_TRACE([AUDIO_PLAYER_BIN])
+m4trace:configure.in:111: -1- m4_pattern_allow([^AUDIO_PLAYER_BIN$])
+m4trace:configure.in:142: -1- AC_SUBST([LIB@&t@OBJS], [$ac_libobjs])
+m4trace:configure.in:142: -1- AC_SUBST_TRACE([LIB@&t@OBJS])
+m4trace:configure.in:142: -1- m4_pattern_allow([^LIB@&t@OBJS$])
+m4trace:configure.in:142: -1- AC_SUBST([LTLIBOBJS], [$ac_ltlibobjs])
+m4trace:configure.in:142: -1- AC_SUBST_TRACE([LTLIBOBJS])
+m4trace:configure.in:142: -1- m4_pattern_allow([^LTLIBOBJS$])
+m4trace:configure.in:143: -1- AC_SUBST([prefix], [`eval echo \`echo $prefix\``])
+m4trace:configure.in:143: -1- AC_SUBST_TRACE([prefix])
+m4trace:configure.in:143: -1- m4_pattern_allow([^prefix$])
+m4trace:configure.in:144: -1- AC_SUBST([exec_prefix], [`eval echo \`echo $exec_prefix\``])
+m4trace:configure.in:144: -1- AC_SUBST_TRACE([exec_prefix])
+m4trace:configure.in:144: -1- m4_pattern_allow([^exec_prefix$])
+m4trace:configure.in:145: -1- AC_SUBST([bindir], [`eval echo \`echo $bindir\``])
+m4trace:configure.in:145: -1- AC_SUBST_TRACE([bindir])
+m4trace:configure.in:145: -1- m4_pattern_allow([^bindir$])
+m4trace:configure.in:146: -1- AC_SUBST([libdir], [`eval echo \`echo $libdir\``])
+m4trace:configure.in:146: -1- AC_SUBST_TRACE([libdir])
+m4trace:configure.in:146: -1- m4_pattern_allow([^libdir$])
+m4trace:configure.in:147: -1- AC_SUBST([datarootdir], [`eval echo \`echo $datarootdir\``])
+m4trace:configure.in:147: -1- AC_SUBST_TRACE([datarootdir])
+m4trace:configure.in:147: -1- m4_pattern_allow([^datarootdir$])
+m4trace:configure.in:148: -1- AC_SUBST([mandir], [`eval echo \`echo $mandir\``])
+m4trace:configure.in:148: -1- AC_SUBST_TRACE([mandir])
+m4trace:configure.in:148: -1- m4_pattern_allow([^mandir$])
+m4trace:configure.in:149: -1- AC_SUBST([docdir], [`eval echo \`echo $docdir\``])
+m4trace:configure.in:149: -1- AC_SUBST_TRACE([docdir])
+m4trace:configure.in:149: -1- m4_pattern_allow([^docdir$])
+m4trace:configure.in:155: -1- AC_SUBST([QT_TR_DIR], [`pkg-config Qt --variable=translationdir`])
+m4trace:configure.in:155: -1- AC_SUBST_TRACE([QT_TR_DIR])
+m4trace:configure.in:155: -1- m4_pattern_allow([^QT_TR_DIR$])
+m4trace:configure.in:161: -1- AC_CONFIG_FILES([Makefile
 apps/Makefile apps/sl/Makefile apps/llrepo/Makefile apps/xsl/Makefile
 resources/Makefile resources/dicts/Makefile resources/sounds/Makefile
 pkg/Makefile
@@ -390,21 +393,21 @@ docs/text/Makefile docs/text/en/Makefile docs/text/ru/Makefile
 docs/man/Makefile docs/man/en/Makefile docs/man/ru/Makefile
 apps/sl/src/config.h apps/xsl/src/xsl/Const.py apps/xsl/src/xsl/xsl.py apps/llrepo/src/const.py apps/llrepo/src/llrepo.py
 pkg/pkg/lightlang.pc])
-m4trace:configure.in:160: -1- _m4_warn([obsolete], [AC_OUTPUT should be used without arguments.
+m4trace:configure.in:161: -1- _m4_warn([obsolete], [AC_OUTPUT should be used without arguments.
 You should run autoupdate.], [])
-m4trace:configure.in:160: -1- AC_SUBST([LIB@&t@OBJS], [$ac_libobjs])
-m4trace:configure.in:160: -1- AC_SUBST_TRACE([LIB@&t@OBJS])
-m4trace:configure.in:160: -1- m4_pattern_allow([^LIB@&t@OBJS$])
-m4trace:configure.in:160: -1- AC_SUBST([LTLIBOBJS], [$ac_ltlibobjs])
-m4trace:configure.in:160: -1- AC_SUBST_TRACE([LTLIBOBJS])
-m4trace:configure.in:160: -1- m4_pattern_allow([^LTLIBOBJS$])
-m4trace:configure.in:160: -1- AC_SUBST_TRACE([top_builddir])
-m4trace:configure.in:160: -1- AC_SUBST_TRACE([top_build_prefix])
-m4trace:configure.in:160: -1- AC_SUBST_TRACE([srcdir])
-m4trace:configure.in:160: -1- AC_SUBST_TRACE([abs_srcdir])
-m4trace:configure.in:160: -1- AC_SUBST_TRACE([top_srcdir])
-m4trace:configure.in:160: -1- AC_SUBST_TRACE([abs_top_srcdir])
-m4trace:configure.in:160: -1- AC_SUBST_TRACE([builddir])
-m4trace:configure.in:160: -1- AC_SUBST_TRACE([abs_builddir])
-m4trace:configure.in:160: -1- AC_SUBST_TRACE([abs_top_builddir])
-m4trace:configure.in:160: -1- AC_SUBST_TRACE([INSTALL])
+m4trace:configure.in:161: -1- AC_SUBST([LIB@&t@OBJS], [$ac_libobjs])
+m4trace:configure.in:161: -1- AC_SUBST_TRACE([LIB@&t@OBJS])
+m4trace:configure.in:161: -1- m4_pattern_allow([^LIB@&t@OBJS$])
+m4trace:configure.in:161: -1- AC_SUBST([LTLIBOBJS], [$ac_ltlibobjs])
+m4trace:configure.in:161: -1- AC_SUBST_TRACE([LTLIBOBJS])
+m4trace:configure.in:161: -1- m4_pattern_allow([^LTLIBOBJS$])
+m4trace:configure.in:161: -1- AC_SUBST_TRACE([top_builddir])
+m4trace:configure.in:161: -1- AC_SUBST_TRACE([top_build_prefix])
+m4trace:configure.in:161: -1- AC_SUBST_TRACE([srcdir])
+m4trace:configure.in:161: -1- AC_SUBST_TRACE([abs_srcdir])
+m4trace:configure.in:161: -1- AC_SUBST_TRACE([top_srcdir])
+m4trace:configure.in:161: -1- AC_SUBST_TRACE([abs_top_srcdir])
+m4trace:configure.in:161: -1- AC_SUBST_TRACE([builddir])
+m4trace:configure.in:161: -1- AC_SUBST_TRACE([abs_builddir])
+m4trace:configure.in:161: -1- AC_SUBST_TRACE([abs_top_builddir])
+m4trace:configure.in:161: -1- AC_SUBST_TRACE([INSTALL])

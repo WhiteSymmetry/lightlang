@@ -176,10 +176,10 @@ class GoogleTranslate(Qt.QObject) :
 				text = tr("<font class=\"word_header_font\">Translated: %1 &#187; %2</font><hr>%3").arg(sl_name).arg(tl_name).arg(text)
 			else :
 				text = ( tr("<font class=\"word_header_font\">Invalid server response</font><hr>Raw JSON: %1")
-					.arg(Qt.QString(unicode(json_dict).encode("utf-8"))) )
+					.arg(Qt.QString(unicode(text).encode("utf-8"))) )
 		except :
 			text = ( tr("<font class=\"word_header_font\">Invalid server response</font><hr>Raw JSON: %1")
-				.arg(Qt.QString(unicode(json_dict).encode("utf-8"))) )
+				.arg(Qt.QString(unicode(text).encode("utf-8"))) )
 			Logger.warning("JSON parser exception")
 			Logger.attachException(Logger.WarningMessage)
 

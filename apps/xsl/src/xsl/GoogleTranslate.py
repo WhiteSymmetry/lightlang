@@ -180,7 +180,7 @@ class GoogleTranslate(Qt.QObject) :
 		except :
 			text = ( tr("<font class=\"word_header_font\">Invalid server response</font><hr>Raw JSON: %1")
 				.arg(Qt.QString(unicode(text).encode("utf-8"))) )
-            Logger.warning(text)
+			Logger.warning(text)
 			Logger.warning("JSON parser exception")
 			Logger.attachException(Logger.WarningMessage)
 
@@ -189,7 +189,7 @@ class GoogleTranslate(Qt.QObject) :
 
 
 	### Signals ###
-		
+
 	def processStartedSignal(self) :
 		self.emit(Qt.SIGNAL("processStarted()"))
 

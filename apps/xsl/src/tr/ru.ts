@@ -412,7 +412,7 @@ Package version: %2</source>
     <message>
         <location filename="MainWindow.py" line="349"/>
         <source>%1 manual</source>
-        <translation>Руковдоство %1</translation>
+        <translation>Руководство %1</translation>
     </message>
     <message>
         <location filename="MainWindow.py" line="350"/>
